@@ -427,6 +427,94 @@ multiplicity 2
         self.assertEqual(duplicate_flags, expected_flags)
 
 
+class TestThermoWrite(unittest.TestCase):
+
+    def setUp(self):
+        """This method is run once before each test."""
+        coeffs_low = [4.03055, -0.00214171, 4.90611e-05, -5.99027e-08, 2.38945e-11, -11257.6, 3.5613]
+        coeffs_high = [-0.307954, 0.0245269, -1.2413e-05, 3.07724e-09, -3.01467e-13, -10693, 22.628]
+        Tmin = 300.
+        Tmax = 3000.
+        Tint = 650.73
+        E0 = -782292.  # J/mol.
+        comment = "C2H6"
+        self.nasa = NASA(
+            polynomials=[
+                NASAPolynomial(coeffs=coeffs_low, Tmin=(Tmin, "K"), Tmax=(Tint, "K")),
+                NASAPolynomial(coeffs=coeffs_high, Tmin=(Tint, "K"), Tmax=(Tmax, "K")),
+            ],
+            Tmin=(Tmin, "K"),
+            Tmax=(Tmax, "K"),
+            E0=(E0, "J/mol"),
+            comment=comment,
+        )
+
+    def testWriteThermoBlock(self):
+        """Test that we can write a normal thermo block"""
+        species = Species(SMILES='CC')
+        species.thermo = self.nasa
+
+        expected = """C2H6                    H   6C   2          G   300.000  3000.000  650.73      1
+-3.07954000E-01 2.45269000E-02-1.24130000E-05 3.07724000E-09-3.01467000E-13    2
+-1.06930000E+04 2.26280000E+01 4.03055000E+00-2.14171000E-03 4.90611000E-05    3
+-5.99027000E-08 2.38945000E-11-1.12576000E+04 3.56130000E+00                   4
+"""
+
+        result = writeThermoEntry(species, verbose=False)
+
+        self.assertEqual(expected, result)
+
+    def testWriteThermoBlock5Elem(self):
+        """Test that we can write a thermo block for a species with 5 elements"""
+        species = Species().fromAdjacencyList("""
+1 O u0 p3 c-1 {3,S}
+2 O u0 p2 c0 {3,D}
+3 N u0 p0 c+1 {1,S} {2,D} {4,S}
+4 C u0 p0 c0 {3,S} {5,S} {6,S} {7,S}
+5 H u0 p0 c0 {4,S}
+6 H u0 p0 c0 {4,S}
+7 H u0 p0 c0 {4,S}
+8 X u0 p0 c0
+""")
+        species.thermo = self.nasa
+
+        expected = """CH3NO2X                 X   1H   3C   1O   2G   300.000  3000.000  650.73N   1 1
+-3.07954000E-01 2.45269000E-02-1.24130000E-05 3.07724000E-09-3.01467000E-13    2
+-1.06930000E+04 2.26280000E+01 4.03055000E+00-2.14171000E-03 4.90611000E-05    3
+-5.99027000E-08 2.38945000E-11-1.12576000E+04 3.56130000E+00                   4
+"""
+
+        result = writeThermoEntry(species, verbose=False)
+
+        self.assertEqual(expected, result)
+
+    def testWriteThermoBlock6Elem(self):
+        """Test that we can write a thermo block for a species with 6 elements"""
+        species = Species().fromAdjacencyList("""
+1 O u0 p3 c-1 {2,S}
+2 N u0 p0 c+1 {1,S} {3,D} {4,S}
+3 O u0 p2 c0 {2,D}
+4 C u0 p0 c0 {2,S} {5,S} {6,S} {7,S}
+5 S u0 p2 c0 {4,S} {8,S}
+6 H u0 p0 c0 {4,S}
+7 H u0 p0 c0 {4,S}
+8 H u0 p0 c0 {5,S}
+9 X u0 p0 c0
+""")
+        species.thermo = self.nasa
+
+        expected = """CH3NO2SX                                    G   300.000  3000.000  650.73      1&
+C 1 H 3 O 2 N 1 S 1 X 1
+-3.07954000E-01 2.45269000E-02-1.24130000E-05 3.07724000E-09-3.01467000E-13    2
+-1.06930000E+04 2.26280000E+01 4.03055000E+00-2.14171000E-03 4.90611000E-05    3
+-5.99027000E-08 2.38945000E-11-1.12576000E+04 3.56130000E+00                   4
+"""
+
+        result = writeThermoEntry(species, verbose=False)
+
+        self.assertEqual(expected, result)
+
+
 class TestReadReactionComments(unittest.TestCase):
     @classmethod
     def setUpClass(self):

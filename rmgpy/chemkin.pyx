@@ -1466,30 +1466,43 @@ def writeThermoEntry(species, elementCounts=None, verbose=True):
 
     # Line 1
     string += '{0:<16}        '.format(getSpeciesIdentifier(species))
-    if len(elementCounts) <= 4:
+    if len(elementCounts) <= 5:
         # Use the original Chemkin syntax for the element counts
+        elements = []
         for key, count in elementCounts.iteritems():
             if isinstance(key, tuple):
                 symbol, isotope = key
                 chemkinName = getElement(symbol, isotope=isotope).chemkinName
             else:
                 chemkinName = key
-            string += '{0!s:<2}{1:>3d}'.format(chemkinName, count)
-        string += '     ' * (4 - len(elementCounts))
+            elements.append('{0!s:<2}{1:>3d}'.format(chemkinName, count))
+        elements.extend(['     '] * (5 - len(elementCounts)))
+        string += ''.join(elements[0:4])
+        string += 'G{0:>10.3f}{1:>10.3f}{2:>8.2f}{3} 1'.format(
+            thermo.polynomials[0].Tmin.value_si,
+            thermo.polynomials[1].Tmax.value_si,
+            thermo.polynomials[0].Tmax.value_si,
+            elements[4]
+        )
     else:
-        string += '     ' * 4
-    string += 'G{0:>10.3f}{1:>10.3f}{2:>8.2f}      1'.format(thermo.polynomials[0].Tmin.value_si, thermo.polynomials[1].Tmax.value_si, thermo.polynomials[0].Tmax.value_si)
-    if len(elementCounts) > 4:
+        string += '                    G{0:>10.3f}{1:>10.3f}{2:>8.2f}      1'.format(
+            thermo.polynomials[0].Tmin.value_si,
+            thermo.polynomials[1].Tmax.value_si,
+            thermo.polynomials[0].Tmax.value_si,
+        )
         string += '&\n'
         # Use the new-style Chemkin syntax for the element counts
         # This will only be recognized by Chemkin 4 or later
+        elements = []
         for key, count in elementCounts.iteritems():
             if isinstance(key, tuple):
                 symbol, isotope = key
                 chemkinName = getElement(symbol, isotope=isotope).chemkinName
             else:
                 chemkinName = key
-            string += '{0!s:<2}{1:>3d}'.format(chemkinName, count)
+            elements.extend([chemkinName, str(count)])
+        string += ' '.join(elements)
+
     string += '\n'
 
     # Line 2
