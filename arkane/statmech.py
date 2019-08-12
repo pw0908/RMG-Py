@@ -314,13 +314,19 @@ class StatMechJob(object):
             except KeyError:
                 raise InputError('Model chemistry {0!r} not found in from dictionary of energy values in species file '
                                  '{1!r}.'.format(self.modelChemistry, path))
+        if not os.path.isfile(energy.path):
+            modified_energy_path = os.path.join(directory, energy.path)
+            if not os.path.isfile(modified_energy_path):
+                raise InputError('Could not find single point energy file for species {0} '
+                                 'in the specified path {1}'.format(self.species.label, energy.path))
+            else:
+                energy.path = modified_energy_path
         e0, e_electronic = None, None  # E0 = e_electronic + ZPE
         energyLog = None
         if isinstance(energy, Log) and type(energy).__name__ == 'Log':
-            energyLog = determine_qm_software(os.path.join(directory, energy.path))
+            energyLog = determine_qm_software(energy.path)
         elif isinstance(energy, Log) and type(energy).__name__ != 'Log':
             energyLog = energy
-            energyLog.path = os.path.join(directory, energyLog.path)
         elif isinstance(energy, float):
             e_electronic = energy
         elif isinstance(energy, tuple) and len(energy) == 2:
@@ -342,16 +348,26 @@ class StatMechJob(object):
             statmechLog = local_context['frequencies']
         except KeyError:
             raise InputError('Required attribute "frequencies" not found in species file {0!r}.'.format(path))
+        if not os.path.isfile(statmechLog.path):
+            modified_statmech_path = os.path.join(directory, statmechLog.path)
+            if not os.path.isfile(modified_statmech_path):
+                raise InputError('Could not find Arkane statmech file for species {0} '
+                                 'in the specified path {1}'.format(self.species.label, statmechLog.path))
+            else:
+                statmechLog.path = modified_statmech_path
         if isinstance(statmechLog, Log) and type(statmechLog).__name__ == 'Log':
-            statmechLog = determine_qm_software(os.path.join(directory, statmechLog.path))
-        else:
-            statmechLog.path = os.path.join(directory, statmechLog.path)
+            statmechLog = determine_qm_software(statmechLog.path)
         try:
             geomLog = local_context['geometry']
+            if not os.path.isfile(geomLog.path):
+                modified_geom_path = os.path.join(directory, geomLog.path)
+                if not os.path.isfile(modified_geom_path):
+                    raise InputError('Could not find Arkane statmech file for species {0} '
+                                     'in the specified path {1}'.format(self.species.label, geomLog.path))
+                else:
+                    geomLog.path = modified_geom_path
             if isinstance(geomLog, Log) and type(geomLog).__name__ == 'Log':
-                geomLog = determine_qm_software(os.path.join(directory, geomLog.path))
-            else:
-                geomLog.path = os.path.join(directory, geomLog.path)
+                geomLog = determine_qm_software(geomLog.path)
         except KeyError:
             geomLog = statmechLog
             logging.debug("Reading geometry from the specified frequencies file.")
@@ -511,9 +527,15 @@ class StatMechJob(object):
                         # the symmetry number will be derived from the scan
                         scanLog, pivots, top, fit = q
                     # Load the hindered rotor scan energies
+                    if not os.path.isfile(scanLog.path):
+                        modified_scan_path = os.path.join(directory, scanLog.path)
+                        if not os.path.isfile(modified_scan_path):
+                            raise InputError('Could not find scan energy file for species {0} '
+                                             'in the specified path {1}'.format(self.species.label, scanLog.path))
+                        else:
+                            scanLog.path = modified_scan_path
                     if isinstance(scanLog, Log) and type(scanLog).__name__ == 'Log':
-                        scanLog = determine_qm_software(os.path.join(directory, scanLog.path))
-                    scanLog.path = os.path.join(directory, scanLog.path)
+                        scanLog = determine_qm_software(scanLog.path)
                     if isinstance(scanLog, (GaussianLog, QChemLog)):
                         v_list, angle = scanLog.loadScanEnergies()
                         try:
