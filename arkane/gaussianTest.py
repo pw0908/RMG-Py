@@ -161,5 +161,7 @@ class GaussianTest(unittest.TestCase):
         self.assertIsInstance(log, GaussianLog)
 
 
+################################################################################
+
 if __name__ == '__main__':
     unittest.main(testRunner=unittest.TextTestRunner(verbosity=2))

@@ -65,9 +65,7 @@ class TestThermo(unittest.TestCase):
         self.assertEqual(element_count, {'H': 4, 'C': 2})
 
 
-
 ################################################################################
-
 
 if __name__ == '__main__':
     unittest.main(testRunner=unittest.TextTestRunner(verbosity=2))
