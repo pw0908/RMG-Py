@@ -227,15 +227,15 @@ cdef class KineticsModel:
         Returns ``True`` if Tmin, Tmax for both objects match.
         Otherwise returns ``False``
         """
-        if self.Tmin is not None and otherKinetics.Tmin is not None and not self.Tmin.equals(otherKinetics.Tmin):
-            return False
+        if self.Tmin is not None and otherKinetics.Tmin is not None and self.Tmin.equals(otherKinetics.Tmin):
+            pass
         elif self.Tmin is None and otherKinetics.Tmin is None:
             pass
         else:
             return False
 
-        if self.Tmax is not None and otherKinetics.Tmax is not None and not self.Tmax.equals(otherKinetics.Tmax):
-            return False
+        if self.Tmax is not None and otherKinetics.Tmax is not None and self.Tmax.equals(otherKinetics.Tmax):
+            pass
         elif self.Tmax is None and otherKinetics.Tmax is None:
             pass
         else:
