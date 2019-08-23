@@ -35,10 +35,77 @@ This script contains unit tests of the :mod:`rmgpy.kinetics.model` module.
 import unittest
 
 from rmgpy.kinetics.model import getReactionOrderFromRateCoefficientUnits, \
-                                 getRateCoefficientUnitsFromReactionOrder
+                                 getRateCoefficientUnitsFromReactionOrder, \
+                                 KineticsModel
+
+from rmgpy.kinetics.uncertainties import RateUncertainty
+
+
+class TestKineticsModel(unittest.TestCase):
+    """
+    Contains unit tests of the KineticsModel class
+    """
+    def setUp(self):
+        """
+        A function run before each unit test in this class.
+        """
+        self.Tmin = 300.
+        self.Tmax = 3000.
+        self.Pmin = 0.1
+        self.Pmax = 100.
+        self.comment = 'foo bar'
+        self.uncertainty = RateUncertainty(mu=0.3,var=0.6,Tref=1000.0,N=1,correlation="ab")
+        self.km = KineticsModel(
+            Tmin = (self.Tmin,"K"),
+            Tmax = (self.Tmax,"K"),
+            Pmin = (self.Pmin,"bar"),
+            Pmax = (self.Pmax,"bar"),
+            uncertainty = self.uncertainty,
+            comment = self.comment,
+        )
+
+    def test_isIdenticalTo(self):
+        """
+        Test that the KineticsModel.isIdenticalTo method works on itself.
+
+        This just checks the Temperature range
+        """
+        self.assertTrue(self.km.isIdenticalTo(self.km))
+
+        import copy
+        km = copy.deepcopy(self.km)
+        self.assertTrue(self.km.isIdenticalTo(self.km))
+
+        km.Tmax = (self.Tmax - 50, 'K') # discrepancy must be more than 1%!
+        self.assertFalse(self.km.isIdenticalTo(km))
+
+    def test_repr(self):
+        """
+        Test that an KineticsModel object can be reconstructed from its repr()
+        output with no loss of information.
+        """
+        km = None
+        exec('km = {0!r}'.format(self.km))
+        self.assertTrue(self.km.isIdenticalTo(km))
+        self.assertEqual(dir(self.km), dir(km))
+        for att in 'Tmax Tmin Pmax Pmin comment uncertainty'.split():
+            self.assertEqual(repr(getattr(self.km, att)), repr(getattr(km, att)))
+
+    def test_pickle(self):
+        """
+        Test that an KineticsModel object can be pickled and unpickled
+        with no loss of information.
+        """
+        import cPickle
+        km = cPickle.loads(cPickle.dumps(self.km,-1))
+        self.assertTrue(self.km.isIdenticalTo(km))
+        self.assertEqual(dir(self.km), dir(km))
+        for att in 'Tmax Tmin Pmax Pmin comment uncertainty'.split():
+            self.assertEqual(repr(getattr(self.km, att)), repr(getattr(km, att)))
+
+
 
 ################################################################################
-
 class TestOrder(unittest.TestCase):
     """
     Contains unit tests of the functions for converting rate coefficient units
