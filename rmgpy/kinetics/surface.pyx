@@ -390,6 +390,7 @@ cdef class SurfaceArrhenius(Arrhenius):
     `Tmax`          The maximum temperature at which the model is valid, or zero if unknown or undefined
     `Pmin`          The minimum pressure at which the model is valid, or zero if unknown or undefined
     `Pmax`          The maximum pressure at which the model is valid, or zero if unknown or undefined
+    `uncertainty`   Uncertainty information
     `comment`       Information about the model (e.g. its source)
     =============== =============================================================
     """
@@ -412,6 +413,7 @@ cdef class SurfaceArrhenius(Arrhenius):
         if self.Tmax is not None: string += ', Tmax={0!r}'.format(self.Tmax)
         if self.Pmin is not None: string += ', Pmin={0!r}'.format(self.Pmin)
         if self.Pmax is not None: string += ', Pmax={0!r}'.format(self.Pmax)
+        if self.uncertainty is not None: string += ', uncertainty={0!r}'.format(self.uncertainty)
         if self.comment != '': string += ', comment="""{0}"""'.format(self.comment)
         string += ')'
         return string
@@ -420,7 +422,7 @@ cdef class SurfaceArrhenius(Arrhenius):
         """
         A helper function used when pickling a SurfaceArrhenius object.
         """
-        return (SurfaceArrhenius, (self.A, self.n, self.Ea, self.T0, self.Tmin, self.Tmax, self.Pmin, self.Pmax, self.comment))
+        return (SurfaceArrhenius, (self.A, self.n, self.Ea, self.T0, self.Tmin, self.Tmax, self.Pmin, self.Pmax, self.uncertainty, self.comment))
 
 
 ################################################################################
@@ -447,6 +449,7 @@ cdef class SurfaceArrheniusBEP(ArrheniusEP):
     `Tmax`          The maximum temperature at which the model is valid, or zero if unknown or undefined
     `Pmin`          The minimum pressure at which the model is valid, or zero if unknown or undefined
     `Pmax`          The maximum pressure at which the model is valid, or zero if unknown or undefined
+    `uncertainty`   Uncertainty information
     `comment`       Information about the model (e.g. its source)
     =============== =============================================================
     
@@ -470,6 +473,7 @@ cdef class SurfaceArrheniusBEP(ArrheniusEP):
         if self.Tmax is not None: string += ', Tmax={0!r}'.format(self.Tmax)
         if self.Pmin is not None: string += ', Pmin={0!r}'.format(self.Pmin)
         if self.Pmax is not None: string += ', Pmax={0!r}'.format(self.Pmax)
+        if self.uncertainty is not None: string += ', uncertainty={0!r}'.format(self.uncertainty)
         if self.comment != '': string += ', comment="""{0}"""'.format(self.comment)
         string += ')'
         return string
@@ -478,7 +482,7 @@ cdef class SurfaceArrheniusBEP(ArrheniusEP):
         """
         A helper function used when pickling an SurfaceArrheniusBEP object.
         """
-        return (SurfaceArrheniusBEP, (self.A, self.n, self.alpha, self.E0, self.Tmin, self.Tmax, self.Pmin, self.Pmax, self.comment))
+        return (SurfaceArrheniusBEP, (self.A, self.n, self.alpha, self.E0, self.Tmin, self.Tmax, self.Pmin, self.Pmax, self.uncertainty, self.comment))
     
     cpdef SurfaceArrhenius toArrhenius(self, double dHrxn):
         """
@@ -496,6 +500,7 @@ cdef class SurfaceArrheniusBEP(ArrheniusEP):
             T0 = (1,"K"),
             Tmin = self.Tmin,
             Tmax = self.Tmax,
+            uncertainty = self.uncertainty,
             comment = self.comment,
         )
 
