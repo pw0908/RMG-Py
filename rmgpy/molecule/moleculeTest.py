@@ -67,6 +67,53 @@ class TestAtom(unittest.TestCase):
         """
         self.assertTrue(self.atom.symbol == self.atom.element.symbol)
 
+    def test_equality(self):
+        """Test that we can perform equality comparison with Atom objects"""
+        atom1 = Atom(element=getElement('C'), radicalElectrons=0, lonePairs=0)
+        atom2 = Atom(element=getElement('C'), radicalElectrons=0, lonePairs=0)
+        atom3 = Atom(element=getElement('C'), radicalElectrons=1, lonePairs=0)
+        atom4 = Atom(element=getElement('H'), radicalElectrons=1, lonePairs=0)
+
+        self.assertEqual(atom1, atom1)
+        self.assertNotEqual(atom1, atom2)
+        self.assertNotEqual(atom1, atom3)
+        self.assertNotEqual(atom1, atom4)
+
+    def test_less_than(self):
+        """Test that we can perform less than comparison with Atom objects"""
+        atom1 = Atom(element=getElement('C'), radicalElectrons=0, lonePairs=0)
+        atom2 = Atom(element=getElement('C'), radicalElectrons=0, lonePairs=0)
+        atom3 = Atom(element=getElement('C'), radicalElectrons=1, lonePairs=0)
+        atom4 = Atom(element=getElement('H'), radicalElectrons=1, lonePairs=0)
+
+        self.assertFalse(atom1 < atom2)  # Because the sorting keys should be identical
+        self.assertLess(atom2, atom3)
+        self.assertLess(atom4, atom1)
+
+    def test_greater_than(self):
+        """Test that we can perform greater than comparison with Atom objects"""
+        atom1 = Atom(element=getElement('C'), radicalElectrons=0, lonePairs=0)
+        atom2 = Atom(element=getElement('C'), radicalElectrons=0, lonePairs=0)
+        atom3 = Atom(element=getElement('C'), radicalElectrons=1, lonePairs=0)
+        atom4 = Atom(element=getElement('H'), radicalElectrons=1, lonePairs=0)
+
+        self.assertFalse(atom2 > atom1)  # Because the sorting keys should be identical
+        self.assertGreater(atom3, atom1)
+        self.assertGreater(atom1, atom4)
+
+    def test_hash(self):
+        """Test behavior of Atom hashing using dictionaries and sets"""
+        atom1 = Atom(element=getElement('C'), radicalElectrons=0, lonePairs=0)
+        atom2 = Atom(element=getElement('C'), radicalElectrons=0, lonePairs=0)
+        atom3 = Atom(element=getElement('C'), radicalElectrons=1, lonePairs=0)
+        atom4 = Atom(element=getElement('H'), radicalElectrons=1, lonePairs=0)
+
+        # Test dictionary behavior
+        self.assertEqual(len(dict.fromkeys([atom1, atom2, atom3, atom4])), 4)
+
+        # Test set behavior
+        self.assertEqual(len({atom1, atom2, atom3, atom4}), 4)
+
     def testIsHydrogen(self):
         """
         Test the Atom.isHydrogen() method.
@@ -389,6 +436,53 @@ class TestBond(unittest.TestCase):
         """
         self.bond = Bond(atom1=None, atom2=None, order=2)
         self.orderList = [1, 2, 3, 4, 1.5, 0.30000000000000004]
+
+    def test_equality(self):
+        """Test that we can perform equality comparison with Bond objects"""
+        bond1 = Bond(atom1=None, atom2=None, order=1)
+        bond2 = Bond(atom1=None, atom2=None, order=1)
+        bond3 = Bond(atom1=None, atom2=None, order=2)
+        bond4 = Bond(atom1=None, atom2=None, order=3)
+
+        self.assertEqual(bond1, bond1)
+        self.assertNotEqual(bond1, bond2)
+        self.assertNotEqual(bond1, bond3)
+        self.assertNotEqual(bond1, bond4)
+
+    def test_less_than(self):
+        """Test that we can perform less than comparison with Bond objects"""
+        bond1 = Bond(atom1=None, atom2=None, order=1)
+        bond2 = Bond(atom1=None, atom2=None, order=1)
+        bond3 = Bond(atom1=None, atom2=None, order=2)
+        bond4 = Bond(atom1=None, atom2=None, order=3)
+
+        self.assertFalse(bond1 < bond2)  # Because the sorting keys should be identical
+        self.assertLess(bond2, bond3)
+        self.assertLess(bond3, bond4)
+
+    def test_greater_than(self):
+        """Test that we can perform greater than comparison with Bond objects"""
+        bond1 = Bond(atom1=None, atom2=None, order=1)
+        bond2 = Bond(atom1=None, atom2=None, order=1)
+        bond3 = Bond(atom1=None, atom2=None, order=2)
+        bond4 = Bond(atom1=None, atom2=None, order=3)
+
+        self.assertFalse(bond2 > bond1)  # Because the sorting keys should be identical
+        self.assertGreater(bond3, bond1)
+        self.assertGreater(bond4, bond1)
+
+    def test_hash(self):
+        """Test behavior of Bond hashing using dictionaries and sets"""
+        bond1 = Bond(atom1=None, atom2=None, order=1)
+        bond2 = Bond(atom1=None, atom2=None, order=1)
+        bond3 = Bond(atom1=None, atom2=None, order=2)
+        bond4 = Bond(atom1=None, atom2=None, order=3)
+
+        # Test dictionary behavior
+        self.assertEqual(len(dict.fromkeys([bond1, bond2, bond3, bond4])), 4)
+
+        # Test set behavior
+        self.assertEqual(len({bond1, bond2, bond3, bond4}), 4)
 
     def testGetOrderStr(self):
         """
@@ -772,6 +866,46 @@ class TestMolecule(unittest.TestCase):
         self.molecule.append(Molecule().fromAdjacencyList(self.adjlist_2, saturateH=True))
 
         self.mHBonds = Molecule().fromSMILES('C(NC=O)OO')
+
+    def test_equality(self):
+        """Test that we can perform equality comparison with Molecule objects"""
+        mol1 = Molecule(SMILES='C')
+        mol2 = Molecule(SMILES='C')
+        mol3 = Molecule(SMILES='CC')
+
+        self.assertEqual(mol1, mol1)
+        self.assertEqual(mol1, mol2)
+        self.assertNotEqual(mol1, mol3)
+
+    def test_less_than(self):
+        """Test that we can perform less than comparison with Molecule objects"""
+        mol1 = Molecule(SMILES='C')
+        mol2 = Molecule(SMILES='C')
+        mol3 = Molecule(SMILES='CC')
+
+        self.assertFalse(mol1 < mol2)  # Because the sorting keys should be identical
+        self.assertLess(mol1, mol3)
+
+    def test_greater_than(self):
+        """Test that we can perform greater than comparison with Molecule objects"""
+        mol1 = Molecule(SMILES='C')
+        mol2 = Molecule(SMILES='C')
+        mol3 = Molecule(SMILES='CC')
+
+        self.assertFalse(mol2 > mol1)  # Because the sorting keys should be identical
+        self.assertGreater(mol3, mol1)
+
+    def test_hash(self):
+        """Test behavior of Molecule hashing using dictionaries and sets"""
+        mol1 = Molecule(SMILES='C')
+        mol2 = Molecule(SMILES='C')
+        mol3 = Molecule(SMILES='CC')
+
+        # Test dictionary behavior
+        self.assertEqual(len(dict.fromkeys([mol1, mol2, mol3])), 2)
+
+        # Test set behavior
+        self.assertEqual(len({mol1, mol2, mol3}), 2)
 
     def testClearLabeledAtoms(self):
         """
