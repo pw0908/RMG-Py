@@ -13,7 +13,7 @@ env:
 
 matrix:
   allow_failures:
-    - env: ENV_FILE='environment_py3.yml'
+    - env: ENV_FILE='environment_linux.yml'
 
 stages:
   - test
