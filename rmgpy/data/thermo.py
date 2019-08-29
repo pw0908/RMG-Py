@@ -46,7 +46,7 @@ import numpy as np
 import rmgpy.constants as constants
 import rmgpy.molecule
 import rmgpy.quantity
-from rmgpy.data.base import Database, Entry, makeLogicNode, DatabaseError
+from rmgpy.data.base import Database, Entry, make_logic_node, DatabaseError
 from rmgpy.ml.estimator import MLEstimator
 from rmgpy.molecule import Molecule, Bond, Group
 from rmgpy.species import Species
@@ -449,7 +449,7 @@ def isRingPartialMatched(ring, matched_group):
     """
     An example of ring partial match is tricyclic ring is matched by a bicyclic group
     usually because of not enough data in polycyclic tree. The method takes a matched group 
-    returned from descendTree and the ring (a list of non-hydrogen atoms in the ring)
+    returned from descend_tree and the ring (a list of non-hydrogen atoms in the ring)
     """
     # if matched group has less atoms than the target ring
     # it's surely a partial match
@@ -711,7 +711,7 @@ class ThermoGroups(Database):
                 group[0:4].upper() == 'AND{' or
                 group[0:7].upper() == 'NOT OR{' or
                 group[0:8].upper() == 'NOT AND{'):
-            item = makeLogicNode(group)
+            item = make_logic_node(group)
         else:
             item = Group().fromAdjacencyList(group)
         self.entries[label] = Entry(
@@ -763,7 +763,7 @@ class ThermoGroups(Database):
         destination.rank = source.rank
         destination.referenceType = source.referenceType
 
-    def removeGroup(self, groupToRemove):
+    def remove_group(self, group_to_remove):
         """
         Removes a group that is in a tree from the database. For thermo
         groups we also, need to re-point any unicode thermoData that may
@@ -773,26 +773,26 @@ class ThermoGroups(Database):
         """
 
         # First call base class method
-        Database.removeGroup(self, groupToRemove)
+        Database.remove_group(self, group_to_remove)
 
-        parent_r = groupToRemove.parent
+        parent_r = group_to_remove.parent
 
         # look for other pointers that point toward entry
         for entry in self.entries.values():
             if isinstance(entry.data, str):
-                if entry.data == groupToRemove.label:
+                if entry.data == group_to_remove.label:
                     # if the entryToRemove.data is also a pointer, then copy
-                    if isinstance(groupToRemove.data, str):
-                        entry.data = groupToRemove.data
+                    if isinstance(group_to_remove.data, str):
+                        entry.data = group_to_remove.data
                     # if the parent points toward entry and the data is
                     # not a base string, we need to copy the data to the parent
                     elif entry is parent_r:
-                        self.copyData(groupToRemove, parent_r)
+                        self.copyData(group_to_remove, parent_r)
                     # otherwise, point toward entryToRemove's parent
                     else:
                         entry.data = str(parent_r.label)
 
-        return groupToRemove
+        return group_to_remove
 
 
 ################################################################################
@@ -983,72 +983,72 @@ class ThermoDatabase(object):
             if (os.path.exists(os.path.join(root, 'Dictionary.txt')) and
                     os.path.exists(os.path.join(root, 'Library.txt'))):
                 library = ThermoLibrary(label=os.path.basename(root), name=os.path.basename(root))
-                library.loadOld(
+                library.load_old(
                     dictstr=os.path.join(root, 'Dictionary.txt'),
                     treestr='',
                     libstr=os.path.join(root, 'Library.txt'),
-                    numParameters=12,
-                    numLabels=1,
+                    num_parameters=12,
+                    num_labels=1,
                     pattern=False,
                 )
                 library.label = os.path.basename(root)
                 self.libraries[library.label] = library
 
         self.groups = {}
-        self.groups['group'] = ThermoGroups(label='group', name='Functional Group Additivity Values').loadOld(
+        self.groups['group'] = ThermoGroups(label='group', name='Functional Group Additivity Values').load_old(
             dictstr=os.path.join(path, 'thermo_groups', 'Group_Dictionary.txt'),
             treestr=os.path.join(path, 'thermo_groups', 'Group_Tree.txt'),
             libstr=os.path.join(path, 'thermo_groups', 'Group_Library.txt'),
-            numParameters=12,
-            numLabels=1,
+            num_parameters=12,
+            num_labels=1,
             pattern=True,
         )
-        self.groups['gauche'] = ThermoGroups(label='gauche', name='Gauche Interaction Corrections').loadOld(
+        self.groups['gauche'] = ThermoGroups(label='gauche', name='Gauche Interaction Corrections').load_old(
             dictstr=os.path.join(path, 'thermo_groups', 'Gauche_Dictionary.txt'),
             treestr=os.path.join(path, 'thermo_groups', 'Gauche_Tree.txt'),
             libstr=os.path.join(path, 'thermo_groups', 'Gauche_Library.txt'),
-            numParameters=12,
-            numLabels=1,
+            num_parameters=12,
+            num_labels=1,
             pattern=True,
         )
-        self.groups['int15'] = ThermoGroups(label='int15', name='1,5-Interaction Corrections').loadOld(
+        self.groups['int15'] = ThermoGroups(label='int15', name='1,5-Interaction Corrections').load_old(
             dictstr=os.path.join(path, 'thermo_groups', '15_Dictionary.txt'),
             treestr=os.path.join(path, 'thermo_groups', '15_Tree.txt'),
             libstr=os.path.join(path, 'thermo_groups', '15_Library.txt'),
-            numParameters=12,
-            numLabels=1,
+            num_parameters=12,
+            num_labels=1,
             pattern=True,
         )
-        self.groups['radical'] = ThermoGroups(label='radical', name='Radical Corrections').loadOld(
+        self.groups['radical'] = ThermoGroups(label='radical', name='Radical Corrections').load_old(
             dictstr=os.path.join(path, 'thermo_groups', 'Radical_Dictionary.txt'),
             treestr=os.path.join(path, 'thermo_groups', 'Radical_Tree.txt'),
             libstr=os.path.join(path, 'thermo_groups', 'Radical_Library.txt'),
-            numParameters=12,
-            numLabels=1,
+            num_parameters=12,
+            num_labels=1,
             pattern=True,
         )
-        self.groups['ring'] = ThermoGroups(label='ring', name='Ring Corrections').loadOld(
+        self.groups['ring'] = ThermoGroups(label='ring', name='Ring Corrections').load_old(
             dictstr=os.path.join(path, 'thermo_groups', 'Ring_Dictionary.txt'),
             treestr=os.path.join(path, 'thermo_groups', 'Ring_Tree.txt'),
             libstr=os.path.join(path, 'thermo_groups', 'Ring_Library.txt'),
-            numParameters=12,
-            numLabels=1,
+            num_parameters=12,
+            num_labels=1,
             pattern=True,
         )
-        self.groups['polycyclic'] = ThermoGroups(label='other', name='Polycyclic Ring Corrections').loadOld(
+        self.groups['polycyclic'] = ThermoGroups(label='other', name='Polycyclic Ring Corrections').load_old(
             dictstr=os.path.join(path, 'thermo_groups', 'Polycyclic_Dictionary.txt'),
             treestr=os.path.join(path, 'thermo_groups', 'Polycyclic_Tree.txt'),
             libstr=os.path.join(path, 'thermo_groups', 'Polycyclic_Library.txt'),
-            numParameters=12,
-            numLabels=1,
+            num_parameters=12,
+            num_labels=1,
             pattern=True,
         )
-        self.groups['other'] = ThermoGroups(label='other', name='Other Corrections').loadOld(
+        self.groups['other'] = ThermoGroups(label='other', name='Other Corrections').load_old(
             dictstr=os.path.join(path, 'thermo_groups', 'Other_Dictionary.txt'),
             treestr=os.path.join(path, 'thermo_groups', 'Other_Tree.txt'),
             libstr=os.path.join(path, 'thermo_groups', 'Other_Library.txt'),
-            numParameters=12,
-            numLabels=1,
+            num_parameters=12,
+            num_labels=1,
             pattern=True,
         )
 
@@ -1088,7 +1088,7 @@ class ThermoDatabase(object):
             library_path = os.path.join(libraries_path, library.label)
             if not os.path.exists(library_path):
                 os.mkdir(library_path)
-            library.saveOld(
+            library.save_old(
                 dictstr=os.path.join(library_path, 'Dictionary.txt'),
                 treestr='',
                 libstr=os.path.join(library_path, 'Library.txt'),
@@ -1097,37 +1097,37 @@ class ThermoDatabase(object):
         groups_path = os.path.join(path, 'thermo_groups')
         if not os.path.exists(groups_path):
             os.mkdir(groups_path)
-        self.groups['group'].saveOld(
+        self.groups['group'].save_old(
             dictstr=os.path.join(groups_path, 'Group_Dictionary.txt'),
             treestr=os.path.join(groups_path, 'Group_Tree.txt'),
             libstr=os.path.join(groups_path, 'Group_Library.txt'),
         )
-        self.groups['gauche'].saveOld(
+        self.groups['gauche'].save_old(
             dictstr=os.path.join(groups_path, 'Gauche_Dictionary.txt'),
             treestr=os.path.join(groups_path, 'Gauche_Tree.txt'),
             libstr=os.path.join(groups_path, 'Gauche_Library.txt'),
         )
-        self.groups['int15'].saveOld(
+        self.groups['int15'].save_old(
             dictstr=os.path.join(groups_path, '15_Dictionary.txt'),
             treestr=os.path.join(groups_path, '15_Tree.txt'),
             libstr=os.path.join(groups_path, '15_Library.txt'),
         )
-        self.groups['radical'].saveOld(
+        self.groups['radical'].save_old(
             dictstr=os.path.join(groups_path, 'Radical_Dictionary.txt'),
             treestr=os.path.join(groups_path, 'Radical_Tree.txt'),
             libstr=os.path.join(groups_path, 'Radical_Library.txt'),
         )
-        self.groups['ring'].saveOld(
+        self.groups['ring'].save_old(
             dictstr=os.path.join(groups_path, 'Ring_Dictionary.txt'),
             treestr=os.path.join(groups_path, 'Ring_Tree.txt'),
             libstr=os.path.join(groups_path, 'Ring_Library.txt'),
         )
-        self.groups['polycyclic'].saveOld(
+        self.groups['polycyclic'].save_old(
             dictstr=os.path.join(groups_path, 'Polycyclic_Dictionary.txt'),
             treestr=os.path.join(groups_path, 'Polycyclic_Tree.txt'),
             libstr=os.path.join(groups_path, 'Polycyclic_Library.txt'),
         )
-        self.groups['other'].saveOld(
+        self.groups['other'].save_old(
             dictstr=os.path.join(groups_path, 'Other_Dictionary.txt'),
             treestr=os.path.join(groups_path, 'Other_Tree.txt'),
             libstr=os.path.join(groups_path, 'Other_Library.txt'),
@@ -2206,7 +2206,7 @@ class ThermoDatabase(object):
         # for each ring, save only the ring that is matches the most specific leaf in the tree.
         for atom in ring:
             atoms = {'*': atom}
-            entry = ring_database.descendTree(molecule, atoms)
+            entry = ring_database.descend_tree(molecule, atoms)
             matched_ring_entries.append(entry)
 
         if matched_ring_entries is []:
@@ -2300,7 +2300,7 @@ class ThermoDatabase(object):
         `thermoData`.
         The parameter `atom` is a dictionary of label-atom pairs like {'*',atom}
         """
-        node0 = database.descendTree(molecule, atom, None)
+        node0 = database.descend_tree(molecule, atom, None)
         if node0 is None:
             raise KeyError('Node not found in thermo database for atom {0} in molecule {1}.'.format(atom, molecule))
 
@@ -2352,7 +2352,7 @@ class ThermoDatabase(object):
         Determine the group additivity thermodynamic data for the atom `atom` in the structure `structure`,
         and REMOVE it from the existing thermo data `thermoData`.
         """
-        node0 = database.descendTree(molecule, atom, None)
+        node0 = database.descend_tree(molecule, atom, None)
         if node0 is None:
             raise KeyError('Node not found in database.')
 

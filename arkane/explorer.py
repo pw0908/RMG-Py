@@ -218,7 +218,7 @@ class ExplorerJob(object):
                         for spc in reaction_model.edge.species:
                             if spc in checked_species:
                                 continue
-                            if forbidden_structures.isMoleculeForbidden(spc.molecule[0]):
+                            if forbidden_structures.is_molecule_forbidden(spc.molecule[0]):
                                 reaction_model.removeSpeciesFromEdge(reaction_model.reactionSystems, spc)
                                 reaction_model.removeEmptyPdepNetworks()
                             else:
@@ -251,7 +251,7 @@ class ExplorerJob(object):
             rm_rxns = []
             for rxn in network.pathReactions:  # remove reactions with forbidden species
                 for r in rxn.reactants + rxn.products:
-                    if forbidden_structures.isMoleculeForbidden(r.molecule[0]):
+                    if forbidden_structures.is_molecule_forbidden(r.molecule[0]):
                         rm_rxns.append(rxn)
 
             for rxn in rm_rxns:

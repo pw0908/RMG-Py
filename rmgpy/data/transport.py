@@ -39,7 +39,7 @@ import os.path
 from copy import deepcopy
 
 import rmgpy.constants as constants
-from rmgpy.data.base import Database, Entry, makeLogicNode, DatabaseError
+from rmgpy.data.base import Database, Entry, make_logic_node, DatabaseError
 from rmgpy.molecule import Molecule, Group
 from rmgpy.transport import TransportData
 
@@ -184,7 +184,7 @@ class TransportGroups(Database):
                 group[0:4].upper() == 'AND{' or
                 group[0:7].upper() == 'NOT OR{' or
                 group[0:8].upper() == 'NOT AND{'):
-            item = makeLogicNode(group)
+            item = make_logic_node(group)
         else:
             item = Group().fromAdjacencyList(group)
         self.entries[label] = Entry(
@@ -513,7 +513,7 @@ class TransportDatabase(object):
         `criticalPointContribution`.
         """
 
-        node0 = database.descendTree(molecule, atom, None)
+        node0 = database.descend_tree(molecule, atom, None)
 
         if node0 is None:
             raise KeyError('Node not found in database.')

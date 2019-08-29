@@ -344,7 +344,7 @@ and immediately used in input files without any additional changes.
             except OSError:
                 pass
             library.save(os.path.join(path, label, 'reactions.py'))
-            library.saveDictionary(os.path.join(path, label, 'dictionary.txt'))
+            library.save_dictionary(os.path.join(path, label, 'dictionary.txt'))
 
     def loadOld(self, path):
         """
@@ -360,7 +360,7 @@ and immediately used in input files without any additional changes.
                     os.path.exists(os.path.join(root, 'reactions.txt')):
                 library = KineticsLibrary(label=root[len(libraries_path) + 1:], name=root[len(libraries_path) + 1:])
                 logging.warning("Loading {0}".format(root))
-                library.loadOld(root)
+                library.load_old(root)
                 self.libraries[library.label] = library
 
         for (root, dirs, files) in os.walk(os.path.join(path, 'kinetics_groups')):
@@ -369,7 +369,7 @@ and immediately used in input files without any additional changes.
                 label = os.path.split(root)[1]
                 family = KineticsFamily(label=label)
                 logging.warning("Loading {0}".format(root))
-                family.loadOld(root)
+                family.load_old(root)
                 self.families[family.label] = family
 
         return self
@@ -384,14 +384,14 @@ and immediately used in input files without any additional changes.
             os.mkdir(libraries_path)
         for library in self.libraries.values():
             library_path = os.path.join(libraries_path, library.label)
-            library.saveOld(library_path)
+            library.save_old(library_path)
 
         groups_path = os.path.join(path, 'kinetics_groups')
         if not os.path.exists(groups_path):
             os.mkdir(groups_path)
         for label, family in self.families.items():
             group_path = os.path.join(groups_path, label)
-            family.saveOld(group_path)
+            family.save_old(group_path)
 
         with open(os.path.join(path, 'kinetics_groups', 'families.txt'), 'w') as f:
             f.write("""

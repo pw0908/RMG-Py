@@ -43,7 +43,7 @@ from copy import deepcopy
 import numpy as np
 
 import rmgpy.constants as constants
-from rmgpy.data.base import Database, Entry, Group, LogicNode, getAllCombinations, makeLogicNode
+from rmgpy.data.base import Database, Entry, Group, LogicNode, get_all_combinations, make_logic_node
 from rmgpy.exceptions import KineticsError, UndeterminableKineticsError, DatabaseError
 from rmgpy.kinetics import Arrhenius, ArrheniusEP, KineticsData
 from rmgpy.species import Species
@@ -87,7 +87,7 @@ class KineticsGroups(Database):
                 group[0:4].upper() == 'AND{' or
                 group[0:7].upper() == 'NOT OR{' or
                 group[0:8].upper() == 'NOT AND{'):
-            item = makeLogicNode(group)
+            item = make_logic_node(group)
         else:
             item = Group().fromAdjacencyList(group)
 
@@ -148,7 +148,7 @@ class KineticsGroups(Database):
 
             atoms = r.getLabeledAtoms()
 
-            matched_node = self.descendTree(r, atoms, root=entry, strict=True)
+            matched_node = self.descend_tree(r, atoms, root=entry, strict=True)
 
             if matched_node is not None:
                 template.append(matched_node)
@@ -169,13 +169,13 @@ class KineticsGroups(Database):
                     # Match labeled atoms
                     # Check that this reactant has each of the atom labels in this group.
                     # If it is a LogicNode, the atom_list is empty and
-                    # it will proceed directly to the descendTree step.
+                    # it will proceed directly to the descend_tree step.
                     if not all([reactant.containsLabeledAtom(label) for label in atom_list]):
                         continue  # don't try to match this structure - the atoms aren't there!
                     # Match structures
                     atoms = reactant.getLabeledAtoms()
                     # Descend the tree, making sure to match atomlabels exactly using strict = True
-                    matched_node = self.descendTree(reactant, atoms, root=entry, strict=True)
+                    matched_node = self.descend_tree(reactant, atoms, root=entry, strict=True)
                     if matched_node is not None:
                         template.append(matched_node)
                     # else:
@@ -415,7 +415,7 @@ class KineticsGroups(Database):
                     groups = [group]
                     groups.extend(self.ancestors(group))
                     combinations.append(groups)
-                combinations = getAllCombinations(combinations)
+                combinations = get_all_combinations(combinations)
                 # Add a row to the matrix for each combination
                 for groups in combinations:
                     Arow = [1 if group in groups else 0 for group in group_list]
@@ -519,7 +519,7 @@ class KineticsGroups(Database):
                     groups = [group]
                     groups.extend(self.ancestors(group))
                     combinations.append(groups)
-                combinations = getAllCombinations(combinations)
+                combinations = get_all_combinations(combinations)
 
                 # Add a row to the matrix for each combination at each temperature
                 for t, T in enumerate(Tdata):
@@ -576,7 +576,7 @@ class KineticsGroups(Database):
                     groups = [group]
                     groups.extend(self.ancestors(group))
                     combinations.append(groups)
-                combinations = getAllCombinations(combinations)
+                combinations = get_all_combinations(combinations)
 
                 # Add a row to the matrix for each parameter
                 if (isinstance(kinetics, Arrhenius) or

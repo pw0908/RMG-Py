@@ -131,7 +131,7 @@ class KineticsDepository(Database):
 
         # Load the species in the kinetics library
         # Do not generate resonance structures, since training reactions may be written for a specific resonance form
-        species_dict = self.getSpecies(os.path.join(os.path.dirname(path), 'dictionary.txt'), resonance=False)
+        species_dict = self.get_species(os.path.join(os.path.dirname(path), 'dictionary.txt'), resonance=False)
         # Make sure all of the reactions draw from only this set
         entries = self.entries.values()
         for entry in entries:

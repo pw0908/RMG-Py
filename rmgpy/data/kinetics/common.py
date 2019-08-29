@@ -118,7 +118,7 @@ def saveEntry(f, entry):
 
     # Write reference
     if entry.reference is not None:
-        reference = entry.reference.toPrettyRepr()
+        reference = entry.reference.to_pretty_repr()
         lines = reference.splitlines()
         f.write('    reference = {0}\n'.format(lines[0]))
         for line in lines[1:-1]:

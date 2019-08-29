@@ -49,7 +49,7 @@ from sklearn.model_selection import KFold
 
 from rmgpy import settings
 from rmgpy.constraints import failsSpeciesConstraints
-from rmgpy.data.base import Database, Entry, LogicNode, LogicOr, ForbiddenStructures, getAllCombinations
+from rmgpy.data.base import Database, Entry, LogicNode, LogicOr, ForbiddenStructures, get_all_combinations
 from rmgpy.data.kinetics.common import saveEntry, find_degenerate_reactions, generate_molecule_combos, \
                                        ensure_independent_atom_ids
 from rmgpy.data.kinetics.depository import KineticsDepository
@@ -456,7 +456,7 @@ class KineticsFamily(Database):
     def __repr__(self):
         return '<ReactionFamily "{0}">'.format(self.label)
 
-    def loadOld(self, path):
+    def load_old(self, path):
         """
         Load an old-style RMG kinetics group additivity database from the
         location `path`.
@@ -469,12 +469,12 @@ class KineticsFamily(Database):
         self.groups = KineticsGroups(label='{0}/groups'.format(self.label))
         self.groups.name = self.groups.label
         try:
-            self.groups.loadOldDictionary(os.path.join(path, 'dictionary.txt'), pattern=True)
+            self.groups.load_old_dictionary(os.path.join(path, 'dictionary.txt'), pattern=True)
         except Exception:
             logging.error('Error while reading old kinetics family dictionary from {0!r}.'.format(path))
             raise
         try:
-            self.groups.loadOldTree(os.path.join(path, 'tree.txt'))
+            self.groups.load_old_tree(os.path.join(path, 'tree.txt'))
         except Exception:
             logging.error('Error while reading old kinetics family tree from {0!r}.'.format(path))
             raise
@@ -503,7 +503,7 @@ class KineticsFamily(Database):
         # Load forbidden structures if present
         try:
             if os.path.exists(os.path.join(path, 'forbiddenGroups.txt')):
-                self.forbidden = ForbiddenStructures().loadOld(os.path.join(path, 'forbiddenGroups.txt'))
+                self.forbidden = ForbiddenStructures().load_old(os.path.join(path, 'forbiddenGroups.txt'))
         except Exception:
             logging.error('Error while reading old kinetics family forbidden groups from {0!r}.'.format(path))
             raise
@@ -517,8 +517,8 @@ class KineticsFamily(Database):
         self.rules = KineticsRules(label='{0}/rules'.format(self.label))
         self.rules.name = self.rules.label
         try:
-            self.rules.loadOld(path, self.groups,
-                               numLabels=max(len(self.forwardTemplate.reactants), len(self.groups.top)))
+            self.rules.load_old(path, self.groups,
+                                num_labels=max(len(self.forwardTemplate.reactants), len(self.groups.top)))
         except Exception:
             logging.error('Error while reading old kinetics family rules from {0!r}.'.format(path))
             raise
@@ -569,7 +569,7 @@ class KineticsFamily(Database):
         finally:
             if ftemp: ftemp.close()
 
-    def saveOld(self, path):
+    def save_old(self, path):
         """
         Save the old RMG kinetics groups to the given `path` on disk.
         """
@@ -577,16 +577,16 @@ class KineticsFamily(Database):
                       " may be removed in version 2.3.", DeprecationWarning)
         if not os.path.exists(path): os.mkdir(path)
 
-        self.groups.saveOldDictionary(os.path.join(path, 'dictionary.txt'))
-        self.groups.saveOldTree(os.path.join(path, 'tree.txt'))
+        self.groups.save_old_dictionary(os.path.join(path, 'dictionary.txt'))
+        self.groups.save_old_tree(os.path.join(path, 'tree.txt'))
         # The old kinetics groups use rate rules (not group additivity values),
         # so we can't save the old rateLibrary.txt
         self.saveOldTemplate(os.path.join(path, 'reactionAdjList.txt'))
         # Save forbidden structures if present
         if self.forbidden is not None:
-            self.forbidden.saveOld(os.path.join(path, 'forbiddenGroups.txt'))
+            self.forbidden.save_old(os.path.join(path, 'forbiddenGroups.txt'))
 
-        self.rules.saveOld(path, self)
+        self.rules.save_old(path, self)
 
     def saveOldTemplate(self, path):
         """
@@ -790,7 +790,7 @@ class KineticsFamily(Database):
         """
         if not self.forbidden:
             self.forbidden = ForbiddenStructures()
-        self.forbidden.loadEntry(label=label, group=group, shortDesc=shortDesc, longDesc=longDesc)
+        self.forbidden.load_entry(label=label, group=group, shortDesc=shortDesc, longDesc=longDesc)
 
     def saveEntry(self, f, entry):
         """
@@ -826,7 +826,7 @@ class KineticsFamily(Database):
         dictionary_path = os.path.join(training_path, 'dictionary.txt')
 
         # Load the old set of the species of the training reactions
-        species_dict = Database().getSpecies(dictionary_path)
+        species_dict = Database().get_species(dictionary_path)
 
         # Add new unique species with labeledAtoms into species_dict
         for rxn in reactions:
@@ -916,14 +916,14 @@ class KineticsFamily(Database):
         Save the given kinetics family `depository` to the location `path` on
         disk.
         """
-        depository.saveDictionary(os.path.join(path, 'dictionary.txt'))
+        depository.save_dictionary(os.path.join(path, 'dictionary.txt'))
         depository.save(os.path.join(path, 'reactions.py'))
 
     def saveGroups(self, path):
         """
         Save the current database to the file at location `path` on disk. 
         """
-        entries = self.groups.getEntriesToSave()
+        entries = self.groups.get_entries_to_save()
 
         # Write the header
         f = codecs.open(path, 'w', 'utf-8')
@@ -976,7 +976,7 @@ class KineticsFamily(Database):
         if len(self.groups.top) > 0:
             f.write('tree(\n')
             f.write('"""\n')
-            f.write(self.generateOldTree(self.groups.top, 1))
+            f.write(self.generate_old_tree(self.groups.top, 1))
             f.write('"""\n')
             f.write(')\n\n')
 
@@ -985,7 +985,7 @@ class KineticsFamily(Database):
             entries = list(self.forbidden.entries.values())
             entries.sort(key=lambda x: x.label)
             for entry in entries:
-                self.forbidden.saveEntry(f, entry, name='forbidden')
+                self.forbidden.save_entry(f, entry, name='forbidden')
 
         f.close()
 
@@ -1021,7 +1021,7 @@ class KineticsFamily(Database):
                     logging.log(1, struct.toAdjacencyList())
 
         # Second, get all possible combinations of reactant structures
-        reactant_structures = getAllCombinations(reactant_structures)
+        reactant_structures = get_all_combinations(reactant_structures)
 
         # Third, generate all possible product structures by applying the
         # recipe to each combination of reactant structures
@@ -1603,7 +1603,7 @@ class KineticsFamily(Database):
         """
 
         # check family-specific forbidden structures 
-        if self.forbidden is not None and self.forbidden.isMoleculeForbidden(molecule):
+        if self.forbidden is not None and self.forbidden.is_molecule_forbidden(molecule):
             return True
 
         return False

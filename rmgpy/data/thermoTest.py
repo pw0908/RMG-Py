@@ -825,7 +825,7 @@ class TestCyclicThermo(unittest.TestCase):
         children = group_to_remove.children
 
         # remove the group
-        rad_group.removeGroup(group_to_remove)
+        rad_group.remove_group(group_to_remove)
 
         # afterwards group_to_remove should not be in the database or root's children
         self.assertNotIn(group_to_remove, list(rad_group.entries.values()))
@@ -847,7 +847,7 @@ class TestCyclicThermo(unittest.TestCase):
 
         # Remove an entry with a ThermoData object
         group_to_remove2 = rad_group.entries['CsJ']
-        rad_group.removeGroup(group_to_remove2)
+        rad_group.remove_group(group_to_remove2)
         # If group_to_remove was a data object, we point toward parent instead
         self.assertEqual(rad_group.entries['RJ2_triplet'].data, group_to_remove2.parent.label)
         # If the parent pointed toward group_to_remove, we need should have copied data object

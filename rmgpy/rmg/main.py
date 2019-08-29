@@ -552,7 +552,7 @@ class RMG(util.Subject):
 
         # Perform species constraints and forbidden species checks on input species
         for spec in self.initialSpecies:
-            if self.database.forbiddenStructures.isMoleculeForbidden(spec.molecule[0]):
+            if self.database.forbiddenStructures.is_molecule_forbidden(spec.molecule[0]):
                 if 'allowed' in self.speciesConstraints and 'input species' in self.speciesConstraints['allowed']:
                     logging.warning('Input species {0} is globally forbidden.  It will behave as an inert unless found '
                                     'in a seed mechanism or reaction library.'.format(spec.label))
@@ -1331,7 +1331,7 @@ class RMG(util.Subject):
                 except:
                     pass
                 kinetics_library.save(os.path.join(database_directory, 'kinetics', 'libraries', name, 'reactions.py'))
-                kinetics_library.saveDictionary(
+                kinetics_library.save_dictionary(
                     os.path.join(database_directory, 'kinetics', 'libraries', name, 'dictionary.txt'))
 
                 try:
@@ -1340,18 +1340,18 @@ class RMG(util.Subject):
                     pass
                 edge_kinetics_library.save(
                     os.path.join(database_directory, 'kinetics', 'libraries', name + '_edge', 'reactions.py'))
-                edge_kinetics_library.saveDictionary(
+                edge_kinetics_library.save_dictionary(
                     os.path.join(database_directory, 'kinetics', 'libraries', name + '_edge', 'dictionary.txt'))
 
             # save in output directory
             # Rename for the output directory, as these names should not be dynamic
             kinetics_library.name = 'seed'
             kinetics_library.save(os.path.join(seed_dir, 'seed', 'reactions.py'))
-            kinetics_library.saveDictionary(os.path.join(seed_dir, 'seed', 'dictionary.txt'))
+            kinetics_library.save_dictionary(os.path.join(seed_dir, 'seed', 'dictionary.txt'))
 
             edge_kinetics_library.name = 'seed_edge'
             edge_kinetics_library.save(os.path.join(seed_dir, 'seed_edge', 'reactions.py'))
-            edge_kinetics_library.saveDictionary(os.path.join(seed_dir, 'seed_edge', 'dictionary.txt'))
+            edge_kinetics_library.save_dictionary(os.path.join(seed_dir, 'seed_edge', 'dictionary.txt'))
 
             # Save the filter tensors
             if not os.path.exists(filter_dir):

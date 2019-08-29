@@ -39,7 +39,7 @@ import os.path
 from copy import deepcopy
 
 import rmgpy.constants as constants
-from rmgpy.data.base import Database, Entry, makeLogicNode, DatabaseError
+from rmgpy.data.base import Database, Entry, make_logic_node, DatabaseError
 from rmgpy.molecule import Molecule, Group, atomTypes
 from rmgpy.species import Species
 
@@ -416,7 +416,7 @@ class SoluteGroups(Database):
                 group[0:4].upper() == 'AND{' or
                 group[0:7].upper() == 'NOT OR{' or
                 group[0:8].upper() == 'NOT AND{'):
-            item = makeLogicNode(group)
+            item = make_logic_node(group)
         else:
             item = Group().fromAdjacencyList(group)
         self.entries[label] = Entry(
@@ -573,12 +573,12 @@ class SolvationDatabase(object):
             if (os.path.exists(os.path.join(root, 'Dictionary.txt')) and
                     os.path.exists(os.path.join(root, 'Library.txt'))):
                 library = SoluteLibrary(label=os.path.basename(root), name=os.path.basename(root))
-                library.loadOld(
+                library.load_old(
                     dictstr=os.path.join(root, 'Dictionary.txt'),
                     treestr='',
                     libstr=os.path.join(root, 'Library.txt'),
-                    numParameters=5,
-                    numLabels=1,
+                    num_parameters=5,
+                    num_labels=1,
                     pattern=False,
                 )
                 library.label = os.path.basename(root)
@@ -588,12 +588,12 @@ class SolvationDatabase(object):
         self.groups['abraham'] = SoluteGroups(
             label='abraham',
             name='Platts Group Additivity Values for Abraham Solute Descriptors'
-        ).loadOld(
+        ).load_old(
             dictstr=os.path.join(path, 'thermo_groups', 'Abraham_Dictionary.txt'),
             treestr=os.path.join(path, 'thermo_groups', 'Abraham_Tree.txt'),
             libstr=os.path.join(path, 'thermo_groups', 'Abraham_Library.txt'),
-            numParameters=5,
-            numLabels=1,
+            num_parameters=5,
+            num_labels=1,
             pattern=True,
         )
 
@@ -611,7 +611,7 @@ class SolvationDatabase(object):
             library_path = os.path.join(libraries_path, library.label)
             if not os.path.exists(library_path):
                 os.mkdir(library_path)
-            library.saveOld(
+            library.save_old(
                 dictstr=os.path.join(library_path, 'Dictionary.txt'),
                 treestr='',
                 libstr=os.path.join(library_path, 'Library.txt'),
@@ -620,7 +620,7 @@ class SolvationDatabase(object):
         groups_path = os.path.join(path, 'thermo_groups')
         if not os.path.exists(groups_path):
             os.mkdir(groups_path)
-        self.groups['abraham'].saveOld(
+        self.groups['abraham'].save_old(
             dictstr=os.path.join(groups_path, 'Abraham_Dictionary.txt'),
             treestr=os.path.join(groups_path, 'Abraham_Tree.txt'),
             libstr=os.path.join(groups_path, 'Abraham_Library.txt'),
@@ -866,7 +866,7 @@ class SolvationDatabase(object):
         `soluteData`.
         """
 
-        node0 = database.descendTree(molecule, atom, None)
+        node0 = database.descend_tree(molecule, atom, None)
 
         if node0 is None:
             raise KeyError('Node not found in database.')

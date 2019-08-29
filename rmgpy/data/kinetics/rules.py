@@ -42,7 +42,7 @@ from copy import deepcopy
 
 import numpy as np
 
-from rmgpy.data.base import Database, Entry, getAllCombinations
+from rmgpy.data.base import Database, Entry, get_all_combinations
 from rmgpy.data.kinetics.common import saveEntry
 from rmgpy.exceptions import KineticsError, DatabaseError
 from rmgpy.kinetics import ArrheniusEP, Arrhenius, StickingCoefficientBEP, SurfaceArrheniusBEP
@@ -216,14 +216,14 @@ class KineticsRules(Database):
 
         return ArrheniusEP(A=A, n=n, alpha=alpha, E0=E0, Tmin=Tmin, Tmax=Tmax), rank
 
-    def loadOld(self, path, groups, numLabels):
+    def load_old(self, path, groups, num_labels):
         """
         Load a set of old rate rules for kinetics groups into this depository.
         """
         warnings.warn("The old kinetics databases are no longer supported and may be"
                       " removed in version 2.3.", DeprecationWarning)
         # Parse the old library
-        entries = self.parseOldLibrary(os.path.join(path, 'rateLibrary.txt'), numParameters=10, numLabels=numLabels)
+        entries = self.parse_old_library(os.path.join(path, 'rateLibrary.txt'), num_parameters=10, num_labels=num_labels)
 
         self.entries = {}
         for entry in entries:
@@ -310,7 +310,7 @@ class KineticsRules(Database):
                 import pdb
                 pdb.set_trace()
 
-    def saveOld(self, path, groups):
+    def save_old(self, path, groups):
         """
         Save a set of old rate rules for kinetics groups from this depository.
         """
@@ -402,7 +402,7 @@ class KineticsRules(Database):
         entries.sort(key=lambda x: x.index)
         return entries
 
-    def getEntriesToSave(self):
+    def get_entries_to_save(self):
         """
         Return a sorted list of all of the entries in the rate rules database
         to save.
@@ -476,7 +476,7 @@ class KineticsRules(Database):
             if parent.children:
                 childrenSet = [[group] for group in rootTemplate]
                 childrenSet[i] = parent.children
-                childrenList.extend(getAllCombinations(childrenSet))
+                childrenList.extend(get_all_combinations(childrenSet))
                 distanceList.extend([k.nodalDistance for k in parent.children])
 
         if distanceList != []:  # average the minimum distance neighbors
