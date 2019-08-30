@@ -40,7 +40,7 @@ from copy import deepcopy
 import numpy as np
 
 import rmgpy
-from rmgpy.data.rmg import getDB
+from rmgpy.data.rmg import get_db
 from rmgpy.exceptions import InputError
 from rmgpy.rmg.main import RMG
 from rmgpy.rmg.model import CoreEdgeReactionModel
@@ -109,8 +109,8 @@ class ExplorerJob(object):
         if outputFile:
             reaction_model.pressureDependence.outputFile = os.path.dirname(outputFile)
 
-        kinetics_database = getDB('kinetics')
-        thermo_database = getDB('thermo')
+        kinetics_database = get_db('kinetics')
+        thermo_database = get_db('thermo')
 
         thermo_database.libraries['thermojobs'] = thermoLibrary
         thermo_database.libraryOrder.insert(0, 'thermojobs')
@@ -204,7 +204,7 @@ class ExplorerJob(object):
 
         # generate the network
 
-        forbidden_structures = getDB('forbidden')
+        forbidden_structures = get_db('forbidden')
         incomplete = True
         checked_species = []
 

@@ -46,7 +46,7 @@ from rmgpy.constraints import failsSpeciesConstraints
 from rmgpy.data.kinetics.depository import DepositoryReaction
 from rmgpy.data.kinetics.family import KineticsFamily, TemplateReaction
 from rmgpy.data.kinetics.library import KineticsLibrary, LibraryReaction
-from rmgpy.data.rmg import getDB
+from rmgpy.data.rmg import get_db
 from rmgpy.display import display
 from rmgpy.exceptions import ForbiddenStructureException
 from rmgpy.kinetics import KineticsData, Arrhenius
@@ -838,12 +838,12 @@ class CoreEdgeReactionModel:
         retrieve the best kinetics for the reaction and apply it towards the forward 
         or reverse direction (if reverse, flip the direaction).
         """
-        from rmgpy.data.rmg import getDB
+        from rmgpy.data.rmg import get_db
         # Find the reaction kinetics
         kinetics, source, entry, is_forward = self.generateKinetics(reaction)
         # Flip the reaction direction if the kinetics are defined in the reverse direction
         if not is_forward:
-            family = getDB('kinetics').families[reaction.family]
+            family = get_db('kinetics').families[reaction.family]
             reaction.reactants, reaction.products = reaction.products, reaction.reactants
             reaction.pairs = [(p, r) for r, p in reaction.pairs]
             if family.ownReverse and hasattr(reaction, 'reverse'):
@@ -1021,7 +1021,7 @@ class CoreEdgeReactionModel:
 
         assert spec not in self.core.species, "Tried to add species {0} to core, but it's already there".format(spec.label)
 
-        forbidden_structures = getDB('forbidden')
+        forbidden_structures = get_db('forbidden')
 
         # check RMG globally forbidden structures
         if not spec.explicitlyAllowed and forbidden_structures.is_molecule_forbidden(spec.molecule[0]):

@@ -149,8 +149,8 @@ class Database(object):
     extensibility behind the database development.
 
     You must derive from this class and implement the :meth:`load_entry`,
-    :meth:`save_entry`, :meth:`processOldLibraryEntry`, and
-    :meth:`generateOldLibraryEntry` methods in order to load and save from the
+    :meth:`save_entry`, :meth:`process_old_library_entry`, and
+    :meth:`generate_old_library_entry` methods in order to load and save from the
     new and old database formats.
     """
 

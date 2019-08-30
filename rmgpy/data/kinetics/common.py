@@ -329,8 +329,8 @@ def find_degenerate_reactions(rxn_list, same_reactants=None, template=None, kine
             try:
                 family = kinetics_family or kinetics_database.families[rxn.family]
             except AttributeError:
-                from rmgpy.data.rmg import getDB
-                family = getDB('kinetics').families[rxn.family]
+                from rmgpy.data.rmg import get_db
+                family = get_db('kinetics').families[rxn.family]
             if not family.ownReverse:
                 rxn.degeneracy = family.calculateDegeneracy(rxn)
 

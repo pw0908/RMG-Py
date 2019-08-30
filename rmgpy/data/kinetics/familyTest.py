@@ -673,7 +673,7 @@ class TestTreeGeneration(unittest.TestCase):
             solvation=False,
             testing=True,
         )
-        cls.database.loadForbiddenStructures()
+        cls.database.load_forbidden_structures()
 
         cls.thermoDatabase = ThermoDatabase()  # the real full Thermo Database
         cls.thermoDatabase.load(path=os.path.join(settings['database.directory'], 'thermo'),
@@ -836,7 +836,7 @@ class TestGenerateReactions(unittest.TestCase):
             solvation=False,
             testing=True,
         )
-        cls.database.loadForbiddenStructures()
+        cls.database.load_forbidden_structures()
 
     @classmethod
     def tearDownClass(cls):

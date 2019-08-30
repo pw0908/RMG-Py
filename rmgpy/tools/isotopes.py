@@ -47,7 +47,7 @@ import rmgpy.constants as constants
 import rmgpy.molecule.element
 from rmgpy.chemkin import ChemkinWriter
 from rmgpy.data.kinetics.family import TemplateReaction
-from rmgpy.data.rmg import getDB
+from rmgpy.data.rmg import get_db
 from rmgpy.data.thermo import findCp0andCpInf
 from rmgpy.kinetics.arrhenius import MultiArrhenius
 from rmgpy.molecule import Molecule
@@ -229,8 +229,8 @@ def generate_isotope_reactions(isotopeless_reactions, isotopes):
         for pair in reactant_pairs:
             # copy species so they don't get modified
             species_tuple = tuple([spc.copy(deep=True) for spc in pair])
-            unfiltered_rxns = getDB('kinetics').generate_reactions_from_families(species_tuple,
-                                                                                 only_families=[rxn.family])
+            unfiltered_rxns = get_db('kinetics').generate_reactions_from_families(species_tuple,
+                                                                                  only_families=[rxn.family])
             # remove reactions whose products don't match the original reactions
             rxn_index5 = 0
             while rxn_index5 < len(unfiltered_rxns):
@@ -435,7 +435,7 @@ def ensure_reaction_direction(isotopomerRxns):
 
     # find isotopeless reaction as standard
     reference = isotopomerRxns[0]
-    family = getDB('kinetics').families[reference.family]
+    family = get_db('kinetics').families[reference.family]
     if family.ownReverse:
         for rxn in isotopomerRxns:
             if not compare_isotopomers(rxn, reference, eitherDirection=False):

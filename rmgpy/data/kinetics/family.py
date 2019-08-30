@@ -3526,8 +3526,8 @@ class KineticsFamily(Database):
         kf = KFold(folds, shuffle=True, random_state=random_state)
 
         if thermoDatabase is None:
-            from rmgpy.data.rmg import getDB
-            tdb = getDB('thermo')
+            from rmgpy.data.rmg import get_db
+            tdb = get_db('thermo')
         else:
             tdb = thermoDatabase
 
@@ -3817,8 +3817,8 @@ class KineticsFamily(Database):
 
         if estimateThermo:
             if thermoDatabase is None:
-                from rmgpy.data.rmg import getDB
-                tdb = getDB('thermo')
+                from rmgpy.data.rmg import get_db
+                tdb = get_db('thermo')
             else:
                 tdb = thermoDatabase
 

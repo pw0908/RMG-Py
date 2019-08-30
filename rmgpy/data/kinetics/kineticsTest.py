@@ -807,7 +807,7 @@ class TestKinetics(unittest.TestCase):
         """
         tests that the addReverseAttribute method gets the reverse degeneracy correct
         """
-        from rmgpy.data.rmg import getDB
+        from rmgpy.data.rmg import get_db
         from rmgpy.data.kinetics.family import TemplateReaction
         adjlist = [
             '''
@@ -855,7 +855,7 @@ class TestKinetics(unittest.TestCase):
             9 H u0 p0 c0 {3,S}
             '''
         ]
-        family = getDB('kinetics').families['H_Abstraction']
+        family = get_db('kinetics').families['H_Abstraction']
         r1 = Species(molecule=[Molecule().fromAdjacencyList(adjlist[0])])
         r2 = Species(molecule=[Molecule().fromAdjacencyList(adjlist[1])])
         p1 = Species(molecule=[Molecule().fromAdjacencyList(adjlist[2])])
@@ -877,7 +877,7 @@ class TestKinetics(unittest.TestCase):
         tests that the calculateDegeneracy method gets the degeneracy correct for unreactive molecules
         and that __generateReactions work correctly with the react_non_reactive flag set to `True`.
         """
-        from rmgpy.data.rmg import getDB
+        from rmgpy.data.rmg import get_db
         from rmgpy.data.kinetics.family import TemplateReaction
 
         adjlist = ['''
@@ -892,7 +892,7 @@ class TestKinetics(unittest.TestCase):
         2 N u0 p2 c-1 {1,D}
         3 H u0 p0 c0 {1,S}''']
 
-        family = getDB('kinetics').families['R_Recombination']
+        family = get_db('kinetics').families['R_Recombination']
         r1 = Species(molecule=[Molecule().fromAdjacencyList(adjlist[0])])
         r2 = Species(molecule=[Molecule().fromAdjacencyList(adjlist[1])])  # r2 is not the representative structure of
         # NO, but it is the correct structure participating in this reaction
@@ -1004,7 +1004,7 @@ class TestKinetics(unittest.TestCase):
     def test_add_atom_labels_for_reaction(self):
         """Test that addAtomLabelsForReaction can identify reactions with resonance
         The molecule [CH]=C=C has resonance in this reaction"""
-        from rmgpy.data.rmg import getDB
+        from rmgpy.data.rmg import get_db
         reactants = [
             Molecule().fromSMILES('C=C=C'),
             Molecule().fromSMILES('[CH]=C=C'),
@@ -1017,7 +1017,7 @@ class TestKinetics(unittest.TestCase):
                                     products=products,
                                     family='H_Abstraction')
         reaction.ensure_species(reactant_resonance=True, product_resonance=True)
-        family = getDB('kinetics').families['H_Abstraction']
+        family = get_db('kinetics').families['H_Abstraction']
         family.addAtomLabelsForReaction(reaction, output_with_resonance=False)
 
         # test that the reaction has labels
@@ -1045,7 +1045,7 @@ class TestKinetics(unittest.TestCase):
     def test_add_atom_labels_for_reaction_2(self):
         """Test that addAtomLabelsForReaction can identify reactions with identical references
         The molecule [CH]=C=C has resonance in this reaction"""
-        from rmgpy.data.rmg import getDB
+        from rmgpy.data.rmg import get_db
         s1 = Species().fromSMILES('C=C=C')
         s2 = Species().fromSMILES('C=C=[CH]')
         s3 = Species().fromSMILES('C#CC')
@@ -1055,7 +1055,7 @@ class TestKinetics(unittest.TestCase):
         reaction = TemplateReaction(reactants=reactants,
                                     products=products,
                                     family='H_Abstraction')
-        family = getDB('kinetics').families['H_Abstraction']
+        family = get_db('kinetics').families['H_Abstraction']
         print(reaction.reactants)
         print(reaction.products)
         family.addAtomLabelsForReaction(reaction, output_with_resonance=False)
@@ -1084,7 +1084,7 @@ class TestKinetics(unittest.TestCase):
 
     def test_add_atom_labels_for_reaction_3(self):
         """Test that addAtomLabelsForReaction can identify reactions with resonance and isotopes"""
-        from rmgpy.data.rmg import getDB
+        from rmgpy.data.rmg import get_db
         mr0 = Molecule().fromAdjacencyList('1    C u0 p0 c0 i13 {3,D} {4,S} {5,S}\n2 *1 C u0 p0 c0 {3,D} {6,S} {7,S}\n3    C u0 p0 c0 {1,D} {2,D}\n4    H u0 p0 c0 {1,S}\n5    H u0 p0 c0 {1,S}\n6    H u0 p0 c0 {2,S}\n7 *4 H u0 p0 c0 {2,S}\n')
         mr1a = Molecule().fromAdjacencyList('multiplicity 2\n1    C u0 p0 c0 i13 {2,D} {4,S} {5,S}\n2    C u0 p0 c0 {1,D} {3,D}\n3 *1 C u1 p0 c0 {2,D} {6,S}\n4    H u0 p0 c0 {1,S}\n5    H u0 p0 c0 {1,S}\n6    H u0 p0 c0 {3,S}\n')
         mr1b = Molecule().fromAdjacencyList('multiplicity 2\n1    C u1 p0 c0 i13 {2,S} {4,S} {5,S}\n2    C u0 p0 c0 {1,S} {3,T}\n3 *1 C u0 p0 c0 {2,T} {6,S}\n4    H u0 p0 c0 {1,S}\n5    H u0 p0 c0 {1,S}\n6    H u0 p0 c0 {3,S}\n')
@@ -1098,7 +1098,7 @@ class TestKinetics(unittest.TestCase):
         reaction = TemplateReaction(reactants=reactants,
                                     products=products,
                                     family='H_Abstraction')
-        family = getDB('kinetics').families['H_Abstraction']
+        family = get_db('kinetics').families['H_Abstraction']
         print(reaction.reactants)
         print(reaction.products)
         family.addAtomLabelsForReaction(reaction, output_with_resonance=False)

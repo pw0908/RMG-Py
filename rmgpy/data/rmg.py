@@ -91,23 +91,23 @@ class RMGDatabase(object):
 
         Argument testing will load a lighter version of the database used for unit-tests
         """
-        self.loadThermo(os.path.join(path, 'thermo'), thermoLibraries, depository)
+        self.load_thermo(os.path.join(path, 'thermo'), thermoLibraries, depository)
         if not testing:
-            self.loadTransport(os.path.join(path, 'transport'), transportLibraries)
-            self.loadForbiddenStructures(os.path.join(path, 'forbiddenStructures.py'))
-        self.loadKinetics(os.path.join(path, 'kinetics'),
-                          reactionLibraries,
-                          seedMechanisms,
-                          kineticsFamilies,
-                          kineticsDepositories
-                          )
+            self.load_transport(os.path.join(path, 'transport'), transportLibraries)
+            self.load_forbidden_structures(os.path.join(path, 'forbiddenStructures.py'))
+        self.load_kinetics(os.path.join(path, 'kinetics'),
+                           reactionLibraries,
+                           seedMechanisms,
+                           kineticsFamilies,
+                           kineticsDepositories
+                           )
         if not testing:
-            self.loadStatmech(os.path.join(path, 'statmech'), statmechLibraries, depository)
+            self.load_statmech(os.path.join(path, 'statmech'), statmechLibraries, depository)
 
         if solvation:
-            self.loadSolvation(os.path.join(path, 'solvation'))
+            self.load_solvation(os.path.join(path, 'solvation'))
 
-    def loadThermo(self, path, thermoLibraries=None, depository=True):
+    def load_thermo(self, path, thermoLibraries=None, depository=True):
         """
         Load the RMG thermo database from the given `path` on disk, where
         `path` points to the top-level folder of the RMG thermo database.
@@ -115,7 +115,7 @@ class RMGDatabase(object):
         self.thermo = ThermoDatabase()
         self.thermo.load(path, thermoLibraries, depository)
 
-    def loadTransport(self, path, transportLibraries=None):
+    def load_transport(self, path, transportLibraries=None):
         """
         Load the RMG transport database from the given 'path' on disk, where 
         'path' points to the top-level folder of the RMG transport database.
@@ -123,7 +123,7 @@ class RMGDatabase(object):
         self.transport = TransportDatabase()
         self.transport.load(path, transportLibraries)
 
-    def loadForbiddenStructures(self, path=None):
+    def load_forbidden_structures(self, path=None):
         """
         Load the RMG forbidden structures from the given `path` on disk, where
         `path` points to the forbidden structures file.
@@ -134,13 +134,13 @@ class RMGDatabase(object):
         if path is not None:
             self.forbiddenStructures.load(path)
 
-    def loadKinetics(self,
-                     path,
-                     reactionLibraries=None,
-                     seedMechanisms=None,
-                     kineticsFamilies=None,
-                     kineticsDepositories=None
-                     ):
+    def load_kinetics(self,
+                      path,
+                      reactionLibraries=None,
+                      seedMechanisms=None,
+                      kineticsFamilies=None,
+                      kineticsDepositories=None
+                      ):
         """
         Load the RMG kinetics database from the given `path` on disk, where
         `path` points to the top-level folder of the RMG kinetics database.
@@ -166,7 +166,7 @@ class RMGDatabase(object):
                            depositories=kineticsDepositories
                            )
 
-    def loadSolvation(self, path):
+    def load_solvation(self, path):
         """
         Load the RMG solvation database from the given `path` on disk, where
         `path` points to the top-level folder of the RMG solvation database.
@@ -174,7 +174,7 @@ class RMGDatabase(object):
         self.solvation = SolvationDatabase()
         self.solvation.load(path)
 
-    def loadStatmech(self, path, statmechLibraries=None, depository=True):
+    def load_statmech(self, path, statmechLibraries=None, depository=True):
         """
         Load the RMG statmech database from the given `path` on disk, where
         `path` points to the top-level folder of the RMG statmech database.
@@ -182,7 +182,7 @@ class RMGDatabase(object):
         self.statmech = StatmechDatabase()
         self.statmech.load(path, statmechLibraries, depository)
 
-    def loadOld(self, path):
+    def load_old(self, path):
         """
         Load the old RMG database from the given `path` on disk, where `path`
         points to the top-level folder of the old RMG database.
@@ -228,7 +228,7 @@ class RMGDatabase(object):
         self.statmech.save_old(path)
 
 
-def getDB(name=''):
+def get_db(name=''):
     """
     Returns the RMG database object that corresponds
     to the parameter name.

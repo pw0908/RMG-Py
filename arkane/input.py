@@ -39,7 +39,7 @@ import numpy as np
 
 from rmgpy import settings
 from rmgpy.data.rmg import RMGDatabase
-from rmgpy.data.rmg import getDB
+from rmgpy.data.rmg import get_db
 from rmgpy.exceptions import InputError, DatabaseError
 from rmgpy.kinetics.arrhenius import Arrhenius
 from rmgpy.kinetics.model import PDepKineticsModel, TunnelingModel
@@ -116,7 +116,7 @@ def database(thermoLibraries=None, transportLibraries=None, reactionLibraries=No
                 "['H_Abstraction','R_Recombination'] or ['!Intra_Disproportionation'].")
         kineticsFamilies = kineticsFamilies
 
-    rmg_database = getDB() or RMGDatabase()
+    rmg_database = get_db() or RMGDatabase()
 
     rmg_database.load(
         path=databaseDirectory,
@@ -215,7 +215,7 @@ def species(label, *args, **kwargs):
                 raise InputError('Neither thermo, E0, species file path, nor structure specified, cannot estimate'
                                  ' thermo properties of species {0}'.format(spec.label))
             try:
-                db = getDB('thermo')
+                db = get_db('thermo')
                 if db is None:
                     raise DatabaseError('Thermo database is None.')
             except DatabaseError:
@@ -319,7 +319,7 @@ def reaction(label, reactants, products, transitionState=None, kinetics=None, tu
         if not all([m.molecule != [] for m in rxn.reactants + rxn.products]):
             raise ValueError('chemical structures of reactants and products not available for RMG estimation of '
                              'reaction {0}'.format(label))
-        db = getDB('kinetics')
+        db = get_db('kinetics')
         rxns = db.generate_reactions_from_libraries(reactants=rxn.reactants, products=rxn.products)
         rxns = [r for r in rxns if r.elementary_high_p]
 
@@ -544,8 +544,8 @@ def loadNecessaryDatabases():
 
     # only load if they are not there already.
     try:
-        getDB('transport')
-        getDB('statmech')
+        get_db('transport')
+        get_db('statmech')
     except DatabaseError:
         logging.info("Databases not found. Making databases")
         db = RMGDatabase()

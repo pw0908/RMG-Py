@@ -513,13 +513,13 @@ class RMG(util.Subject):
 
         # Do all liquid-phase startup things:
         if self.solvent:
-            solvent_data = self.database.solvation.getSolventData(self.solvent)
+            solvent_data = self.database.solvation.get_solvent_data(self.solvent)
             diffusionLimiter.enable(solvent_data, self.database.solvation)
             logging.info("Setting solvent data for {0}".format(self.solvent))
 
             # Set solvent viscosity for reaction filtering
             for reactionSystem in self.reactionSystems:
-                reactionSystem.viscosity = solvent_data.getSolventViscosity(reactionSystem.T.value_si)
+                reactionSystem.viscosity = solvent_data.get_solvent_viscosity(reactionSystem.T.value_si)
 
         try:
             self.wallTime = kwargs['walltime']
@@ -570,9 +570,9 @@ class RMG(util.Subject):
 
         # For liquidReactor, checks whether the solvent is listed as one of the initial species.
         if self.solvent:
-            solvent_structure_list = self.database.solvation.getSolventStructure(self.solvent)
+            solvent_structure_list = self.database.solvation.get_solvent_structure(self.solvent)
             for spc in solvent_structure_list:
-                self.database.solvation.checkSolventinInitialSpecies(self, spc)
+                self.database.solvation.check_solvent_in_initial_species(self, spc)
 
         # Check to see if user has input Singlet O2 into their input file or libraries
         # This constraint is special in that we only want to check it once in the input instead of every time a species is made

@@ -63,7 +63,7 @@ def setUpModule():
         depository=False,
         solvation=False,
     )
-    database.loadForbiddenStructures()
+    database.load_forbidden_structures()
 
     # Prepare the database by loading training reactions and averaging the rate rules
     for family in database.kinetics.families.values():

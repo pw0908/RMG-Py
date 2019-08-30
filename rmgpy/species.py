@@ -738,9 +738,9 @@ class Species(object):
         """
         Generate the transportData parameters for the species.
         """
-        from rmgpy.data.rmg import getDB
+        from rmgpy.data.rmg import get_db
         try:
-            transport_db = getDB('transport')
+            transport_db = get_db('transport')
             if not transport_db: raise Exception
         except Exception:
             logging.debug('Could not obtain the transport database. Not generating transport...')
@@ -767,9 +767,9 @@ class Species(object):
         :meth:`generateThermoData()`.
         """
         logging.debug("Generating statmech for species {}".format(self.label))
-        from rmgpy.data.rmg import getDB
+        from rmgpy.data.rmg import get_db
         try:
-            statmech_db = getDB('statmech')
+            statmech_db = get_db('statmech')
             if not statmech_db: raise Exception
         except Exception:
             logging.debug('Could not obtain the stat. mech database. Not generating stat. mech...')
