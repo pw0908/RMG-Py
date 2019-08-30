@@ -72,7 +72,7 @@ def save_entry(f, entry):
         f.write('        Pc = {0!r},\n'.format(entry.data.Pc))
         f.write('        Vc = {0!r},\n'.format(entry.data.Vc))
         f.write('        Tb = {0!r},\n'.format(entry.data.Tb))
-        f.write('        structure_index = {0!r},\n'.format(entry.data.structure_index))
+        f.write('        structureIndex = {0!r},\n'.format(entry.data.structureIndex))
         f.write('    ),\n')
     elif entry.data is None:
         f.write('    transportGroup = None,\n')
@@ -475,7 +475,7 @@ class TransportDatabase(object):
             Pc=0,
             Vc=0,
             Tb=0,
-            structure_index=0,
+            structureIndex=0,
         )
 
         # Generate estimate of critical point contribution data
@@ -495,7 +495,7 @@ class TransportDatabase(object):
         Vc = 17.5 + group_data.Vc
         Tc = Tb / (0.584 + 0.965 * group_data.Tc - (group_data.Tc * group_data.Tc))
         Pc = 1 / (0.113 + 0.0032 * num_atoms + group_data.Pc) ** 2
-        is_linear = (group_data.structure_index == 0)
+        is_linear = (group_data.structureIndex == 0)
 
         critical_point = CriticalPoint(
             Tc=Tc,
@@ -594,7 +594,7 @@ class TransportDatabase(object):
 
 class CriticalPoint(object):
     """
-    The critical properties of the species (and structure_index)
+    The critical properties of the species (and structureIndex)
     """
 
     def __init__(self, Tc=None, Pc=None, Vc=None, Tb=None, linear=None):
@@ -618,19 +618,19 @@ class CriticalPoint(object):
 class CriticalPointGroupContribution(object):
     """Joback group contribution to estimate critical properties"""
 
-    def __init__(self, Tc=None, Pc=None, Vc=None, Tb=None, structure_index=None):
+    def __init__(self, Tc=None, Pc=None, Vc=None, Tb=None, structureIndex=None):
         self.Tc = Tc
         self.Pc = Pc
         self.Vc = Vc
         self.Tb = Tb
-        self.structure_index = structure_index  # 0 if linear, 1 if makes molecule nonlinear
+        self.structureIndex = structureIndex  # 0 if linear, 1 if makes molecule nonlinear
 
     def __repr__(self):
         """
         Return a string representation that can be used to reconstruct the
         CriticalPointGroupContribution object
         """
-        string = 'CriticalPointGroupContribution(Tc={0!r}, Pc={1!r}, Vc={2!r}, Tb={3!r}, structure_index={4!r}'.format(
-            self.Tc, self.Pc, self.Vc, self.Tb, self.structure_index)
+        string = 'CriticalPointGroupContribution(Tc={0!r}, Pc={1!r}, Vc={2!r}, Tb={3!r}, structureIndex={4!r}'.format(
+            self.Tc, self.Pc, self.Vc, self.Tb, self.structureIndex)
         string += ')'
         return string

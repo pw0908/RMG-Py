@@ -653,7 +653,7 @@ multiplicity 2
         """
         family = self.database.families['R_Recombination']
         spc = Molecule().fromSMILES("[CH2]CC[CH2]")
-        out = family._KineticsFamily__generateReactions(reactants=[spc], forward=True)
+        out = family._generate_reactions(reactants=[spc], forward=True)
         self.assertEqual(out, [])
 
 
@@ -687,7 +687,7 @@ class TestTreeGeneration(unittest.TestCase):
             ],
         )
         cls.family = cls.kineticsDatabase.families['Singlet_Carbene_Intra_Disproportionation']
-        cls.treerxns = cls.family.get_training_set(thermoDatabase=cls.thermoDatabase, remove_degeneracy=True,
+        cls.treerxns = cls.family.get_training_set(thermo_database=cls.thermoDatabase, remove_degeneracy=True,
                                                    estimate_thermo=True, fix_labels=True, get_reverse=True)
 
     @classmethod
@@ -742,7 +742,7 @@ class TestTreeGeneration(unittest.TestCase):
         """
         test that there are six rules and each is under a different group
         """
-        template_rxn_map = self.family.get_reaction_matches(thermoDatabase=self.thermoDatabase, remove_degeneracy=True)
+        template_rxn_map = self.family.get_reaction_matches(thermo_database=self.thermoDatabase, remove_degeneracy=True)
         self.family.make_bm_rules_from_template_rxn_map(template_rxn_map)
 
         c = 0
@@ -757,7 +757,7 @@ class TestTreeGeneration(unittest.TestCase):
         """
         test that appropriate regularization dimensions have been identified
         """
-        template_rxn_map = self.family.get_reaction_matches(thermoDatabase=self.database.thermo, estimate_thermo=False)
+        template_rxn_map = self.family.get_reaction_matches(thermo_database=self.database.thermo, estimate_thermo=False)
 
         for entry in self.family.groups.entries.values():
             if entry.children == []:
@@ -814,7 +814,7 @@ class TestTreeGeneration(unittest.TestCase):
         self.family.clean_tree()
         self.family.generate_tree(thermo_database=self.thermoDatabase, rxns=self.treerxns)
         self.family.check_tree()
-        self.family.regularize(thermoDatabase=self.thermoDatabase, rxns=self.treerxns)
+        self.family.regularize(thermo_database=self.thermoDatabase, rxns=self.treerxns)
         self.family.check_tree()
 
 

@@ -264,19 +264,19 @@ class TestSoluteDatabase(TestCase):
 
         # Case 1: When the solventDatabase does not contain the solvent SMILES, the item attribute is None
         solventlibrary = SolventLibrary()
-        solventlibrary.loadEntry(index=1, label='water', solvent=None)
+        solventlibrary.load_entry(index=1, label='water', solvent=None)
         self.assertTrue(solventlibrary.entries['water'].item is None)
 
         # Case 2: When the solventDatabase contains the correct solvent SMILES, the item attribute is the instance of
         # Species with the correct solvent molecular structure
-        solventlibrary.loadEntry(index=2, label='octane', solvent=None, molecule='CCCCCCCC')
+        solventlibrary.load_entry(index=2, label='octane', solvent=None, molecule='CCCCCCCC')
         solvent_species = Species().fromSMILES('C(CCCCC)CC')
         self.assertTrue(solvent_species.isIsomorphic(solventlibrary.entries['octane'].item[0]))
 
         # Case 3: When the solventDatabase contains the correct solvent adjacency list, the item attribute
         # is the instance of the species with the correct solvent molecular structure.
         # This will display the SMILES Parse Error message from the external function, but ignore it.
-        solventlibrary.loadEntry(index=3, label='ethanol', solvent=None, molecule="""
+        solventlibrary.load_entry(index=3, label='ethanol', solvent=None, molecule="""
         1 C u0 p0 c0 {2,S} {4,S} {5,S} {6,S}
         2 C u0 p0 c0 {1,S} {3,S} {7,S} {8,S}
         3 O u0 p2 c0 {2,S} {9,S}
@@ -292,10 +292,10 @@ class TestSoluteDatabase(TestCase):
 
         # Case 4: when the solventDatabase contains incorrect values for the molecule attribute, it raises Exception
         # This will display the SMILES Parse Error message from the external function, but ignore it.
-        self.assertRaises(Exception, solventlibrary.loadEntry, index=4, label='benzene', solvent=None, molecule='ring')
+        self.assertRaises(Exception, solventlibrary.load_entry, index=4, label='benzene', solvent=None, molecule='ring')
 
         # Case 5: when the solventDatabase contains data for co-solvents.
-        solventlibrary.loadEntry(index=5, label='methanol_50_water_50', solvent=None, molecule=['CO', 'O'])
+        solventlibrary.load_entry(index=5, label='methanol_50_water_50', solvent=None, molecule=['CO', 'O'])
         solvent_species_list = [Species().fromSMILES('CO'), Species().fromSMILES('O')]
         self.assertEqual(len(solventlibrary.entries['methanol_50_water_50'].item), 2)
         for spc1 in solventlibrary.entries['methanol_50_water_50'].item:

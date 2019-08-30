@@ -75,7 +75,7 @@ def setUpModule():
 
     # Prepare the database by loading training reactions and averaging the rate rules
     for family in database.kinetics.families.values():
-        family.add_rules_from_training(thermoDatabase=database.thermo)
+        family.add_rules_from_training(thermo_database=database.thermo)
         family.fill_rules_by_averaging_up(verbose=True)
 
 
@@ -420,9 +420,9 @@ class TestReactionDegeneracy(unittest.TestCase):
         mol_d = Molecule().fromSMILES('C=CC')
 
         family = database.kinetics.families['Disproportionation']
-        reaction_list = family._KineticsFamily__generateReactions([mol_a, mol_b], products=[mol_c, mol_d])
+        reaction_list = family._generate_reactions([mol_a, mol_b], products=[mol_c, mol_d])
 
-        swapped_reaction_list = family._KineticsFamily__generateReactions([mol_b, mol_a], products=[mol_c, mol_d])
+        swapped_reaction_list = family._generate_reactions([mol_b, mol_a], products=[mol_c, mol_d])
 
         # eliminate rxns that do not match products
         templates = {}
@@ -556,10 +556,10 @@ class TestReactionDegeneracy(unittest.TestCase):
         mol_d.assignAtomIDs()
 
         # generate reactions in both directions
-        forward_reactions = family._KineticsFamily__generateReactions([mol_a, mol_b], products=[mol_c, mol_d],
-                                                                      forward=True)
-        reverse_reactions = family._KineticsFamily__generateReactions([mol_c, mol_d], products=[mol_a, mol_b],
-                                                                      forward=False)
+        forward_reactions = family._generate_reactions([mol_a, mol_b], products=[mol_c, mol_d],
+                                                       forward=True)
+        reverse_reactions = family._generate_reactions([mol_c, mol_d], products=[mol_a, mol_b],
+                                                       forward=False)
 
         forward_reactions = find_degenerate_reactions(forward_reactions)
         reverse_reactions = find_degenerate_reactions(reverse_reactions)

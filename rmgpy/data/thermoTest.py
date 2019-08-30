@@ -104,7 +104,7 @@ class TestThermoDatabase(unittest.TestCase):
         import pickle
         thermodb0 = pickle.loads(pickle.dumps(self.database))
 
-        self.assertEqual(thermodb0.libraryOrder, self.database.libraryOrder)
+        self.assertEqual(thermodb0.library_order, self.database.library_order)
         self.assertEqual(sorted(thermodb0.depository.keys()),
                          sorted(self.database.depository.keys()))
 
@@ -881,7 +881,7 @@ class TestCyclicThermo(unittest.TestCase):
         polyring = mol.getDisparateRings()[1][0]
 
         poly_groups = self.database.groups['polycyclic']
-        _, matched_entry, _ = self.database._ThermoDatabase__addRingCorrectionThermoDataFromTree(
+        _, matched_entry, _ = self.database._add_ring_correction_thermo_data_from_tree(
             None, poly_groups, mol, polyring)
 
         self.assertEqual(matched_entry.label, 's2-3_5_5_5_ane')
@@ -921,7 +921,7 @@ class TestCyclicThermo(unittest.TestCase):
                 S298=(0.0, "J/(mol*K)"),
             )
 
-            self.database._ThermoDatabase__addPolyRingCorrectionThermoDataFromHeuristic(
+            self.database._add_poly_ring_correction_thermo_data_from_heuristic(
                 thermo_data, polyring)
 
             ring_groups, polycyclic_groups = self.database.get_ring_groups_from_comments(thermo_data)
@@ -965,7 +965,7 @@ class TestCyclicThermo(unittest.TestCase):
             S298=(0.0, "J/(mol*K)"),
         )
 
-        self.database._ThermoDatabase__addPolyRingCorrectionThermoDataFromHeuristic(
+        self.database._add_poly_ring_correction_thermo_data_from_heuristic(
             thermo_data, polyring)
 
         ring_groups, polycyclic_groups = self.database.get_ring_groups_from_comments(thermo_data)
@@ -994,7 +994,7 @@ class TestCyclicThermo(unittest.TestCase):
             S298=(0.0, "J/(mol*K)"),
         )
 
-        self.database._ThermoDatabase__addPolyRingCorrectionThermoDataFromHeuristic(
+        self.database._add_poly_ring_correction_thermo_data_from_heuristic(
             thermo_data, polyring)
 
         ring_groups, polycyclic_groups = self.database.get_ring_groups_from_comments(thermo_data)
@@ -1030,7 +1030,7 @@ class TestCyclicThermo(unittest.TestCase):
             S298=(0.0, "J/(mol*K)"),
         )
 
-        self.database._ThermoDatabase__addPolyRingCorrectionThermoDataFromHeuristic(
+        self.database._add_poly_ring_correction_thermo_data_from_heuristic(
             thermo_data, polyring)
 
         ring_groups, polycyclic_groups = self.database.get_ring_groups_from_comments(thermo_data)
@@ -1068,7 +1068,7 @@ class TestCyclicThermo(unittest.TestCase):
             S298=(0.0, "J/(mol*K)"),
         )
 
-        self.database._ThermoDatabase__addPolyRingCorrectionThermoDataFromHeuristic(
+        self.database._add_poly_ring_correction_thermo_data_from_heuristic(
             thermo_data, polyring)
 
         ring_groups, polycyclic_groups = self.database.get_ring_groups_from_comments(thermo_data)

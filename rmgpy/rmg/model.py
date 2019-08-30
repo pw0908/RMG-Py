@@ -422,8 +422,8 @@ class CoreEdgeReactionModel:
         # Determine the proper species objects for all reactants and products
         reactants = [self.makeNewSpecies(reactant, generateThermo=generateThermo)[0] for reactant in forward.reactants]
         products = [self.makeNewSpecies(product, generateThermo=generateThermo)[0] for product in forward.products]
-        if forward.specificCollider is not None:
-            forward.specificCollider = self.makeNewSpecies(forward.specificCollider)[0]
+        if forward.specific_collider is not None:
+            forward.specific_collider = self.makeNewSpecies(forward.specific_collider)[0]
 
         if forward.pairs is not None:
             for pairIndex in range(len(forward.pairs)):
@@ -1458,7 +1458,7 @@ class CoreEdgeReactionModel:
                 logging.warning('loading reaction {0} originally from family {1} as a library reaction'.format(str(rxn),
                                                                                                                rxn.family))
                 rxn = LibraryReaction(reactants=rxn.reactants[:], products=rxn.products[:],
-                                      library=seedMechanism.name, specificCollider=rxn.specificCollider,
+                                      library=seedMechanism.name, specific_collider=rxn.specific_collider,
                                       kinetics=rxn.kinetics, duplicate=rxn.duplicate,
                                       reversible=rxn.reversible
                                       )
@@ -1555,7 +1555,7 @@ class CoreEdgeReactionModel:
                 logging.warning('loading reaction {0} originally from family {1} as a library reaction'.format(str(rxn),
                                                                                                                rxn.family))
                 rxn = LibraryReaction(reactants=rxn.reactants[:], products=rxn.products[:],
-                                      library=reactionLibrary.name, specificCollider=rxn.specificCollider,
+                                      library=reactionLibrary.name, specific_collider=rxn.specific_collider,
                                       kinetics=rxn.kinetics, duplicate=rxn.duplicate,
                                       reversible=rxn.reversible
                                       )
@@ -1995,6 +1995,6 @@ def areIdenticalSpeciesReferences(rxn1, rxn2):
     """
     identical_same_direction = rxn1.reactants == rxn2.reactants and rxn1.products == rxn2.products
     identical_opposite_directions = rxn1.reactants == rxn2.products and rxn1.products == rxn2.reactants
-    identical_collider = rxn1.specificCollider == rxn2.specificCollider
+    identical_collider = rxn1.specific_collider == rxn2.specific_collider
 
     return (identical_same_direction or identical_opposite_directions) and identical_collider

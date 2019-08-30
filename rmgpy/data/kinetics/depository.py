@@ -67,10 +67,10 @@ class DepositoryReaction(Reaction):
                           index=index,
                           reactants=reactants,
                           products=products,
-                          specificCollider=specific_collider,
+                          specific_collider=specific_collider,
                           kinetics=kinetics,
                           reversible=reversible,
-                          transitionState=transition_state,
+                          transition_state=transition_state,
                           duplicate=duplicate,
                           degeneracy=degeneracy,
                           pairs=pairs
@@ -86,10 +86,10 @@ class DepositoryReaction(Reaction):
         return (DepositoryReaction, (self.index,
                                      self.reactants,
                                      self.products,
-                                     self.specificCollider,
+                                     self.specific_collider,
                                      self.kinetics,
                                      self.reversible,
-                                     self.transitionState,
+                                     self.transition_state,
                                      self.duplicate,
                                      self.degeneracy,
                                      self.pairs,
@@ -213,7 +213,7 @@ class KineticsDepository(Database):
                    rank=None,
                    ):
 
-        reaction = Reaction(reactants=[], products=[], specificCollider=specificCollider,
+        reaction = Reaction(reactants=[], products=[], specific_collider=specificCollider,
                             degeneracy=degeneracy, duplicate=duplicate, reversible=reversible)
 
         entry = Entry(

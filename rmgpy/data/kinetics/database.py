@@ -459,7 +459,7 @@ and immediately used in input files without any additional changes.
                 reaction = LibraryReaction(
                     reactants=entry.item.reactants[:],
                     products=entry.item.products[:],
-                    specificCollider=entry.item.specificCollider,
+                    specific_collider=entry.item.specific_collider,
                     degeneracy=entry.item.degeneracy,
                     reversible=entry.item.reversible,
                     duplicate=entry.item.duplicate,
@@ -606,7 +606,7 @@ and immediately used in input files without any additional changes.
             reaction = Reaction(
                 reactants=entry.item.reactants[:],
                 products=[],
-                specificCollider=entry.item.specificCollider,
+                specific_collider=entry.item.specific_collider,
                 kinetics=entry.data,
                 degeneracy=1,
             )

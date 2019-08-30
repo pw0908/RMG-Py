@@ -278,15 +278,15 @@ def transitionState(label, *args, **kwargs):
             elif key == 'frequency':
                 frequency = value
             else:
-                raise TypeError('transitionState() got an unexpected keyword argument {0!r}.'.format(key))
+                raise TypeError('transition_state() got an unexpected keyword argument {0!r}.'.format(key))
 
         ts.conformer = Conformer(E0=E0, modes=modes, spinMultiplicity=spinMultiplicity, opticalIsomers=opticalIsomers)
         ts.frequency = frequency
     else:
         if len(args) == 0 and len(kwargs) == 0:
             raise InputError(
-                'The transitionState needs to reference a quantum job file or contain kinetic information.')
-        raise InputError('The transitionState can only link a quantum job or directly input information, not both.')
+                'The transition_state needs to reference a quantum job file or contain kinetic information.')
+        raise InputError('The transition_state can only link a quantum job or directly input information, not both.')
 
     return ts
 
@@ -311,10 +311,10 @@ def reaction(label, reactants, products, transitionState=None, kinetics=None, tu
         transitionState.tunneling = None
     elif transitionState and not isinstance(tunneling, TunnelingModel):
         raise ValueError('Unknown tunneling model {0!r}.'.format(tunneling))
-    rxn = Reaction(label=label, reactants=reactants, products=products, transitionState=transitionState,
+    rxn = Reaction(label=label, reactants=reactants, products=products, transition_state=transitionState,
                    kinetics=kinetics)
 
-    if rxn.transitionState is None and rxn.kinetics is None:
+    if rxn.transition_state is None and rxn.kinetics is None:
         logging.info('estimating rate of reaction {0} using RMG-database')
         if not all([m.molecule != [] for m in rxn.reactants + rxn.products]):
             raise ValueError('chemical structures of reactants and products not available for RMG estimation of '

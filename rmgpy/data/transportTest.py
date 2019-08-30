@@ -61,7 +61,7 @@ class TestCriticalPointGroupContribution(unittest.TestCase):
             Pc=self.Pc,
             Vc=self.Vc,
             Tb=self.Tb,
-            structure_index=self.structureIndex,
+            structureIndex=self.structureIndex,
         )
 
     def test_Tc(self):
@@ -90,9 +90,9 @@ class TestCriticalPointGroupContribution(unittest.TestCase):
 
     def test_structureIndex(self):
         """
-        Test that the CriticalPointGroupContribution structure_index property was properly set.
+        Test that the CriticalPointGroupContribution structureIndex property was properly set.
         """
-        self.assertAlmostEqual(self.criticalPointContribution.structure_index, self.structureIndex, 6)
+        self.assertAlmostEqual(self.criticalPointContribution.structureIndex, self.structureIndex, 6)
 
     def test_pickle(self):
         """
@@ -104,7 +104,7 @@ class TestCriticalPointGroupContribution(unittest.TestCase):
         self.assertAlmostEqual(self.criticalPointContribution.Pc, criticalPointContribution.Pc, 4)
         self.assertAlmostEqual(self.criticalPointContribution.Vc, criticalPointContribution.Vc, 4)
         self.assertAlmostEqual(self.criticalPointContribution.Tb, criticalPointContribution.Tb, 4)
-        self.assertAlmostEqual(self.criticalPointContribution.structure_index, criticalPointContribution.structureIndex, 4)
+        self.assertAlmostEqual(self.criticalPointContribution.structureIndex, criticalPointContribution.structureIndex, 4)
 
     def test_repr(self):
         """
@@ -118,7 +118,7 @@ class TestCriticalPointGroupContribution(unittest.TestCase):
         self.assertAlmostEqual(self.criticalPointContribution.Pc, criticalPointContribution.Pc, 4)
         self.assertAlmostEqual(self.criticalPointContribution.Vc, criticalPointContribution.Vc, 4)
         self.assertAlmostEqual(self.criticalPointContribution.Tb, criticalPointContribution.Tb, 4)
-        self.assertAlmostEqual(self.criticalPointContribution.structure_index, criticalPointContribution.structureIndex, 4)
+        self.assertAlmostEqual(self.criticalPointContribution.structureIndex, criticalPointContribution.structureIndex, 4)
 
 
 class TestTransportDatabase(unittest.TestCase):
