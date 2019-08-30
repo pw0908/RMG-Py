@@ -297,7 +297,7 @@ class TestDatabase(object):  # cannot inherit from unittest.TestCase if we want 
         This test ensures that each rate rule contains the proper number of nodes according to the family it originates.
         """
         family = self.database.kinetics.families[family_name]
-        expected_number_nodes = len(family.getRootTemplate())
+        expected_number_nodes = len(family.get_root_template())
         tst = []
         for label, entries in family.rules.entries.items():
             for entry in entries:
@@ -323,12 +323,12 @@ class TestDatabase(object):  # cannot inherit from unittest.TestCase if we want 
 
         # List of the each top node's descendants (including the top node)
         top_descendants = []
-        for topNode in family.getRootTemplate():
+        for topNode in family.get_root_template():
             nodes = [topNode]
             nodes.extend(family.groups.descendants(topNode))
             top_descendants.append(nodes)
 
-        top_group_order = ';'.join(topNode.label for topNode in family.getRootTemplate())
+        top_group_order = ';'.join(topNode.label for topNode in family.get_root_template())
         tst1 = []
         tst2 = []
         for label, entries in family.rules.entries.items():
@@ -877,9 +877,9 @@ The following adjList may have atoms in a different ordering than the input file
         #################################################################################
         family = self.database.kinetics.families[family_name]
 
-        backbone = family.getBackboneRoots()[0]
+        backbone = family.get_backbone_roots()[0]
 
-        end_groups = family.getEndRoots()
+        end_groups = family.get_end_roots()
 
         end_labels = {}
         for end_group in end_groups:
@@ -1013,10 +1013,10 @@ The following adjList may have atoms in a different ordering than the input file
         # If family is backbone archetype, then we need to merge groups before descending
         roots = family.groups.top
         if len(roots) > len(family.forwardTemplate.reactants):
-            backbone_roots = family.getBackboneRoots()
+            backbone_roots = family.get_backbone_roots()
             all_backbone_groups = []
             for backboneRoot in backbone_roots:
-                all_backbone_groups.extend(family.getTopLevelGroups(backboneRoot))
+                all_backbone_groups.extend(family.get_top_level_groups(backboneRoot))
             # list of numbered of labelled atoms for all_backbone_groups
             backbone_sizes = [len(backbone.item.getLabeledAtoms()) for backbone in all_backbone_groups]
 

@@ -182,7 +182,7 @@ def applyRRKMTheory(transitionState,
                     np.ndarray[np.float64_t,ndim=2] densStates):
     """
     Calculate the microcanonical rate coefficient for a reaction using RRKM
-    theory, where `transitionState` is the transition state of the reaction,
+    theory, where `transition_state` is the transition state of the reaction,
     `Elist` is the array of energies in J/mol at which to evaluate the
     microcanonial rate, and `densStates` is the density of states of the
     reactant.

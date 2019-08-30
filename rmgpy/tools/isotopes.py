@@ -443,7 +443,7 @@ def ensure_reaction_direction(isotopomerRxns):
                 logging.info('isotope: identified flipped reaction direction in reaction number {} of reaction {}. '
                              'Altering the direction.'.format( rxn.index, str(rxn)))
                 # obtain reverse attribute with template and degeneracy
-                family.addReverseAttribute(rxn)
+                family.add_reverse_attribute(rxn)
                 if frozenset(rxn.reverse.template) != frozenset(reference.template):
                     logging.warning("Reaction {} did not find proper reverse template, might cause "
                                     "degeneracy error.".format(str(rxn)))
@@ -613,7 +613,7 @@ def get_labeled_reactants(reaction, family):
     reactants = list(reaction.reactants)
     products = list(reaction.products)
 
-    family.addAtomLabelsForReaction(reaction, output_with_resonance=True)
+    family.add_atom_labels_for_reaction(reaction, output_with_resonance=True)
     labeled_reactants = [species.molecule[0] for species in reaction.reactants]
 
     # replace the original reactants and products

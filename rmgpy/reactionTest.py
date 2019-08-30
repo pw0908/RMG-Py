@@ -616,7 +616,7 @@ class TestReaction(unittest.TestCase):
 
     def testFixBarrierHeight(self):
         """
-        Test that fixBarrierHeight:
+        Test that fix_barrier_height:
             1) raises Ea to match endothermicity of reaction
             2) forces Ea to be positive if forcePositive=True
             3) Evans-Polanyi kinetics are handled so that negative Ea if Ea<E0 are set to min(0,E0)

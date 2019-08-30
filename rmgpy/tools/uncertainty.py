@@ -318,8 +318,8 @@ class Uncertainty(object):
 
         # Prepare the database by loading training reactions but not averaging the rate rules
         for familyLabel, family in self.database.kinetics.families.items():
-            family.addKineticsRulesFromTrainingSet(thermoDatabase=self.database.thermo)
-            family.fillKineticsRulesByAveragingUp(verbose=True)
+            family.add_rules_from_training(thermoDatabase=self.database.thermo)
+            family.fill_rules_by_averaging_up(verbose=True)
 
     def loadModel(self, chemkinPath, dictionaryPath, transportPath=None):
         """

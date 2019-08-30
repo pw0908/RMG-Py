@@ -194,7 +194,7 @@ class RMGDatabase(object):
         self.forbiddenStructures = ForbiddenStructures()
         self.forbiddenStructures.load_old(os.path.join(path, 'ForbiddenStructures.txt'))
         self.kinetics = KineticsDatabase()
-        self.kinetics.loadOld(path)
+        self.kinetics.load_old(path)
         self.statmech = StatmechDatabase()
         self.statmech.loadOld(path)
         self.solvation = SolvationDatabase()

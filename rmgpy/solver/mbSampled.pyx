@@ -210,7 +210,7 @@ cdef class MBSampledReactor(ReactionSystem):
                 if rxn.specificCollider is None:
                     Peff = self.P.value_si * np.sum(self.colliderEfficiencies[i] * y0_core_species / sum_core_species)
                 else:
-                    logging.debug("Calculating Peff using {0} as a specificCollider".format(rxn.specificCollider))
+                    logging.debug("Calculating Peff using {0} as a specific_collider".format(rxn.specificCollider))
                     Peff = self.P.value_si * self.y0[self.speciesIndex[rxn.specificCollider]] / sum_core_species
                 return Peff
         return self.P.value_si

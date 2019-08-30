@@ -268,7 +268,7 @@ class PDepSensitivity(object):
         wells.extend(self.job.network.products)
         transition_states = []
         for rxn in self.job.network.pathReactions:
-            # if rxn.transitionState is not None:
+            # if rxn.transition_state is not None:
             transition_states.append(rxn.transitionState)
 
         for entry in wells + transition_states:

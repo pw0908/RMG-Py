@@ -216,9 +216,9 @@ cdef class SimpleReactor(ReactionSystem):
 
         or as:
 
-        .. math:: P_{eff} = \\frac{P * y_{specificCollider}}{\\sum_j y_j}
+        .. math:: P_{eff} = \\frac{P * y_{specific_collider}}{\\sum_j y_j}
 
-        if a specificCollider is mentioned.
+        if a specific_collider is mentioned.
         """
 
         y0_core_species = self.y0[:self.numCoreSpecies]
@@ -231,7 +231,7 @@ cdef class SimpleReactor(ReactionSystem):
                 if rxn.specificCollider is None:
                     Peff = self.P.value_si * np.sum(self.colliderEfficiencies[i] * y0_core_species / sum_core_species)
                 else:
-                    logging.debug("Calculating Peff using {0} as a specificCollider".format(rxn.specificCollider))
+                    logging.debug("Calculating Peff using {0} as a specific_collider".format(rxn.specificCollider))
                     Peff = self.P.value_si * self.y0[self.speciesIndex[rxn.specificCollider]] / sum_core_species
                 return Peff
         return self.P.value_si

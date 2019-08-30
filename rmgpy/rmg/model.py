@@ -452,7 +452,7 @@ class CoreEdgeReactionModel:
         if isinstance(forward, TemplateReaction):
             logging.debug('Creating new {0} template reaction {1}'.format(forward.family, forward))
         elif isinstance(forward, DepositoryReaction):
-            logging.debug('Creating new {0} reaction {1}'.format(forward.getSource(), forward))
+            logging.debug('Creating new {0} reaction {1}'.format(forward.get_source(), forward))
         elif isinstance(forward, LibraryReaction):
             logging.debug('Creating new library reaction {0}'.format(forward))
         else:
@@ -865,10 +865,10 @@ class CoreEdgeReactionModel:
         family = getFamilyLibraryObject(reaction.family)
 
         # Get the kinetics for the reaction
-        kinetics, source, entry, is_forward = family.getKinetics(reaction, templateLabels=reaction.template,
-                                                                 degeneracy=reaction.degeneracy,
-                                                                 estimator=self.kineticsEstimator,
-                                                                 returnAllKinetics=False)
+        kinetics, source, entry, is_forward = family.get_kinetics(reaction, template_labels=reaction.template,
+                                                                  degeneracy=reaction.degeneracy,
+                                                                  estimator=self.kineticsEstimator,
+                                                                  return_all_kinetics=False)
         # Get the gibbs free energy of reaction at 298 K
         G298 = reaction.getFreeEnergyOfReaction(298)
         gibbs_is_positive = G298 > -1e-8
@@ -878,11 +878,11 @@ class CoreEdgeReactionModel:
                 # The kinetics family is its own reverse, so we could estimate kinetics in either direction
 
                 # First get the kinetics for the other direction
-                rev_kinetics, rev_source, rev_entry, rev_is_forward = family.getKinetics(reaction.reverse,
-                                                                                         templateLabels=reaction.reverse.template,
-                                                                                         degeneracy=reaction.reverse.degeneracy,
-                                                                                         estimator=self.kineticsEstimator,
-                                                                                         returnAllKinetics=False)
+                rev_kinetics, rev_source, rev_entry, rev_is_forward = family.get_kinetics(reaction.reverse,
+                                                                                          template_labels=reaction.reverse.template,
+                                                                                          degeneracy=reaction.reverse.degeneracy,
+                                                                                          estimator=self.kineticsEstimator,
+                                                                                          return_all_kinetics=False)
                 # Now decide which direction's kinetics to keep
                 keep_reverse = False
                 if entry is not None and rev_entry is None:
@@ -1447,7 +1447,7 @@ class CoreEdgeReactionModel:
 
         seedMechanism = database.kinetics.libraries[seedMechanism]
 
-        rxns = seedMechanism.getLibraryReactions()
+        rxns = seedMechanism.get_library_reactions()
 
         for rxn in rxns:
             if isinstance(rxn, LibraryReaction) and not (rxn.library in library_names) and not (rxn.library == 'kineticsjobs'):  # if one of the reactions in the library is from another library load that library
@@ -1545,7 +1545,7 @@ class CoreEdgeReactionModel:
         logging.info('Adding reaction library {0} to model edge...'.format(reactionLibrary))
         reactionLibrary = database.kinetics.libraries[reactionLibrary]
 
-        rxns = reactionLibrary.getLibraryReactions()
+        rxns = reactionLibrary.get_library_reactions()
         for rxn in rxns:
             if isinstance(rxn, LibraryReaction) and not (rxn.library in library_names):  # if one of the reactions in the library is from another library load that library
                 database.kinetics.libraryOrder.append((rxn.library, 'Internal'))

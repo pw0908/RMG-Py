@@ -81,11 +81,11 @@ class Reaction:
     `label`             ``str``                     A descriptive string label
     `reactants`         :class:`list`               The reactant species (as :class:`Species` objects)
     `products`          :class:`list`               The product species (as :class:`Species` objects)
-    'specificCollider'  :class:`Species`            The collider species (as a :class:`Species` object)
+    'specific_collider'  :class:`Species`            The collider species (as a :class:`Species` object)
     `kinetics`          :class:`KineticsModel`      The kinetics model to use for the reaction
     `network_kinetics`  :class:`Arrhenius`          The kinetics model to use for PDep network exploration if the `kinetics` attribute is :class:PDepKineticsModel:
     `reversible`        ``bool``                    ``True`` if the reaction is reversible, ``False`` if not
-    `transitionState`   :class:`TransitionState`    The transition state
+    `transition_state`   :class:`TransitionState`    The transition state
     `duplicate`         ``bool``                    ``True`` if the reaction is known to be a duplicate, ``False`` if not
     `degeneracy`        :class:`double`             The reaction path degeneracy for the reaction
     `pairs`             ``list``                    Reactant-product pairings to use in converting reaction flux to species flux
@@ -150,11 +150,11 @@ class Reaction:
         if self.label != '': string += 'label={0!r}, '.format(self.label)
         if self.reactants is not None: string += 'reactants={0!r}, '.format(self.reactants)
         if self.products is not None: string += 'products={0!r}, '.format(self.products)
-        if self.specificCollider is not None: string += 'specificCollider={0!r}, '.format(self.specificCollider)
+        if self.specificCollider is not None: string += 'specific_collider={0!r}, '.format(self.specificCollider)
         if self.kinetics is not None: string += 'kinetics={0!r}, '.format(self.kinetics)
         if self.network_kinetics is not None: string += 'network_kinetics={0!r}, '.format(self.network_kinetics)
         if not self.reversible: string += 'reversible={0}, '.format(self.reversible)
-        if self.transitionState is not None: string += 'transitionState={0!r}, '.format(self.transitionState)
+        if self.transitionState is not None: string += 'transition_state={0!r}, '.format(self.transitionState)
         if self.duplicate: string += 'duplicate={0}, '.format(self.duplicate)
         if self.degeneracy != 1: string += 'degeneracy={0:.1f}, '.format(self.degeneracy)
         if self.pairs is not None: string += 'pairs={0}, '.format(self.pairs)
@@ -168,7 +168,7 @@ class Reaction:
     def __str__(self):
         """
         Return a string representation of the reaction, in the form 'A + B <=> C + D'.
-        If a specificCollider exists, the srting representation is 'A + B (+S) <=> C + D (+S)'.
+        If a specific_collider exists, the srting representation is 'A + B (+S) <=> C + D (+S)'.
         """
         return self.toLabeledStr(use_index=True)
 
@@ -481,7 +481,7 @@ class Reaction:
                                                     generate_initial_map=generateInitialMap,
                                                     strict=strict)
 
-        # Compare specificCollider to specificCollider
+        # Compare specific_collider to specific_collider
         collider_match = (self.specificCollider == other.specificCollider)
 
         # Return now, if we can
