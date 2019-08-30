@@ -93,7 +93,7 @@ class KineticsDatabase(object):
         d = {
             'families': self.families,
             'libraries': self.libraries,
-            'libraryOrder': self.libraryOrder,
+            'library_order': self.libraryOrder,
         }
         return KineticsDatabase, (), d
 
@@ -103,7 +103,7 @@ class KineticsDatabase(object):
         """
         self.families = d['families']
         self.libraries = d['libraries']
-        self.libraryOrder = d['libraryOrder']
+        self.libraryOrder = d['library_order']
 
     def load(self, path, families=None, libraries=None, depositories=None):
         """
@@ -622,12 +622,12 @@ and immediately used in input files without any additional changes.
             for molecule in entry.item.reactants:
                 reactant = Species(molecule=[molecule])
                 reactant.generate_resonance_structures()
-                reactant.thermo = thermoDatabase.getThermoData(reactant)
+                reactant.thermo = thermoDatabase.get_thermo_data(reactant)
                 reaction.reactants.append(reactant)
             for molecule in entry.item.products:
                 product = Species(molecule=[molecule])
                 product.generate_resonance_structures()
-                product.thermo = thermoDatabase.getThermoData(product)
+                product.thermo = thermoDatabase.get_thermo_data(product)
                 reaction.products.append(product)
 
             # Generate all possible reactions involving the reactant species
@@ -711,7 +711,7 @@ and immediately used in input files without any additional changes.
 
         if isinstance(reaction, TemplateReaction):
             # This reaction comes from rate rules
-            training, data_source = self.families[reaction.family].extractSourceFromComments(reaction)
+            training, data_source = self.families[reaction.family].extract_source_from_comments(reaction)
             if training:
                 source['Training'] = data_source
             else:
@@ -735,12 +735,12 @@ and immediately used in input files without any additional changes.
         Reaction is the original reaction with original kinetics.
         Note that for Library and PDep reactions this function does not do anything other than return the original kinetics...
         
-        You must enter source data in the appropriate format such as returned from returned from self.extractSourceFromComments, 
+        You must enter source data in the appropriate format such as returned from returned from self.extract_source_from_comments,
         self-constructed.  
         fixBarrierHeight and forcePositiveBarrier will change the kinetics based on the Reaction.fixBarrierHeight function.
         Return Arrhenius form kinetics if the source is from training reaction or rate rules.
         """
-        from rmgpy.data.thermo import findCp0andCpInf
+        from rmgpy.data.thermo import find_cp0_and_cpinf
         from rmgpy.thermo import Wilhoit
         if 'Library' in source:
             return reaction.kinetics
@@ -803,7 +803,7 @@ and immediately used in input files without any additional changes.
                 for spc in rxn_copy.reactants + rxn_copy.products:
                     # Need wilhoit to do this
                     if not isinstance(spc.thermo, Wilhoit):
-                        findCp0andCpInf(spc, spc.thermo)
+                        find_cp0_and_cpinf(spc, spc.thermo)
                         wilhoit = spc.thermo.toWilhoit()
                         spc.thermo = wilhoit
 

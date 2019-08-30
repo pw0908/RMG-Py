@@ -747,7 +747,7 @@ class Species(object):
             raise
 
         # count = sum([1 for atom in self.molecule[0].vertices if atom.isNonHydrogen()])
-        self.transportData = transport_db.getTransportProperties(self)[0]
+        self.transportData = transport_db.get_transport_properties(self)[0]
 
     def getTransportData(self):
         """
@@ -776,7 +776,7 @@ class Species(object):
             raise
 
         molecule = self.molecule[0]
-        conformer = statmech_db.getStatmechData(molecule, self.getThermoData())
+        conformer = statmech_db.get_statmech_data(molecule, self.getThermoData())
 
         if self.conformer is None:
             self.conformer = Conformer()
@@ -799,8 +799,8 @@ class Species(object):
         else:
             if not self.thermo.Cp0 or not self.thermo.CpInf:
                 # set Cp0 and CpInf
-                from rmgpy.data.thermo import findCp0andCpInf
-                findCp0andCpInf(self, self.thermo)
+                from rmgpy.data.thermo import find_cp0_and_cpinf
+                find_cp0_and_cpinf(self, self.thermo)
             self.conformer.E0 = self.getThermoData().toWilhoit().E0
 
     def generateEnergyTransferModel(self):

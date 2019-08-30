@@ -347,7 +347,7 @@ class KineticsGroups(Database):
 
     def generateGroupAdditivityValues(self, trainingSet, kunits, method='Arrhenius'):
         """
-        Generate the group additivity values using the given `trainingSet`,
+        Generate the group additivity values using the given `training_set`,
         a list of 2-tuples of the form ``(template, kinetics)``. You must also
         specify the `kunits` for the family and the `method` to use when
         generating the group values. Returns ``True`` if the group values have

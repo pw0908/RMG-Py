@@ -48,7 +48,7 @@ import rmgpy.molecule.element
 from rmgpy.chemkin import ChemkinWriter
 from rmgpy.data.kinetics.family import TemplateReaction
 from rmgpy.data.rmg import get_db
-from rmgpy.data.thermo import findCp0andCpInf
+from rmgpy.data.thermo import find_cp0_and_cpinf
 from rmgpy.kinetics.arrhenius import MultiArrhenius
 from rmgpy.molecule import Molecule
 from rmgpy.molecule.element import getElement
@@ -871,7 +871,7 @@ def run(inputFile, outputDir, original=None, maximumIsotopicAtoms=1,
 
     logging.info("isotope: adding all the new and old isotopomers")
     for spc in rmg.reactionModel.core.species:
-        findCp0andCpInf(spc, spc.thermo)
+        find_cp0_and_cpinf(spc, spc.thermo)
         isotopes.append([spc] + generate_isotopomers(spc, maximumIsotopicAtoms))
 
     logging.info('isotope: number of isotopomers: {}'.format(

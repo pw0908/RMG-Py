@@ -394,7 +394,7 @@ class RMG(util.Subject):
         self.checkLibraries()
 
         if self.bindingEnergies:
-            self.database.thermo.setDeltaAtomicAdsorptionEnergies(self.bindingEnergies)
+            self.database.thermo.set_delta_atomic_adsorption_energies(self.bindingEnergies)
 
         # set global variable solvent
         if self.solvent:
@@ -502,7 +502,7 @@ class RMG(util.Subject):
             shutil.copyfile(self.speciesMapPath, os.path.join(filters_restart, 'species_map.yml'))
 
             # Load the seed mechanism to get the core and edge species
-            self.database.kinetics.loadLibraries(restart_dir, libraries=['restart', 'restart_edge'])
+            self.database.kinetics.load_libraries(restart_dir, libraries=['restart', 'restart_edge'])
             self.seedMechanisms.append('restart')
             self.reactionLibraries.append(('restart_edge', False))
 

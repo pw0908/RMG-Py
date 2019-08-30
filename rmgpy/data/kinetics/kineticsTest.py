@@ -640,7 +640,7 @@ class TestKineticsCommentsParsing(unittest.TestCase):
 
         sources = []
         for reaction in reactions:
-            sources.append(self.database.kinetics.extractSourceFromComments(reaction))
+            sources.append(self.database.kinetics.extract_source_from_comments(reaction))
 
         # Source 0 comes from a kinetics library
         self.assertTrue('Library' in sources[0])

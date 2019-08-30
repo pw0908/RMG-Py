@@ -1452,7 +1452,7 @@ class CoreEdgeReactionModel:
         for rxn in rxns:
             if isinstance(rxn, LibraryReaction) and not (rxn.library in library_names) and not (rxn.library == 'kineticsjobs'):  # if one of the reactions in the library is from another library load that library
                 database.kinetics.libraryOrder.append((rxn.library, 'Internal'))
-                database.kinetics.loadLibraries(path=path, libraries=[rxn.library])
+                database.kinetics.load_libraries(path=path, libraries=[rxn.library])
                 library_names = list(database.kinetics.libraries.keys())
             if isinstance(rxn, TemplateReaction) and not (rxn.family in family_names):
                 logging.warning('loading reaction {0} originally from family {1} as a library reaction'.format(str(rxn),
@@ -1549,7 +1549,7 @@ class CoreEdgeReactionModel:
         for rxn in rxns:
             if isinstance(rxn, LibraryReaction) and not (rxn.library in library_names):  # if one of the reactions in the library is from another library load that library
                 database.kinetics.libraryOrder.append((rxn.library, 'Internal'))
-                database.kinetics.loadLibraries(path=path, libraries=[rxn.library])
+                database.kinetics.load_libraries(path=path, libraries=[rxn.library])
                 library_names = list(database.kinetics.libraries.keys())
             if isinstance(rxn, TemplateReaction) and not (rxn.family in family_names):
                 logging.warning('loading reaction {0} originally from family {1} as a library reaction'.format(str(rxn),

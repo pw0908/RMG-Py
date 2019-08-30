@@ -71,7 +71,7 @@ class TestSpecies(unittest.TestCase):
 
     def testGetThermoData(self):
         """
-        Test that getThermoData method of Species works.
+        Test that get_thermo_data method of Species works.
         """
         spc = Species().fromSMILES('CCC')
 

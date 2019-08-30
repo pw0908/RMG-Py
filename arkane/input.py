@@ -225,7 +225,7 @@ def species(label, *args, **kwargs):
             else:
                 logging.info('No E0 or thermo found, estimating thermo and E0 of species {0} using'
                              ' RMG-Database...'.format(spec.label))
-                spec.thermo = db.getThermoData(spec)
+                spec.thermo = db.get_thermo_data(spec)
                 if spec.thermo.E0 is None:
                     th = spec.thermo.toWilhoit()
                     spec.conformer.E0 = th.E0

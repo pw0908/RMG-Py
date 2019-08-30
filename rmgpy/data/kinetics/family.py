@@ -1205,7 +1205,7 @@ class KineticsFamily(Database):
             data = deepcopy(entry.data)
             data.changeT0(1)
             # Estimate the thermo for the reactants and products
-            # trainingSet=True used later to does not allow species to match a liquid phase library
+            # training_set=True used later to does not allow species to match a liquid phase library
             # and get corrected thermo which will affect reverse rate calculation
             item = Reaction(reactants=[Species(molecule=[m.molecule[0].copy(deep=True)], label=m.label)
                                        for m in entry.item.reactants],
@@ -1223,11 +1223,11 @@ class KineticsFamily(Database):
                 # Clear atom labels to avoid effects on thermo generation, ok because this is a deepcopy
                 reactant.molecule[0].clearLabeledAtoms()
                 reactant.generate_resonance_structures()
-                reactant.thermo = thermoDatabase.getThermoData(reactant, trainingSet=True)
+                reactant.thermo = thermoDatabase.get_thermo_data(reactant, training_set=True)
             for product in item.products:
                 product.molecule[0].clearLabeledAtoms()
                 product.generate_resonance_structures()
-                product.thermo = thermoDatabase.getThermoData(product, trainingSet=True)
+                product.thermo = thermoDatabase.get_thermo_data(product, training_set=True)
             # Now that we have the thermo, we can get the reverse k(T)
             item.kinetics = data
             data = item.generateReverseRateCoefficient()
@@ -3846,11 +3846,11 @@ class KineticsFamily(Database):
             if estimateThermo:
                 for j, react in enumerate(r.item.reactants):
                     if rxns[i].reactants[j].thermo is None:
-                        rxns[i].reactants[j].thermo = tdb.getThermoData(react)
+                        rxns[i].reactants[j].thermo = tdb.get_thermo_data(react)
 
                 for j, react in enumerate(r.item.products):
                     if rxns[i].products[j].thermo is None:
-                        rxns[i].products[j].thermo = tdb.getThermoData(react)
+                        rxns[i].products[j].thermo = tdb.get_thermo_data(react)
 
             rxns[i].kinetics = r.data
             rxns[i].rank = r.rank
@@ -3925,7 +3925,7 @@ class KineticsFamily(Database):
                     if estimateThermo:
                         for r in rrev.reactants:
                             if r.thermo is None:
-                                r.thermo = tdb.getThermoData(deepcopy(r))
+                                r.thermo = tdb.get_thermo_data(deepcopy(r))
 
                     rev_rxns.append(rrev)
 
@@ -3964,7 +3964,7 @@ class KineticsFamily(Database):
                 if estimateThermo:
                     for r in rrev.reactants:
                         if r.thermo is None:
-                            r.thermo = tdb.getThermoData(deepcopy(r))
+                            r.thermo = tdb.get_thermo_data(deepcopy(r))
                 rxns[i] = rrev
 
         if self.ownReverse and getReverse:
