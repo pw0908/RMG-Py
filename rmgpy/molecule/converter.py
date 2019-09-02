@@ -50,13 +50,13 @@ import rmgpy.molecule.molecule as mm
 from rmgpy.exceptions import DependencyError
 
 
-def toRDKitMol(mol, removeHs=True, returnMapping=False, sanitize=True):
+def to_rdkit_mol(mol, remove_h=True, return_mapping=False, sanitize=True):
     """
     Convert a molecular structure to a RDKit rdmol object. Uses
     `RDKit <http://rdkit.org/>`_ to perform the conversion.
-    Perceives aromaticity and, unless removeHs==False, removes Hydrogen atoms.
+    Perceives aromaticity and, unless remove_h==False, removes Hydrogen atoms.
 
-    If returnMapping==True then it also returns a dictionary mapping the
+    If return_mapping==True then it also returns a dictionary mapping the
     atoms to RDKit's atom indices.
     """
 
@@ -78,7 +78,7 @@ def toRDKitMol(mol, removeHs=True, returnMapping=False, sanitize=True):
         if atom.element.symbol == 'C' and atom.lonePairs == 1 and mol.multiplicity == 1: rd_atom.SetNumRadicalElectrons(
             2)
         rdkitmol.AddAtom(rd_atom)
-        if removeHs and atom.symbol == 'H':
+        if remove_h and atom.symbol == 'H':
             pass
         else:
             rd_atom_indices[atom] = index
@@ -102,14 +102,14 @@ def toRDKitMol(mol, removeHs=True, returnMapping=False, sanitize=True):
     rdkitmol = rdkitmol.GetMol()
     if sanitize:
         Chem.SanitizeMol(rdkitmol)
-    if removeHs:
+    if remove_h:
         rdkitmol = Chem.RemoveHs(rdkitmol, sanitize=sanitize)
-    if returnMapping:
+    if return_mapping:
         return rdkitmol, rd_atom_indices
     return rdkitmol
 
 
-def fromRDKitMol(mol, rdkitmol):
+def from_rdkit_mol(mol, rdkitmol):
     """
     Convert a RDKit Mol object `rdkitmol` to a molecular structure. Uses
     `RDKit <http://rdkit.org/>`_ to perform the conversion.
@@ -140,7 +140,7 @@ def fromRDKitMol(mol, rdkitmol):
         # Use atomic number as key for element
         number = rdkitatom.GetAtomicNum()
         isotope = rdkitatom.GetIsotope()
-        element = elements.getElement(number, isotope or -1)
+        element = elements.get_element(number, isotope or -1)
 
         # Process charge
         charge = rdkitatom.GetFormalCharge()
@@ -185,7 +185,7 @@ def fromRDKitMol(mol, rdkitmol):
     return mol
 
 
-def debugRDKitMol(rdmol, level=logging.INFO):
+def debug_rdkit_mol(rdmol, level=logging.INFO):
     """
     Takes an rdkit molecule object and logs some debugging information
     equivalent to calling rdmol.Debug() but uses our logging framework.
@@ -212,7 +212,7 @@ def debugRDKitMol(rdmol, level=logging.INFO):
     return message
 
 
-def toOBMol(mol, returnMapping=False):
+def to_ob_mol(mol, return_mapping=False):
     """
     Convert a molecular structure to an OpenBabel OBMol object. Uses
     `OpenBabel <http://openbabel.org/>`_ to perform the conversion.
@@ -246,13 +246,13 @@ def toOBMol(mol, returnMapping=False):
 
     obmol.AssignSpinMultiplicity(True)
 
-    if returnMapping:
+    if return_mapping:
         return obmol, ob_atom_ids
 
     return obmol
 
 
-def fromOBMol(mol, obmol):
+def from_ob_mol(mol, obmol):
     """
     Convert a OpenBabel Mol object `obmol` to a molecular structure. Uses
     `OpenBabel <http://openbabel.org/>`_ to perform the conversion.
@@ -275,7 +275,7 @@ def fromOBMol(mol, obmol):
         # Use atomic number as key for element
         number = obatom.GetAtomicNum()
         isotope = obatom.GetIsotope()
-        element = elements.getElement(number, isotope or -1)
+        element = elements.get_element(number, isotope or -1)
         # Process charge
         charge = obatom.GetFormalCharge()
         obatom_multiplicity = obatom.GetSpinMultiplicity()

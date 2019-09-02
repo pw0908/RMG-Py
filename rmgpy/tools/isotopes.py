@@ -51,7 +51,7 @@ from rmgpy.data.rmg import get_db
 from rmgpy.data.thermo import find_cp0_and_cpinf
 from rmgpy.kinetics.arrhenius import MultiArrhenius
 from rmgpy.molecule import Molecule
-from rmgpy.molecule.element import getElement
+from rmgpy.molecule.element import get_element
 from rmgpy.reaction import Reaction, same_species_lists
 from rmgpy.rmg.main import RMG, initializeLog
 from rmgpy.species import Species
@@ -261,7 +261,7 @@ def generate_isotopomers(spc, N=1):
     """
 
     mol = spc.molecule[0]
-    isotope = getElement(6, 13)
+    isotope = get_element(6, 13)
 
     mols = []
     add_isotope(0, N, mol, mols, isotope)
@@ -362,14 +362,14 @@ def remove_isotope(labeledObj, inplace=False):
                 for atom in mol.atoms:
                     if atom.element.isotope != -1:
                         modified_atoms.append((atom, atom.element))
-                        atom.element = getElement(atom.element.symbol)
+                        atom.element = get_element(atom.element.symbol)
             return modified_atoms
         else:
             stripped = labeledObj.copy(deep=True)
 
             for atom in stripped.molecule[0].atoms:
                 if atom.element.isotope != -1:
-                    atom.element = getElement(atom.element.symbol)
+                    atom.element = get_element(atom.element.symbol)
 
             # only do it for the first molecule, generate the other resonance isomers.
             stripped.molecule = [stripped.molecule[0]]
@@ -412,14 +412,14 @@ def remove_isotope(labeledObj, inplace=False):
             for atom in labeledObj.atoms:
                 if atom.element.isotope != -1:
                     modified_atoms.append((atom, atom.element))
-                    atom.element = getElement(atom.element.symbol)
+                    atom.element = get_element(atom.element.symbol)
             return modified_atoms
         else:
             stripped = labeledObj.copy(deep=True)
 
             for atom in stripped.atoms:
                 if atom.element.isotope != -1:
-                    atom.element = getElement(atom.element.symbol)
+                    atom.element = get_element(atom.element.symbol)
 
             return stripped
     else:
@@ -664,7 +664,7 @@ def is_enriched(obj):
 
     if isinstance(obj, Species):
         for atom in obj.molecule[0].atoms:
-            if atom.element.isotope != -1 and not np.allclose(atom.element.mass, getElement(atom.element.symbol).mass):
+            if atom.element.isotope != -1 and not np.allclose(atom.element.mass, get_element(atom.element.symbol).mass):
                 return True
         return False
     elif isinstance(obj, Reaction):

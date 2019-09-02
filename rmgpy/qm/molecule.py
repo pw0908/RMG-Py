@@ -141,7 +141,7 @@ class Geometry(object):
         """
         Import rmg molecule and create rdkit molecule with the same atom labeling.
         """
-        return self.molecule.toRDKitMol(removeHs=False, returnMapping=True)
+        return self.molecule.toRDKitMol(remove_h=False, return_mapping=True)
 
     def rd_embed(self, rdmol, numConfAttempts):
         """

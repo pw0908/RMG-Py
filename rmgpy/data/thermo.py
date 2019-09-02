@@ -1060,7 +1060,7 @@ class ThermoDatabase(object):
         """
         if allowed is None:
             allowed = ['C', 'H', 'O', 'S']
-        allowed_elements = [rmgpy.molecule.element.getElement(label) for label in allowed]
+        allowed_elements = [rmgpy.molecule.element.get_element(label) for label in allowed]
         for library in self.libraries.values():
             logging.info("Removing hetoroatoms from thermo library '{0}'".format(library.name))
             to_delete = []

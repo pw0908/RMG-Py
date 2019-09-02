@@ -1266,7 +1266,7 @@ class Group(Graph):
 
         # generate appropriate R and R!H
         if R is None:
-            R = elements.BDE_elements  # set of possible R elements/atoms
+            R = elements.bde_elements  # set of possible R elements/atoms
             R = [ATOMTYPES[x] for x in R]
 
         Rbonds = [1, 2, 3, 1.5]

@@ -38,7 +38,7 @@ import warnings
 
 from rmgpy.exceptions import InvalidAdjacencyListError
 from rmgpy.molecule.atomtype import get_atomtype
-from rmgpy.molecule.element import getElement, PeriodicSystem
+from rmgpy.molecule.element import get_element, PeriodicSystem
 from rmgpy.molecule.group import GroupAtom, GroupBond
 from rmgpy.molecule.molecule import Atom, Bond
 
@@ -698,7 +698,7 @@ def from_adjacency_list(adjlist, group=False, saturate_h=False):
         else:
             atom = Atom(atom_type[0], unpaired_electrons[0], partial_charges[0], label, lone_pairs[0])
             if isotope != -1:
-                atom.element = getElement(atom.number, isotope)
+                atom.element = get_element(atom.number, isotope)
 
         # Add the atom to the list
         atoms.append(atom)

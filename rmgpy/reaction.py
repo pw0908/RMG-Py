@@ -62,7 +62,7 @@ from rmgpy.kinetics import KineticsData, ArrheniusBM, ArrheniusEP, ThirdBody, Li
     StickingCoefficient, SurfaceArrhenius, SurfaceArrheniusBEP, StickingCoefficientBEP
 from rmgpy.kinetics.arrhenius import Arrhenius  # Separate because we cimport from rmgpy.kinetics.arrhenius
 from rmgpy.kinetics.diffusionLimited import diffusionLimiter
-from rmgpy.molecule.element import Element, elementList
+from rmgpy.molecule.element import Element, element_list
 from rmgpy.molecule.molecule import Molecule, Atom
 from rmgpy.pdep.reaction import calculateMicrocanonicalRateCoefficient
 from rmgpy.species import Species
@@ -983,7 +983,7 @@ class Reaction:
 
         reactant_elements = {}
         product_elements = {}
-        for element in elementList:
+        for element in element_list:
             reactant_elements[element] = 0
             product_elements[element] = 0
 
@@ -1003,7 +1003,7 @@ class Reaction:
             for atom in molecule.atoms:
                 product_elements[atom.element] += 1
 
-        for element in elementList:
+        for element in element_list:
             if reactant_elements[element] != product_elements[element]:
                 return False
 

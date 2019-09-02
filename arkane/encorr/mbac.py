@@ -37,7 +37,7 @@ Anantharaman and Melius, J. Phys. Chem. A 2005, 109, 1734-1747
 import numpy as np
 import pybel
 
-from rmgpy.molecule import Molecule, Atom, Bond, getElement
+from rmgpy.molecule import Molecule, Atom, Bond, get_element
 
 import arkane.encorr.data as data
 from arkane.exceptions import BondAdditivityCorrectionError
@@ -136,7 +136,7 @@ def pybel_to_rmg(pybel_mol):
     """
     mol = Molecule()
     for pybel_atom in pybel_mol:
-        element = getElement(pybel_atom.atomicnum)
+        element = get_element(pybel_atom.atomicnum)
         atom = Atom(element=element, coords=np.array(pybel_atom.coords))
         mol.vertices.append(atom)
     for obbond in pybel.ob.OBMolBondIter(pybel_mol.OBMol):

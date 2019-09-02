@@ -42,7 +42,7 @@ import yaml
 
 import rmgpy.constants as constants
 from rmgpy import __version__
-from rmgpy.molecule.element import elementList, getElement
+from rmgpy.molecule.element import element_list, get_element
 from rmgpy.molecule.translator import toInChI, toInChIKey
 from rmgpy.pdep.collision import SingleExponentialDown
 from rmgpy.quantity import ScalarQuantity, ArrayQuantity
@@ -206,7 +206,7 @@ class ArkaneSpecies(RMGObject):
             xyz_list.append(str(len(self.conformer.number.value_si)))
             xyz_list.append(self.label)
             for number, coordinate in zip(self.conformer.number.value_si, self.conformer.coordinates.value_si):
-                element_symbol = getElement(int(number)).symbol
+                element_symbol = get_element(int(number)).symbol
                 row = '{0:4}'.format(element_symbol)
                 row += '{0:14.8f}{1:14.8f}{2:14.8f}'.format(*(coordinate * 1e10).tolist())  # convert m to Angstrom
                 xyz_list.append(row)

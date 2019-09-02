@@ -32,7 +32,7 @@ import unittest
 
 from external.wip import work_in_progress
 from rmgpy.exceptions import InchiException
-from rmgpy.molecule.element import getElement, elementList
+from rmgpy.molecule.element import get_element, element_list
 from rmgpy.molecule.group import Group, ActionError
 from rmgpy.molecule.molecule import Atom, Bond, Molecule
 
@@ -47,12 +47,12 @@ class TestAtom(unittest.TestCase):
         """
         A method called before each unit test in this class.
         """
-        self.atom = Atom(element=getElement('C'), radicalElectrons=1, charge=0, label='*1', lonePairs=0)
+        self.atom = Atom(element=get_element('C'), radicalElectrons=1, charge=0, label='*1', lonePairs=0)
 
-        self.atom1 = Atom(element=getElement('C'), radicalElectrons=0, lonePairs=0)
-        self.atom2 = Atom(element=getElement('C'), radicalElectrons=0, lonePairs=0)
-        self.atom3 = Atom(element=getElement('C'), radicalElectrons=1, lonePairs=0)
-        self.atom4 = Atom(element=getElement('H'), radicalElectrons=1, lonePairs=0)
+        self.atom1 = Atom(element=get_element('C'), radicalElectrons=0, lonePairs=0)
+        self.atom2 = Atom(element=get_element('C'), radicalElectrons=0, lonePairs=0)
+        self.atom3 = Atom(element=get_element('C'), radicalElectrons=1, lonePairs=0)
+        self.atom4 = Atom(element=get_element('H'), radicalElectrons=1, lonePairs=0)
 
     def testMass(self):
         """
@@ -103,7 +103,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isHydrogen() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
             if element.symbol == 'H':
                 self.assertTrue(atom.isHydrogen())
@@ -114,7 +114,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isNonHydrogen() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
             if element.symbol == 'H':
                 self.assertFalse(atom.isNonHydrogen())
@@ -125,7 +125,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isCarbon() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
             if element.symbol == 'C':
                 self.assertTrue(atom.isCarbon())
@@ -136,7 +136,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isSilicon() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
             if element.symbol == 'Si':
                 self.assertTrue(atom.isSilicon())
@@ -147,7 +147,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isOxygen() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=2, charge=0, label='*1', lonePairs=2)
             if element.symbol == 'O':
                 self.assertTrue(atom.isOxygen())
@@ -158,7 +158,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isNitrogen() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=1)
             if element.symbol == 'N':
                 self.assertTrue(atom.isNitrogen())
@@ -169,7 +169,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isSulfur() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=2)
             if element.symbol == 'S':
                 self.assertTrue(atom.isSulfur())
@@ -180,7 +180,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isFluorine() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=3)
             if element.symbol == 'F':
                 self.assertTrue(atom.isFluorine())
@@ -191,7 +191,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isChlorine() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=3)
             if element.symbol == 'Cl':
                 self.assertTrue(atom.isChlorine())
@@ -202,7 +202,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isIodine() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=3)
             if element.symbol == 'I':
                 self.assertTrue(atom.isIodine())
@@ -213,7 +213,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isNOS() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=2)
             if element.symbol in ['N', 'O', 'S']:
                 self.assertTrue(atom.isNOS())
@@ -224,7 +224,7 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isSurfaceSite() method.
         """
-        for element in elementList:
+        for element in element_list:
             atom = Atom(element=element, radicalElectrons=0, charge=0, label='*1', lonePairs=0)
             if element.symbol == 'X':
                 self.assertTrue(atom.isSurfaceSite())
@@ -252,7 +252,7 @@ class TestAtom(unittest.TestCase):
         Test the Atom.applyAction() method for a BREAK_BOND action.
         """
         action = ['BREAK_BOND', '*1', 1, '*2']
-        for element in elementList:
+        for element in element_list:
             atom0 = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
             atom = atom0.copy()
             atom.applyAction(action)
@@ -266,7 +266,7 @@ class TestAtom(unittest.TestCase):
         Test the Atom.applyAction() method for a FORM_BOND action.
         """
         action = ['FORM_BOND', '*1', 1, '*2']
-        for element in elementList:
+        for element in element_list:
             atom0 = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
             atom = atom0.copy()
             atom.applyAction(action)
@@ -280,7 +280,7 @@ class TestAtom(unittest.TestCase):
         Test the Atom.applyAction() method for a CHANGE_BOND action.
         """
         action = ['CHANGE_BOND', '*1', 1, '*2']
-        for element in elementList:
+        for element in element_list:
             atom0 = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
             atom = atom0.copy()
             atom.applyAction(action)
@@ -294,7 +294,7 @@ class TestAtom(unittest.TestCase):
         Test the Atom.applyAction() method for a CHANGE_BOND action.
         """
         action = ['CHANGE_BOND', '*1', -1, '*2']
-        for element in elementList:
+        for element in element_list:
             atom0 = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
             atom = atom0.copy()
             atom.applyAction(action)
@@ -308,7 +308,7 @@ class TestAtom(unittest.TestCase):
         Test the Atom.applyAction() method for a GAIN_RADICAL action.
         """
         action = ['GAIN_RADICAL', '*1', 1]
-        for element in elementList:
+        for element in element_list:
             atom0 = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
             atom = atom0.copy()
             atom.applyAction(action)
@@ -322,7 +322,7 @@ class TestAtom(unittest.TestCase):
         Test the Atom.applyAction() method for a LOSE_RADICAL action.
         """
         action = ['LOSE_RADICAL', '*1', 1]
-        for element in elementList:
+        for element in element_list:
             atom0 = Atom(element=element, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
             atom = atom0.copy()
             atom.applyAction(action)
@@ -335,8 +335,8 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.equivalent() method.
         """
-        for index1, element1 in enumerate(elementList[0:10]):
-            for index2, element2 in enumerate(elementList[0:10]):
+        for index1, element1 in enumerate(element_list[0:10]):
+            for index2, element2 in enumerate(element_list[0:10]):
                 atom1 = Atom(element=element1, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
                 atom2 = Atom(element=element2, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
                 if index1 == index2:
@@ -350,8 +350,8 @@ class TestAtom(unittest.TestCase):
         """
         Test the Atom.isSpecificCaseOf() method.
         """
-        for index1, element1 in enumerate(elementList[0:10]):
-            for index2, element2 in enumerate(elementList[0:10]):
+        for index1, element1 in enumerate(element_list[0:10]):
+            for index2, element2 in enumerate(element_list[0:10]):
                 atom1 = Atom(element=element1, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
                 atom2 = Atom(element=element2, radicalElectrons=1, charge=0, label='*1', lonePairs=0)
                 if index1 == index2:
@@ -388,9 +388,9 @@ class TestAtom(unittest.TestCase):
         Test the Atom.equivalent() method for non-normal isotopes
         """
 
-        atom1 = Atom(element=getElement('H'))
-        atom2 = Atom(element=getElement('H', 2))
-        atom3 = Atom(element=getElement('H'))
+        atom1 = Atom(element=get_element('H'))
+        atom2 = Atom(element=get_element('H', 2))
+        atom3 = Atom(element=get_element('H'))
 
         self.assertFalse(atom1.equivalent(atom2))
         self.assertTrue(atom1.equivalent(atom3))
@@ -805,7 +805,7 @@ class TestBond(unittest.TestCase):
 
     def test_get_bond_string(self):
         """Test that bond objects can return a bond string"""
-        bond = Bond(atom1=Atom(element=getElement(1)), atom2=Atom(element=getElement(6)), order=1)
+        bond = Bond(atom1=Atom(element=get_element(1)), atom2=Atom(element=get_element(6)), order=1)
         self.assertEqual(bond.get_bond_string(), 'C-H')
 
 ################################################################################
@@ -2271,7 +2271,7 @@ multiplicity 2
         """
 
         mol = Molecule().fromSMILES('CC')
-        mol.atoms[0].element = getElement('C', 13)
+        mol.atoms[0].element = get_element('C', 13)
 
         table = str.maketrans({'\n': None, ' ': None})  # Translation table to remove whitespace
 
@@ -2290,7 +2290,7 @@ multiplicity 2
         self.assertEquals(adjlist, adjlist_exp)
 
         mol = Molecule().fromSMILES('CC')
-        mol.atoms[2].element = getElement('H', 2)
+        mol.atoms[2].element = get_element('H', 2)
 
         adjlist = mol.toAdjacencyList().translate(table)
         adjlist_exp = """
@@ -2307,7 +2307,7 @@ multiplicity 2
         self.assertEquals(adjlist, adjlist_exp)
 
         mol = Molecule().fromSMILES('OC')
-        mol.atoms[0].element = getElement('O', 18)
+        mol.atoms[0].element = get_element('O', 18)
 
         adjlist = mol.toAdjacencyList().translate(table)
         adjlist_exp = """
@@ -2327,7 +2327,7 @@ multiplicity 2
         """
 
         exp = Molecule().fromSMILES('CC')
-        exp.atoms[0].element = getElement('C', 13)
+        exp.atoms[0].element = get_element('C', 13)
 
         adjlist_calc = """
         1 C u0 p0 c0 i13 {2,S} {3,S} {4,S} {5,S}
@@ -2344,7 +2344,7 @@ multiplicity 2
         self.assertTrue(exp.isIsomorphic(calc))
 
         exp = Molecule().fromSMILES('CC')
-        exp.atoms[2].element = getElement('H', 2)
+        exp.atoms[2].element = get_element('H', 2)
 
         adjlist_calc = """
         1 C u0 p0 c0 {2,S} {3,S} {4,S} {5,S}
@@ -2361,7 +2361,7 @@ multiplicity 2
         self.assertTrue(exp.isIsomorphic(calc))
 
         exp = Molecule().fromSMILES('OC')
-        exp.atoms[0].element = getElement('O', 18)
+        exp.atoms[0].element = get_element('O', 18)
 
         adjlist_calc = """
         1 O u0 p2 c0 i18 {2,S} {3,S}

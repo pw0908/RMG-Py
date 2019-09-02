@@ -42,7 +42,7 @@ import rmgpy.molecule.pathfinder as pathfinder
 import rmgpy.molecule.resonance as resonance
 from rmgpy.exceptions import InchiException
 from rmgpy.molecule.adjlist import ConsistencyChecker
-from rmgpy.molecule.converter import toRDKitMol
+from rmgpy.molecule.converter import to_rdkit_mol
 from rmgpy.molecule.molecule import Atom, Bond, Molecule
 from rmgpy.molecule.util import agglomerate, partition, generate_combo, swap
 
@@ -647,7 +647,7 @@ def create_augmented_layers(mol):
         for h in hydrogens:
             molcopy.removeAtom(h)
 
-        rdkitmol = toRDKitMol(molcopy)
+        rdkitmol = to_rdkit_mol(molcopy)
         _, auxinfo = Chem.MolToInchiAndAuxInfo(rdkitmol, options='-SNon')  # suppress stereo warnings
 
         # extract the atom numbers from N-layer of auxiliary info:

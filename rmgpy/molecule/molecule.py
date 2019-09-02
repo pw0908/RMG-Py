@@ -60,7 +60,7 @@ import rmgpy.molecule.translator as translator
 from rmgpy.exceptions import DependencyError
 from rmgpy.molecule.adjlist import Saturator
 from rmgpy.molecule.atomtype import AtomType, ATOMTYPES, get_atomtype, AtomTypeError
-from rmgpy.molecule.element import BDEs
+from rmgpy.molecule.element import bdes
 from rmgpy.molecule.graph import Vertex, Edge, Graph, getVertexConnectivityValue
 from rmgpy.molecule.kekulize import kekulize
 from rmgpy.molecule.pathfinder import find_shortest_path
@@ -618,7 +618,7 @@ class Bond(Edge):
         and the atoms involved in the bond
         """
         try:
-            return BDEs[(self.atom1.element.symbol, self.atom2.element.symbol, self.order)]
+            return bdes[(self.atom1.element.symbol, self.atom2.element.symbol, self.order)]
         except KeyError:
             raise KeyError('Bond Dissociation energy not known for combination: '
                            '({0},{1},{2})'.format(self.atom1.element.symbol, self.atom2.element.symbol, self.order))
@@ -1817,7 +1817,7 @@ class Molecule(Graph):
         """
         Convert a molecular structure to a RDKit rdmol object.
         """
-        return converter.toRDKitMol(self, *args, **kwargs)
+        return converter.to_rdkit_mol(self, *args, **kwargs)
 
     def toAdjacencyList(self, label='', removeH=False, removeLonePairs=False, oldStyle=False):
         """
@@ -2247,7 +2247,7 @@ class Molecule(Graph):
             return [], []
 
         try:
-            rdkitmol, rd_atom_indices = converter.toRDKitMol(self, removeHs=False, returnMapping=True)
+            rdkitmol, rd_atom_indices = converter.to_rdkit_mol(self, remove_h=False, return_mapping=True)
         except ValueError:
             logging.warning('Unable to check aromaticity by converting to RDKit Mol.')
         else:
@@ -2276,7 +2276,7 @@ class Molecule(Graph):
 
         logging.info('Trying to use OpenBabel to check aromaticity.')
         try:
-            obmol, ob_atom_ids = converter.toOBMol(self, returnMapping=True)
+            obmol, ob_atom_ids = converter.to_ob_mol(self, return_mapping=True)
         except DependencyError:
             logging.warning('Unable to check aromaticity by converting for OB Mol.')
             return [], []

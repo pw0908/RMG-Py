@@ -50,7 +50,7 @@ import rmgpy.molecule.inchi as inchiutil
 import rmgpy.molecule.molecule as mm
 import rmgpy.molecule.util as util
 from rmgpy.exceptions import DependencyError
-from rmgpy.molecule.converter import toRDKitMol, fromRDKitMol, toOBMol, fromOBMol
+from rmgpy.molecule.converter import to_rdkit_mol, from_rdkit_mol, to_ob_mol, from_ob_mol
 
 # constants
 
@@ -333,7 +333,7 @@ def _rdkit_translator(input_object, identifier_type, mol=None):
     if isinstance(input_object, str):
         # We are converting from a string identifier to a molecule
         if identifier_type == 'inchi':
-            rdkitmol = Chem.inchi.MolFromInchi(input_object, removeHs=False)
+            rdkitmol = Chem.inchi.MolFromInchi(input_object, remove_h=False)
         elif identifier_type == 'sma':
             rdkitmol = Chem.MolFromSmarts(input_object)
         elif identifier_type == 'smi':
@@ -344,13 +344,13 @@ def _rdkit_translator(input_object, identifier_type, mol=None):
             raise ValueError("Could not interpret the identifier {0!r}".format(input_object))
         if mol is None:
             mol = mm.Molecule()
-        output = fromRDKitMol(mol, rdkitmol)
+        output = from_rdkit_mol(mol, rdkitmol)
     elif isinstance(input_object, mm.Molecule):
         # We are converting from a molecule to a string identifier
         if identifier_type == 'smi':
-            rdkitmol = toRDKitMol(input_object, sanitize=False)
+            rdkitmol = to_rdkit_mol(input_object, sanitize=False)
         else:
-            rdkitmol = toRDKitMol(input_object, sanitize=True)
+            rdkitmol = to_rdkit_mol(input_object, sanitize=True)
         if identifier_type == 'inchi':
             output = Chem.inchi.MolToInchi(rdkitmol, options='-SNon')
         elif identifier_type == 'inchikey':
@@ -397,7 +397,7 @@ def _openbabel_translator(input_object, identifier_type, mol=None):
         obmol.AssignSpinMultiplicity(True)
         if mol is None:
             mol = mm.Molecule()
-        output = fromOBMol(mol, obmol)
+        output = from_ob_mol(mol, obmol)
     elif isinstance(input_object, mm.Molecule):
         # We are converting from a Molecule to a string identifier
         if identifier_type == 'inchi':
@@ -413,7 +413,7 @@ def _openbabel_translator(input_object, identifier_type, mol=None):
             ob_conversion.AddOption('i')
         else:
             raise ValueError('Unexpected identifier type {0}.'.format(identifier_type))
-        obmol = toOBMol(input_object)
+        obmol = to_ob_mol(input_object)
         output = ob_conversion.WriteString(obmol).strip()
     else:
         raise ValueError('Unexpected input format. Should be a Molecule or a string.')

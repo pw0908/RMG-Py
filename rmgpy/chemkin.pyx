@@ -47,7 +47,7 @@ from rmgpy.data.base import Entry
 from rmgpy.data.kinetics.family import TemplateReaction
 from rmgpy.data.kinetics.library import LibraryReaction
 from rmgpy.exceptions import ChemkinError
-from rmgpy.molecule.element import getElement
+from rmgpy.molecule.element import get_element
 from rmgpy.molecule.util import retrieveElementCount
 from rmgpy.quantity import Quantity
 from rmgpy.reaction import Reaction
@@ -1517,7 +1517,7 @@ def writeThermoEntry(species, elementCounts=None, verbose=True):
         for key, count in elementCounts.items():
             if isinstance(key, tuple):
                 symbol, isotope = key
-                chemkin_name = getElement(symbol, isotope=isotope).chemkinName
+                chemkin_name = get_element(symbol, isotope=isotope).chemkin_name
             else:
                 chemkin_name = key
             string += '{0!s:<2}{1:>3d}'.format(chemkin_name, count)
@@ -1534,7 +1534,7 @@ def writeThermoEntry(species, elementCounts=None, verbose=True):
         for key, count in elementCounts.items():
             if isinstance(key, tuple):
                 symbol, isotope = key
-                chemkin_name = getElement(symbol, isotope=isotope).chemkinName
+                chemkin_name = get_element(symbol, isotope=isotope).chemkin_name
             else:
                 chemkin_name = key
             string += '{0!s:<2}{1:>3d}'.format(chemkin_name, count)
@@ -2307,8 +2307,8 @@ def writeElementsSection(f):
     for el in elements:
         if isinstance(el, tuple):
             symbol, isotope = el
-            chemkin_name = getElement(symbol, isotope=isotope).chemkinName
-            mass = 1000 * getElement(symbol, isotope=isotope).mass
+            chemkin_name = get_element(symbol, isotope=isotope).chemkin_name
+            mass = 1000 * get_element(symbol, isotope=isotope).mass
             s += '\t{0} /{1:.3f}/\n'.format(chemkin_name, mass)
         else:
             s += '\t' + el + '\n'

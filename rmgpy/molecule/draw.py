@@ -70,7 +70,7 @@ from rmgpy.species import Species
 
 ################################################################################
 
-def createNewSurface(format, target=None, width=1024, height=768):
+def create_new_surface(format, target=None, width=1024, height=768):
     """
     Create a new surface of the specified `format`:
         "png" for :class:`ImageSurface`
@@ -194,7 +194,7 @@ class MoleculeDrawer(object):
 
         # Generate information about any cycles present in the molecule, as
         # they will need special attention
-        self.__findRingGroups()
+        self._find_ring_groups()
         # Handle carbon monoxide special case
         if self.molecule.getFormula() == 'CO' and len(atoms_to_remove) == 0:
             # RDKit does not accept atom type O4tc
@@ -208,12 +208,12 @@ class MoleculeDrawer(object):
                 # before getting coordinates, make all bonds single and then
                 # replace the bonds after generating coordinates. This avoids
                 # bugs with RDKit
-                old_bond_dictionary = self.__make_single_bonds()
-                self.__generateCoordinates()
-                self.__replace_bonds(old_bond_dictionary)
+                old_bond_dictionary = self._make_single_bonds()
+                self._generate_coordinates()
+                self._replace_bonds(old_bond_dictionary)
 
                 # Generate labels to use
-                self.__generateAtomLabels()
+                self._generate_atom_labels()
 
             except (ValueError, np.linalg.LinAlgError) as e:
                 logging.error('Error while drawing molecule {0}: {1}'.format(molecule.toSMILES(), e))
@@ -267,7 +267,7 @@ class MoleculeDrawer(object):
 
         # Create a dummy surface to draw to, since we don't know the bounding rect
         # We will copy this to another surface with the correct bounding rect
-        surface0 = createNewSurface(format=format, target=None)
+        surface0 = create_new_surface(format=format, target=None)
         cr0 = cairo.Context(surface0)
 
         # Render using Cairo
@@ -278,7 +278,7 @@ class MoleculeDrawer(object):
         yoff = self.top
         width = self.right - self.left
         height = self.bottom - self.top
-        self.surface = createNewSurface(format=format, target=target, width=width, height=height)
+        self.surface = create_new_surface(format=format, target=target, width=width, height=height)
         self.cr = cairo.Context(self.surface)
 
         # Draw white background
@@ -301,7 +301,7 @@ class MoleculeDrawer(object):
 
         return self.surface, self.cr, (xoff, yoff, width, height)
 
-    def __findRingGroups(self):
+    def _find_ring_groups(self):
         """
         Find all of the cycles in the current molecule, and group them into
         sets of adjacent cycles.
@@ -325,7 +325,7 @@ class MoleculeDrawer(object):
                 if not found:
                     self.ringSystems.append([cycle])
 
-    def __generateCoordinates(self):
+    def _generate_coordinates(self):
         """
         Generate the 2D coordinates to be used when drawing the current 
         molecule. The function uses rdKits 2D coordinate generation.
@@ -365,15 +365,15 @@ class MoleculeDrawer(object):
         if not use_rdkit:
             if len(self.cycles) > 0:
                 # Cyclic molecule
-                backbone = self.__findCyclicBackbone()
-                self.__generateRingSystemCoordinates(backbone)
+                backbone = self._find_cyclic_backbone()
+                self._generate_ring_system_coordinates(backbone)
                 # Flatten backbone so that it contains a list of the atoms in the
                 # backbone, rather than a list of the cycles in the backbone
                 backbone = list(set([atom for cycle in backbone for atom in cycle]))
             else:
                 # Straight chain molecule
-                backbone = self.__findStraightChainBackbone()
-                self.__generateStraightChainCoordinates(backbone)
+                backbone = self._find_straight_chain_backbone()
+                self._generate_straight_chain_coordinates(backbone)
 
                 # If backbone is linear, then rotate so that the bond is parallel to the
                 # horizontal axis
@@ -407,7 +407,7 @@ class MoleculeDrawer(object):
             # branching and cycles
             # In general substituents should try to grow away from the origin to
             # minimize likelihood of overlap
-            self.__generateNeighborCoordinates(backbone)
+            self._generate_neighbor_coordinates(backbone)
 
         else:
             # Use RDKit 2D coordinate generation:
@@ -456,7 +456,7 @@ class MoleculeDrawer(object):
                 coordinates[index, 1] = min(coordinates[:, 1]) - 0.8  # just move the site down a bit
                 coordinates[index, 0] = coordinates[:, 0].mean()  # and center it
 
-    def __findCyclicBackbone(self):
+    def _find_cyclic_backbone(self):
         """
         Return a set of atoms to use as the "backbone" of the molecule. For
         cyclics this is simply the largest ring system.
@@ -468,7 +468,7 @@ class MoleculeDrawer(object):
                 index = i
         return self.ringSystems[index]
 
-    def __findStraightChainBackbone(self):
+    def _find_straight_chain_backbone(self):
         """
         Return a set of atoms to use as the "backbone" of the molecule. For
         non-cyclics this is the largest straight chain between atoms. If carbon
@@ -484,7 +484,7 @@ class MoleculeDrawer(object):
         backbone = []
         paths = []
         for atom in terminal_atoms:
-            paths.extend(self.__findStraightChainPaths([atom]))
+            paths.extend(self._find_straight_chain_paths([atom]))
 
         # Remove any paths that don't end in a terminal atom
         # (I don't think this should remove any!)
@@ -508,7 +508,7 @@ class MoleculeDrawer(object):
 
         return backbone
 
-    def __findStraightChainPaths(self, atoms0):
+    def _find_straight_chain_paths(self, atoms0):
         """
         Finds the paths containing the list of atoms `atoms0` in the
         current molecule. The atoms are assumed to already be in a path, with
@@ -521,12 +521,12 @@ class MoleculeDrawer(object):
                 atoms = atoms0[:]
                 atoms.append(atom2)
                 if not self.molecule.isAtomInCycle(atom2):
-                    paths.extend(self.__findStraightChainPaths(atoms))
+                    paths.extend(self._find_straight_chain_paths(atoms))
         if len(paths) == 0:
             paths.append(atoms0[:])
         return paths
 
-    def __generateRingSystemCoordinates(self, atoms):
+    def _generate_ring_system_coordinates(self, atoms):
         """
         For a ring system composed of the given cycles of `atoms`, update the
         coordinates of each atom in the system.
@@ -659,7 +659,7 @@ class MoleculeDrawer(object):
             # We're done assigning coordinates for this cycle, so mark it as processed
             processed.append(cycle)
 
-    def __generateStraightChainCoordinates(self, atoms):
+    def _generate_straight_chain_coordinates(self, atoms):
         """
         Update the coordinates for the linear straight chain of `atoms` in
         the current molecule. 
@@ -721,7 +721,7 @@ class MoleculeDrawer(object):
                 rotate_positive = not rotate_positive
             coordinates[index2, :] = coordinates[index1, :] + vector
 
-    def __generateNeighborCoordinates(self, backbone):
+    def _generate_neighbor_coordinates(self, backbone):
         """
         Recursively update the coordinates for the atoms immediately adjacent
         to the atoms in the molecular `backbone`.
@@ -781,7 +781,7 @@ class MoleculeDrawer(object):
                                 if np.linalg.norm(coordinates[index2, :] - coordinates[index0, :] - vector) < 1e-4:
                                     occupied = True
                         coordinates[atoms.index(atom1), :] = coordinates[index0, :] + vector
-                        self.__generateFunctionalGroupCoordinates(atom0, atom1)
+                        self._generate_functional_group_coordinates(atom0, atom1)
 
             else:
 
@@ -803,9 +803,9 @@ class MoleculeDrawer(object):
                         vector = np.array([math.cos(angle), math.sin(angle)], np.float64)
                         vector /= np.linalg.norm(vector)
                         coordinates[atoms.index(atom1), :] = coordinates[index0, :] + vector
-                        self.__generateFunctionalGroupCoordinates(atom0, atom1)
+                        self._generate_functional_group_coordinates(atom0, atom1)
 
-    def __generateFunctionalGroupCoordinates(self, atom0, atom1):
+    def _generate_functional_group_coordinates(self, atom0, atom1):
         """
         For the functional group starting with the bond from `atom0` to `atom1`,
         generate the coordinates of the rest of the functional group. `atom0` is
@@ -838,7 +838,7 @@ class MoleculeDrawer(object):
             # ring system at once
 
             # Generate coordinates for all atoms in the ring system
-            self.__generateRingSystemCoordinates(ring_system)
+            self._generate_ring_system_coordinates(ring_system)
 
             cycle_atoms = list(set([atom for ring in ring_system for atom in ring]))
 
@@ -865,7 +865,7 @@ class MoleculeDrawer(object):
 
             # Generate coordinates for remaining neighbors of ring system,
             # continuing to recurse as needed
-            self.__generateNeighborCoordinates(cycle_atoms)
+            self._generate_neighbor_coordinates(cycle_atoms)
 
         else:
             # atom1 is not in any rings, so we can continue as normal
@@ -912,9 +912,9 @@ class MoleculeDrawer(object):
                     coordinates[atoms.index(atom), :] = coordinates[index1, :] + vector
 
                     # Recursively continue with functional group
-                    self.__generateFunctionalGroupCoordinates(atom1, atom)
+                    self._generate_functional_group_coordinates(atom1, atom)
 
-    def __generateAtomLabels(self):
+    def _generate_atom_labels(self):
         """
         Generate the labels to use for each atom in the drawing. In general,
         all atoms are labeled with their symbols except carbon. Some carbon
@@ -990,7 +990,7 @@ class MoleculeDrawer(object):
                 index1 = atoms.index(atom1)
                 index2 = atoms.index(atom2)
                 if index1 < index2:  # So we only draw each bond once
-                    self.__renderBond(index1, index2, bond, cr)
+                    self._render_bond(index1, index2, bond, cr)
 
         # Draw aromatic bonds
         for cycle in self.cycles:
@@ -1032,7 +1032,7 @@ class MoleculeDrawer(object):
                 heavy_first = False
                 cr.set_font_size(self.options['fontSizeNormal'])
                 x0 += cr.text_extents(symbols[0])[2] / 2.0
-            self.__renderAtom(symbol, atom, x0, y0, cr, heavy_first, draw_lone_pairs)
+            self._render_atom(symbol, atom, x0, y0, cr, heavy_first, draw_lone_pairs)
 
         # Add a small amount of whitespace on all sides
         padding = self.options['padding']
@@ -1041,7 +1041,7 @@ class MoleculeDrawer(object):
         self.right += padding
         self.bottom += padding
 
-    def __drawLine(self, cr, x1, y1, x2, y2, dashed=False):
+    def _draw_line(self, cr, x1, y1, x2, y2, dashed=False):
         """
         Draw a line on the given Cairo context `cr` from (`x1`, `y1`) to
         (`x2`,`y2`), and update the bounding rectangle if necessary.
@@ -1075,7 +1075,7 @@ class MoleculeDrawer(object):
         if y2 > self.bottom:
             self.bottom = y2
 
-    def __renderBond(self, atom1, atom2, bond, cr):
+    def _render_bond(self, atom1, atom2, bond, cr):
         """
         Render an individual `bond` between atoms with indices `atom1` and `atom2`
         on the Cairo context `cr`.
@@ -1110,79 +1110,79 @@ class MoleculeDrawer(object):
                 # Draw quadruple bond centered on bond axis
                 du *= 1.5
                 dv *= 1.5
-                self.__drawLine(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
-                self.__drawLine(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
+                self._draw_line(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
+                self._draw_line(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
                 du *= 2.2
                 dv *= 2.2
-                self.__drawLine(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
-                self.__drawLine(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
+                self._draw_line(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
+                self._draw_line(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
             elif bond.isTriple():
                 # Draw triple bond centered on bond axis
                 du *= 3
                 dv *= 3
-                self.__drawLine(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
-                self.__drawLine(cr, x1, y1, x2, y2)
-                self.__drawLine(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
+                self._draw_line(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
+                self._draw_line(cr, x1, y1, x2, y2)
+                self._draw_line(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
             elif 2 < bond.getOrderNum() < 3:
                 du *= 3
                 dv *= 3
-                self.__drawLine(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
-                self.__drawLine(cr, x1, y1, x2, y2)
-                self.__drawLine(cr, x1 + du, y1 + dv, x2 + du, y2 + dv, dashed=True)
+                self._draw_line(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
+                self._draw_line(cr, x1, y1, x2, y2)
+                self._draw_line(cr, x1 + du, y1 + dv, x2 + du, y2 + dv, dashed=True)
             elif bond.isDouble():
                 # Draw double bond centered on bond axis
                 du *= 1.6
                 dv *= 1.6
-                self.__drawLine(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
-                self.__drawLine(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
+                self._draw_line(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
+                self._draw_line(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
             elif 1 < bond.getOrderNum() < 2 and not is_aromatic:
                 # Draw dashed double bond centered on bond axis
                 du *= 1.6
                 dv *= 1.6
-                self.__drawLine(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
-                self.__drawLine(cr, x1 + du, y1 + dv, x2 + du, y2 + dv, dashed=True)
+                self._draw_line(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
+                self._draw_line(cr, x1 + du, y1 + dv, x2 + du, y2 + dv, dashed=True)
             else:
-                self.__drawLine(cr, x1, y1, x2, y2)
+                self._draw_line(cr, x1, y1, x2, y2)
         else:
             # Draw bond on skeleton
-            self.__drawLine(cr, x1, y1, x2, y2)
+            self._draw_line(cr, x1, y1, x2, y2)
             # Draw other bonds
             if bond.isDouble():
                 du *= 3.2
                 dv *= 3.2
                 dx = 2 * dx / bond_length
                 dy = 2 * dy / bond_length
-                self.__drawLine(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy)
+                self._draw_line(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy)
             elif bond.isTriple():
                 du *= 3
                 dv *= 3
                 dx = 2 * dx / bond_length
                 dy = 2 * dy / bond_length
-                self.__drawLine(cr, x1 - du + dx, y1 - dv + dy, x2 - du - dx, y2 - dv - dy)
-                self.__drawLine(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy)
+                self._draw_line(cr, x1 - du + dx, y1 - dv + dy, x2 - du - dx, y2 - dv - dy)
+                self._draw_line(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy)
             elif 1 < bond.getOrderNum() < 2 and not is_aromatic:
                 du *= 3.2
                 dv *= 3.2
                 dx = 2 * dx / bond_length
                 dy = 2 * dy / bond_length
-                self.__drawLine(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy, dashed=True)
+                self._draw_line(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy, dashed=True)
             elif 2 < bond.getOrderNum() < 3:
                 du *= 3
                 dv *= 3
                 dx = 2 * dx / bond_length
                 dy = 2 * dy / bond_length
-                self.__drawLine(cr, x1 - du + dx, y1 - dv + dy, x2 - du - dx, y2 - dv - dy)
-                self.__drawLine(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy, dashed=True)
+                self._draw_line(cr, x1 - du + dx, y1 - dv + dy, x2 - du - dx, y2 - dv - dy)
+                self._draw_line(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy, dashed=True)
             elif bond.isQuadruple():
                 du *= 3
                 dv *= 3
                 dx = 2 * dx / bond_length
                 dy = 2 * dy / bond_length
-                self.__drawLine(cr, x1 - du + dx, y1 - dv + dy, x2 - du - dx, y2 - dv - dy)
-                self.__drawLine(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy)
-                self.__drawLine(cr, x1 + 2 * du + dx, y1 + 2 * dv + dy, x2 + 2 * du - dx, y2 + 2 * dv - dy)
+                self._draw_line(cr, x1 - du + dx, y1 - dv + dy, x2 - du - dx, y2 - dv - dy)
+                self._draw_line(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy)
+                self._draw_line(cr, x1 + 2 * du + dx, y1 + 2 * dv + dy, x2 + 2 * du - dx, y2 + 2 * dv - dy)
 
-    def __renderAtom(self, symbol, atom, x0, y0, cr, heavyFirst=True, drawLonePairs=False):
+    def _render_atom(self, symbol, atom, x0, y0, cr, heavy_first=True, draw_lone_pairs=False):
         """
         Render the `label` for an atom centered around the coordinates (`x0`, `y0`)
         onto the Cairo context `cr`. If `heavyFirst` is ``False``, then the order
@@ -1197,7 +1197,7 @@ class MoleculeDrawer(object):
 
             # Split label by atoms
             labels = re.findall('[A-Z][a-z]*[0-9]*', symbol)
-            if not heavyFirst:
+            if not heavy_first:
                 labels.reverse()
             if 'C' not in symbol and 'O' not in symbol and len(atoms) == 1:
                 labels.sort()
@@ -1244,7 +1244,7 @@ class MoleculeDrawer(object):
                 if i == len(symbol) - 1:
                     end_width = extents[2]
 
-            if not heavyFirst:
+            if not heavy_first:
                 for i in range(len(coordinates)):
                     coordinates[i] = (coordinates[i][0] - (width - start_width / 2 - end_width / 2), coordinates[i][1])
                 x -= width - start_width / 2 - end_width / 2
@@ -1312,7 +1312,7 @@ class MoleculeDrawer(object):
                 cr.move_to(xi, yi)
                 cr.show_text(char)
 
-            x, y = coordinates[0] if heavyFirst else coordinates[-1]
+            x, y = coordinates[0] if heavy_first else coordinates[-1]
 
         else:
             x, y = x0, y0
@@ -1496,7 +1496,7 @@ class MoleculeDrawer(object):
 
             # Draw lone electron pairs            
             # Draw them for nitrogen containing molecules only
-            if drawLonePairs:
+            if draw_lone_pairs:
                 for i in range(atom.lonePairs):
                     cr.new_sub_path()
                     if i == 0:
@@ -1514,7 +1514,7 @@ class MoleculeDrawer(object):
                         y1lp = y - 1
                         x2lp = x + 2
                         y2lp = y + 3
-                    self.__drawLine(cr, x1lp, y1lp, x2lp, y2lp)
+                    self._draw_line(cr, x1lp, y1lp, x2lp, y2lp)
 
         elif orientation[0] == 'l' or orientation[0] == 'r':
             # Draw charges first
@@ -1542,7 +1542,7 @@ class MoleculeDrawer(object):
                 cr.fill()
             # Draw lone electron pairs
             # Draw them for nitrogen species only
-            if drawLonePairs:
+            if draw_lone_pairs:
                 for i in range(atom.lonePairs):
                     cr.new_sub_path()
                     if i == 0:
@@ -1560,7 +1560,7 @@ class MoleculeDrawer(object):
                         y1lp = y - 1
                         x2lp = x + 2
                         y2lp = y + 3
-                    self.__drawLine(cr, x1lp, y1lp, x2lp, y2lp)
+                    self._draw_line(cr, x1lp, y1lp, x2lp, y2lp)
 
         # Update bounding rect to ensure atoms are included
         if bounding_rect[0] < self.left:
@@ -1572,7 +1572,7 @@ class MoleculeDrawer(object):
         if bounding_rect[3] > self.bottom:
             self.bottom = bounding_rect[3]
 
-    def __make_single_bonds(self):
+    def _make_single_bonds(self):
         """This method converts all bonds to single bonds and then returns
         a dictionary of Bond object keys with the old bond order as a value"""
         dictionary = {}
@@ -1583,10 +1583,10 @@ class MoleculeDrawer(object):
                     bond.setOrderNum(1)
         return dictionary
 
-    def __replace_bonds(self, bond_order_dictionary):
+    def _replace_bonds(self, bond_order_dictionary):
         """
         Sets the bond order in self.molecule equal to the orders in bond_order_dictionary
-        which is obtained from __make_single_bonds().
+        which is obtained from _make_single_bonds().
         """
         for bond, order in bond_order_dictionary.items():
             bond.setOrderNum(order)
@@ -1668,7 +1668,7 @@ class ReactionDrawer(object):
         rxn_width += (len(reactants) - 1) * plus_extents[4] + arrow_width + (len(products) - 1) * plus_extents[4]
 
         # Now make the surface for the reaction and render each molecule on it
-        rxn_surface = createNewSurface(format, path, width=rxn_width, height=rxn_height)
+        rxn_surface = create_new_surface(format, path, width=rxn_width, height=rxn_height)
         rxn_cr = cairo.Context(rxn_surface)
 
         # Draw white background
