@@ -18,7 +18,7 @@ from rmgpy.data.base import LogicOr
 from rmgpy.data.rmg import RMGDatabase
 from rmgpy.exceptions import ImplicitBenzeneError, UnexpectedChargeError
 from rmgpy.molecule import Group
-from rmgpy.molecule.atomtype import atomTypes
+from rmgpy.molecule.atomtype import ATOMTYPES
 from rmgpy.molecule.pathfinder import find_shortest_path
 
 
@@ -766,7 +766,7 @@ class TestDatabase(object):  # cannot inherit from unittest.TestCase if we want 
         """
         family = self.database.kinetics.families[family_name]
         target_label = ['Cd', 'CO', 'CS', 'Cdd']
-        target_atom_types = [atomTypes[x] for x in target_label]
+        target_atom_types = [ATOMTYPES[x] for x in target_label]
 
         # ignore product entries that get created from training reactions
         ignore = []
@@ -800,15 +800,15 @@ class TestDatabase(object):  # cannot inherit from unittest.TestCase if we want 
                             # Ignore ligands that are not double bonded
                             if any([abs(2 - order) < 1e-7 for order in bond.order]):
                                 for ligAtomType in ligand.atomType:
-                                    if ligand.atomType[0].isSpecificCaseOf(atomTypes['O']):
+                                    if ligand.atomType[0].is_specific_case_of(ATOMTYPES['O']):
                                         correct_atom_list.append('CO')
-                                    elif ligand.atomType[0].isSpecificCaseOf(atomTypes['S']):
+                                    elif ligand.atomType[0].is_specific_case_of(ATOMTYPES['S']):
                                         correct_atom_list.append('CS')
 
                     # remove duplicates from correctAtom:
                     correct_atom_list = list(set(correct_atom_list))
                     for correctAtom in correct_atom_list:
-                        tst.append((atomTypes[correctAtom] in atom.atomType, """
+                        tst.append((ATOMTYPES[correctAtom] in atom.atomType, """
 In family {0}, node {1} is missing the atomtype {2} in atom {3} and may be misusing the atomtype Cd, CO, CS, or Cdd.
 The following adjList may have atoms in a different ordering than the input file:
 {4}""".format(family_name, entry, correctAtom, index + 1, entry.item.toAdjacencyList())))
@@ -1255,7 +1255,7 @@ Origin Group AdjList:
         correctly according to their strict definitions
         """
         target_label = ['Cd', 'CO', 'CS', 'Cdd']
-        target_atom_types = [atomTypes[x] for x in target_label]
+        target_atom_types = [ATOMTYPES[x] for x in target_label]
         tst = []
         for entry_name, entry in group.entries.items():
             if isinstance(entry.item, Group):
@@ -1277,15 +1277,15 @@ Origin Group AdjList:
                             # Ignore ligands that are not double bonded
                             if any([abs(2 - order) < 1e-7 for order in bond.order]):
                                 for lig_atom_type in ligand.atomType:
-                                    if ligand.atomType[0].isSpecificCaseOf(atomTypes['O']):
+                                    if ligand.atomType[0].is_specific_case_of(ATOMTYPES['O']):
                                         correct_atom_list.append('CO')
-                                    elif ligand.atomType[0].isSpecificCaseOf(atomTypes['S']):
+                                    elif ligand.atomType[0].is_specific_case_of(ATOMTYPES['S']):
                                         correct_atom_list.append('CS')
 
                     # remove duplicates from correctAtom:
                     correct_atom_list = list(set(correct_atom_list))
                     for correctAtom in correct_atom_list:
-                        tst.append((atomTypes[correctAtom] in atom.atomType, """
+                        tst.append((ATOMTYPES[correctAtom] in atom.atomType, """
 In group {0}, node {1} is missing the atomtype {2} in atom {3} and may be misusing the atomtype Cd, CO, CS, or Cdd.
 The following adjList may have atoms in a different ordering than the input file:
 {4}""".format(group_name, entry, correctAtom, index + 1, entry.item.toAdjacencyList())))

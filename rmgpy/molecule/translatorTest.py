@@ -37,7 +37,7 @@ import unittest
 from external.wip import work_in_progress
 
 from rmgpy.molecule.adjlist import ConsistencyChecker
-from rmgpy.molecule.atomtype import atomTypes
+from rmgpy.molecule.atomtype import ATOMTYPES
 from rmgpy.molecule.inchi import compose_aug_inchi, P_LAYER_PREFIX, P_LAYER_SEPARATOR, U_LAYER_PREFIX, U_LAYER_SEPARATOR
 from rmgpy.molecule.molecule import Molecule
 from rmgpy.molecule.translator import *
@@ -792,7 +792,7 @@ class ParsingTest(unittest.TestCase):
         # Test that atomtypes that rely on lone pairs for identity are typed correctly
         smiles = 'CN'
         mol = fromSMILES(Molecule(), smiles)
-        self.assertEquals(mol.atoms[1].atomType, atomTypes['N3s'])
+        self.assertEquals(mol.atoms[1].atomType, ATOMTYPES['N3s'])
 
         # Test N2
         adjlist = '''
@@ -1035,7 +1035,7 @@ class ParsingTest(unittest.TestCase):
         # Test that atomtypes that rely on lone pairs for identity are typed correctly
         inchi = "InChI=1S/CH5N/c1-2/h2H2,1H3"
         mol = fromInChI(Molecule(), inchi)
-        self.assertEquals(mol.atoms[1].atomType, atomTypes['N3s'])
+        self.assertEquals(mol.atoms[1].atomType, ATOMTYPES['N3s'])
 
     # current implementation of SMARTS is broken
     def test_fromSMARTS(self):

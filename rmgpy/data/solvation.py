@@ -40,7 +40,7 @@ from copy import deepcopy
 
 import rmgpy.constants as constants
 from rmgpy.data.base import Database, Entry, make_logic_node, DatabaseError
-from rmgpy.molecule import Molecule, Group, atomTypes
+from rmgpy.molecule import Molecule, Group, ATOMTYPES
 from rmgpy.species import Species
 
 
@@ -738,25 +738,25 @@ class SolvationDatabase(object):
                 sum_bond_orders = 0
                 for key, bond in bonds.items():
                     sum_bond_orders += bond.order  # We should always have 2 'B' bonds (but what about Cbf?)
-                if atomTypes['Val4'] in atom.atomType.generic:  # Carbon, Silicon
+                if ATOMTYPES['Val4'] in atom.atomType.generic:  # Carbon, Silicon
                     while atom.radicalElectrons + charge + sum_bond_orders < 4:
                         atom.decrementLonePairs()
                         atom.incrementRadical()
                         atom.incrementRadical()
                         added_to_pairs[atom] += 1
-                if atomTypes['Val5'] in atom.atomType.generic:  # Nitrogen
+                if ATOMTYPES['Val5'] in atom.atomType.generic:  # Nitrogen
                     while atom.radicalElectrons + charge + sum_bond_orders < 3:
                         atom.decrementLonePairs()
                         atom.incrementRadical()
                         atom.incrementRadical()
                         added_to_pairs[atom] += 1
-                if atomTypes['Val6'] in atom.atomType.generic:  # Oxygen, sulfur
+                if ATOMTYPES['Val6'] in atom.atomType.generic:  # Oxygen, sulfur
                     while atom.radicalElectrons + charge + sum_bond_orders < 2:
                         atom.decrementLonePairs()
                         atom.incrementRadical()
                         atom.incrementRadical()
                         added_to_pairs[atom] += 1
-                if atomTypes['Val7'] in atom.atomType.generic:  # Chlorine
+                if ATOMTYPES['Val7'] in atom.atomType.generic:  # Chlorine
                     while atom.radicalElectrons + charge + sum_bond_orders < 1:
                         atom.decrementLonePairs()
                         atom.incrementRadical()

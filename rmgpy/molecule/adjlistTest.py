@@ -51,7 +51,7 @@ class TestGroupAdjLists(unittest.TestCase):
 
     def testFromOldAdjacencyList1(self):
         """
-        adjlist: Test the Group.fromAdjacencyList() method on an old style adjacency list.
+        adjlist: Test the Group.from_adjacency_list() method on an old style adjacency list.
         """
         adjlist = """
 1 *2 {Cs,Cd} 0 {2,{S,D}} {3,S}
@@ -86,7 +86,7 @@ class TestGroupAdjLists(unittest.TestCase):
 
     def testFromAdjacencyList(self):
         """
-        adjlist: Test the Group.fromAdjacencyList() method.
+        adjlist: Test the Group.from_adjacency_list() method.
         """
         adjlist = """
 1 *2 [Cs,Cd]   u0 {2,[S,D]} {3,S}
@@ -184,7 +184,7 @@ class TestMoleculeAdjLists(unittest.TestCase):
 
     def testFromAdjacencyList1(self):
         """
-        adjlist: Test the Molecule.fromAdjacencyList() method 1.
+        adjlist: Test the Molecule.from_adjacency_list() method 1.
         """
         # molecule 1
         adjlist = """
@@ -238,7 +238,7 @@ class TestMoleculeAdjLists(unittest.TestCase):
 
     def testFromAdjacencyList2(self):
         """
-        adjlist: Test the Molecule.fromAdjacencyList() method 2.
+        adjlist: Test the Molecule.from_adjacency_list() method 2.
         """
         # molecule 2
         adjlist = """
@@ -292,7 +292,7 @@ class TestMoleculeAdjLists(unittest.TestCase):
 
     def testFromAdjacencyList3(self):
         """
-        adjlist: Test the Molecule.fromAdjacencyList() method 3.
+        adjlist: Test the Molecule.from_adjacency_list() method 3.
         """
         # molecule 3
         adjlist = """
@@ -346,7 +346,7 @@ class TestMoleculeAdjLists(unittest.TestCase):
 
     def testFromAdjacencyList4(self):
         """
-        adjlist: Test the Molecule.fromAdjacencyList() method 4.
+        adjlist: Test the Molecule.from_adjacency_list() method 4.
         """
         # molecule 4
         adjlist = """
@@ -398,7 +398,7 @@ class TestMoleculeAdjLists(unittest.TestCase):
 
     def testFromAdjacencyList5(self):
         """
-        adjlist: Test if fromAdjacencyList works when saturateH is turned on 
+        adjlist: Test if from_adjacency_list works when saturateH is turned on
         and test molecule is fused aromatics.
         """
         # molecule 5
@@ -742,7 +742,7 @@ class TestMoleculeAdjLists(unittest.TestCase):
         molecule = Molecule().fromAdjacencyList(adjlist)
         molecule_new = Molecule().fromAdjacencyList(adjlist_new)
         self.assertTrue(molecule.isIsomorphic(molecule_new))
-        # Currently the fromOldAdjacencyList cannot correctly interpret CO written in this old form
+        # Currently the from_old_adjacency_list cannot correctly interpret CO written in this old form
         # (I don't think any adjlists are actually formed this way.)  
         # Currently 'adjlist' will fail when the Molecule is determined to be non-neurtral in net charge.
 

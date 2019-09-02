@@ -32,7 +32,7 @@ import unittest
 
 import rmgpy.molecule.element as elements
 from rmgpy.molecule import Molecule
-from rmgpy.molecule.atomtype import atomTypes
+from rmgpy.molecule.atomtype import ATOMTYPES
 from rmgpy.molecule.group import ActionError, GroupAtom, GroupBond, Group
 
 ################################################################################
@@ -47,20 +47,20 @@ class TestGroupAtom(unittest.TestCase):
         """
         A method called before each unit test in this class.
         """
-        self.atom = GroupAtom(atomType=[atomTypes['Cd']], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
+        self.atom = GroupAtom(atomType=[ATOMTYPES['Cd']], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
 
     def testApplyActionBreakBond(self):
         """
         Test the GroupAtom.applyAction() method for a BREAK_BOND action.
         """
         action = ['BREAK_BOND', '*1', 1, '*2']
-        for label, atomType in atomTypes.items():
+        for label, atomType in ATOMTYPES.items():
             atom0 = GroupAtom(atomType=[atomType], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
             atom = atom0.copy()
             try:
                 atom.applyAction(action)
-                self.assertEqual(len(atom.atomType), len(atomType.breakBond))
-                for a in atomType.breakBond:
+                self.assertEqual(len(atom.atomType), len(atomType.break_bond))
+                for a in atomType.break_bond:
                     self.assertTrue(a in atom.atomType)
                 self.assertEqual(atom0.radicalElectrons, atom.radicalElectrons)
                 self.assertEqual(atom0.charge, atom.charge)
@@ -68,89 +68,89 @@ class TestGroupAtom(unittest.TestCase):
                 self.assertEqual(atom0.label, atom.label)
                 self.assertEqual(atom0.lonePairs, atom.lonePairs)
             except ActionError:
-                self.assertEqual(len(atomType.breakBond), 0)
+                self.assertEqual(len(atomType.break_bond), 0)
 
     def testApplyActionFormBond(self):
         """
         Test the GroupAtom.applyAction() method for a FORM_BOND action.
         """
         action = ['FORM_BOND', '*1', 1, '*2']
-        for label, atomType in atomTypes.items():
+        for label, atomType in ATOMTYPES.items():
             atom0 = GroupAtom(atomType=[atomType], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
             atom = atom0.copy()
             try:
                 atom.applyAction(action)
-                self.assertEqual(len(atom.atomType), len(atomType.formBond))
-                for a in atomType.formBond:
+                self.assertEqual(len(atom.atomType), len(atomType.form_bond))
+                for a in atomType.form_bond:
                     self.assertTrue(a in atom.atomType)
                 self.assertEqual(atom0.radicalElectrons, atom.radicalElectrons)
                 self.assertEqual(atom0.charge, atom.charge)
                 self.assertEqual(atom0.label, atom.label)
                 self.assertEqual(atom0.lonePairs, atom.lonePairs)
             except ActionError:
-                self.assertEqual(len(atomType.formBond), 0)
+                self.assertEqual(len(atomType.form_bond), 0)
 
     def testApplyActionIncrementBond(self):
         """
         Test the GroupAtom.applyAction() method for a CHANGE_BOND action.
         """
         action = ['CHANGE_BOND', '*1', 1, '*2']
-        for label, atomType in atomTypes.items():
+        for label, atomType in ATOMTYPES.items():
             atom0 = GroupAtom(atomType=[atomType], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
             atom = atom0.copy()
             try:
                 atom.applyAction(action)
-                self.assertEqual(len(atom.atomType), len(atomType.incrementBond))
-                for a in atomType.incrementBond:
+                self.assertEqual(len(atom.atomType), len(atomType.increment_bond))
+                for a in atomType.increment_bond:
                     self.assertTrue(a in atom.atomType)
                 self.assertEqual(atom0.radicalElectrons, atom.radicalElectrons)
                 self.assertEqual(atom0.charge, atom.charge)
                 self.assertEqual(atom0.label, atom.label)
                 self.assertEqual(atom0.lonePairs, atom.lonePairs)
             except ActionError:
-                self.assertEqual(len(atomType.incrementBond), 0)
+                self.assertEqual(len(atomType.increment_bond), 0)
 
     def testApplyActionDecrementBond(self):
         """
         Test the GroupAtom.applyAction() method for a CHANGE_BOND action.
         """
         action = ['CHANGE_BOND', '*1', -1, '*2']
-        for label, atomType in atomTypes.items():
+        for label, atomType in ATOMTYPES.items():
             atom0 = GroupAtom(atomType=[atomType], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
             atom = atom0.copy()
             try:
                 atom.applyAction(action)
-                self.assertEqual(len(atom.atomType), len(atomType.decrementBond))
-                for a in atomType.decrementBond:
+                self.assertEqual(len(atom.atomType), len(atomType.decrement_bond))
+                for a in atomType.decrement_bond:
                     self.assertTrue(a in atom.atomType)
                 self.assertEqual(atom0.radicalElectrons, atom.radicalElectrons)
                 self.assertEqual(atom0.charge, atom.charge)
                 self.assertEqual(atom0.label, atom.label)
                 self.assertEqual(atom0.lonePairs, atom.lonePairs)
             except ActionError:
-                self.assertEqual(len(atomType.decrementBond), 0)
+                self.assertEqual(len(atomType.decrement_bond), 0)
 
     def testApplyActionGainRadical(self):
         """
         Test the GroupAtom.applyAction() method for a GAIN_RADICAL action.
         """
         action = ['GAIN_RADICAL', '*1', 1]
-        for label, atomType in atomTypes.items():
+        for label, atomType in ATOMTYPES.items():
             atom0 = GroupAtom(atomType=[atomType], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
             atom = atom0.copy()
             try:
                 atom.applyAction(action)
-                self.assertEqual(len(atom.atomType), len(atomType.incrementRadical))
-                for a in atomType.incrementRadical:
+                self.assertEqual(len(atom.atomType), len(atomType.increment_radical))
+                for a in atomType.increment_radical:
                     self.assertTrue(a in atom.atomType,
                                     "GAIN_RADICAL on {0} gave {1} not {2}".format(atomType, atom.atomType,
-                                                                                  atomType.incrementRadical))
+                                                                                  atomType.increment_radical))
                 self.assertEqual(atom0.radicalElectrons, [r - 1 for r in atom.radicalElectrons])
                 self.assertEqual(atom0.charge, atom.charge)
                 self.assertEqual(atom0.label, atom.label)
                 self.assertEqual(atom0.lonePairs, atom.lonePairs)
             except ActionError:
-                self.assertEqual(len(atomType.incrementRadical), 0)
+                self.assertEqual(len(atomType.increment_radical), 0)
 
         # test when radicals unspecified
         group = Group().fromAdjacencyList("""
@@ -165,22 +165,22 @@ class TestGroupAtom(unittest.TestCase):
         Test the GroupAtom.applyAction() method for a LOSE_RADICAL action.
         """
         action = ['LOSE_RADICAL', '*1', 1]
-        for label, atomType in atomTypes.items():
+        for label, atomType in ATOMTYPES.items():
             atom0 = GroupAtom(atomType=[atomType], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
             atom = atom0.copy()
             try:
                 atom.applyAction(action)
-                self.assertEqual(len(atom.atomType), len(atomType.decrementRadical))
-                for a in atomType.incrementRadical:
+                self.assertEqual(len(atom.atomType), len(atomType.decrement_radical))
+                for a in atomType.increment_radical:
                     self.assertTrue(a in atom.atomType,
                                     "LOSE_RADICAL on {0} gave {1} not {2}".format(atomType, atom.atomType,
-                                                                                  atomType.decrementRadical))
+                                                                                  atomType.decrement_radical))
                 self.assertEqual(atom0.radicalElectrons, [r + 1 for r in atom.radicalElectrons])
                 self.assertEqual(atom0.charge, atom.charge)
                 self.assertEqual(atom0.label, atom.label)
                 self.assertEqual(atom0.lonePairs, atom.lonePairs)
             except ActionError:
-                self.assertEqual(len(atomType.decrementRadical), 0)
+                self.assertEqual(len(atomType.decrement_radical), 0)
 
         # test when radicals unspecified
         group = Group().fromAdjacencyList("""
@@ -198,40 +198,40 @@ class TestGroupAtom(unittest.TestCase):
         action = ['GAIN_PAIR', '*1', 1]
 
         # lonePairs specified:
-        for label, atomType in atomTypes.items():
+        for label, atomType in ATOMTYPES.items():
             atom0 = GroupAtom(atomType=[atomType], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
             atom = atom0.copy()
             try:
                 atom.applyAction(action)
-                self.assertEqual(len(atom.atomType), len(atomType.incrementLonePair))
-                for a in atomType.incrementLonePair:
+                self.assertEqual(len(atom.atomType), len(atomType.increment_lone_pair))
+                for a in atomType.increment_lone_pair:
                     self.assertTrue(a in atom.atomType,
                                     "GAIN_PAIR on {0} gave {1} not {2}".format(atomType, atom.atomType,
-                                                                               atomType.incrementLonePair))
+                                                                               atomType.increment_lone_pair))
                 self.assertEqual(atom0.radicalElectrons, atom.radicalElectrons)
                 self.assertEqual(atom0.charge, atom.charge)
                 self.assertEqual(atom0.label, atom.label)
                 self.assertEqual(atom0.lonePairs, [r - 1 for r in atom.lonePairs])
             except ActionError:
-                self.assertEqual(len(atomType.incrementLonePair), 0)
+                self.assertEqual(len(atomType.increment_lone_pair), 0)
 
         # lonePairs unspecified:
-        for label, atomType in atomTypes.items():
+        for label, atomType in ATOMTYPES.items():
             atom0 = GroupAtom(atomType=[atomType], radicalElectrons=[1], charge=[0], label='*1')
             atom = atom0.copy()
             try:
                 atom.applyAction(action)
-                self.assertEqual(len(atom.atomType), len(atomType.incrementLonePair))
-                for a in atomType.incrementLonePair:
+                self.assertEqual(len(atom.atomType), len(atomType.increment_lone_pair))
+                for a in atomType.increment_lone_pair:
                     self.assertTrue(a in atom.atomType,
                                     "GAIN_PAIR on {0} gave {1} not {2}".format(atomType, atom.atomType,
-                                                                               atomType.incrementLonePair))
+                                                                               atomType.increment_lone_pair))
                 self.assertEqual(atom0.radicalElectrons, atom.radicalElectrons)
                 self.assertEqual(atom0.charge, atom.charge)
                 self.assertEqual(atom0.label, atom.label)
                 self.assertEqual([0, 1, 2, 3], [r - 1 for r in atom.lonePairs])
             except ActionError:
-                self.assertEqual(len(atomType.incrementLonePair), 0)
+                self.assertEqual(len(atomType.increment_lone_pair), 0)
 
     def testApplyActionLosePair(self):
         """
@@ -241,47 +241,47 @@ class TestGroupAtom(unittest.TestCase):
         action = ['LOSE_PAIR', '*1', 1]
 
         # lonePairs specified:
-        for label, atomType in atomTypes.items():
+        for label, atomType in ATOMTYPES.items():
             atom0 = GroupAtom(atomType=[atomType], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[1])
             atom = atom0.copy()
             try:
                 atom.applyAction(action)
-                self.assertEqual(len(atom.atomType), len(atomType.decrementLonePair))
-                for a in atomType.decrementLonePair:
+                self.assertEqual(len(atom.atomType), len(atomType.decrement_lone_pair))
+                for a in atomType.decrement_lone_pair:
                     self.assertTrue(a in atom.atomType,
                                     "LOSE_PAIR on {0} gave {1} not {2}".format(atomType, atom.atomType,
-                                                                               atomType.decrementLonePair))
+                                                                               atomType.decrement_lone_pair))
                 self.assertEqual(atom0.radicalElectrons, atom.radicalElectrons)
                 self.assertEqual(atom0.charge, atom.charge)
                 self.assertEqual(atom0.label, atom.label)
                 self.assertEqual(atom0.lonePairs, [r + 1 for r in atom.lonePairs])
             except ActionError:
-                self.assertEqual(len(atomType.decrementLonePair), 0)
+                self.assertEqual(len(atomType.decrement_lone_pair), 0)
 
         # lonePairs unspecified:
-        for label, atomType in atomTypes.items():
+        for label, atomType in ATOMTYPES.items():
             atom0 = GroupAtom(atomType=[atomType], radicalElectrons=[1], charge=[0], label='*1')
             atom = atom0.copy()
             try:
                 atom.applyAction(action)
-                self.assertEqual(len(atom.atomType), len(atomType.decrementLonePair))
-                for a in atomType.decrementLonePair:
+                self.assertEqual(len(atom.atomType), len(atomType.decrement_lone_pair))
+                for a in atomType.decrement_lone_pair:
                     self.assertTrue(a in atom.atomType,
                                     "LOSE_PAIR on {0} gave {1} not {2}".format(atomType, atom.atomType,
-                                                                               atomType.decrementLonePair))
+                                                                               atomType.decrement_lone_pair))
                 self.assertEqual(atom0.radicalElectrons, atom.radicalElectrons)
                 self.assertEqual(atom0.charge, atom.charge)
                 self.assertEqual(atom0.label, atom.label)
                 self.assertEqual([1, 2, 3, 4], [r + 1 for r in atom.lonePairs])
             except ActionError:
-                self.assertEqual(len(atomType.decrementLonePair), 0)
+                self.assertEqual(len(atomType.decrement_lone_pair), 0)
 
     def testEquivalent(self):
         """
         Test the GroupAtom.equivalent() method.
         """
-        for label1, atomType1 in atomTypes.items():
-            for label2, atomType2 in atomTypes.items():
+        for label1, atomType1 in ATOMTYPES.items():
+            for label2, atomType2 in ATOMTYPES.items():
                 atom1 = GroupAtom(atomType=[atomType1], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
                 atom2 = GroupAtom(atomType=[atomType2], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
                 if label1 == label2 or atomType2 in atomType1.generic or atomType1 in atomType2.generic:
@@ -311,8 +311,8 @@ class TestGroupAtom(unittest.TestCase):
         """
         Test the GroupAtom.isSpecificCaseOf() method.
         """
-        for label1, atomType1 in atomTypes.items():
-            for label2, atomType2 in atomTypes.items():
+        for label1, atomType1 in ATOMTYPES.items():
+            for label2, atomType2 in ATOMTYPES.items():
                 atom1 = GroupAtom(atomType=[atomType1], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
                 atom2 = GroupAtom(atomType=[atomType2], radicalElectrons=[1], charge=[0], label='*1', lonePairs=[0])
                 # And make more generic types of these two atoms
@@ -843,7 +843,7 @@ class TestGroup(unittest.TestCase):
         ]
         ans = [Group().fromAdjacencyList(k) for k in ans]
 
-        extensions = test_grp.getExtensions(R=[atomTypes[i] for i in ['C', 'O', 'H']])
+        extensions = test_grp.getExtensions(R=[ATOMTYPES[i] for i in ['C', 'O', 'H']])
         extensions = [a[0] for a in extensions]
 
         self.assertEqual(len(extensions), len(ans))
@@ -858,7 +858,7 @@ class TestGroup(unittest.TestCase):
 2 *1 C u[0,1] {1,[S,D]} {3,S}
 3    R!H     u0 {2,S}
 """)
-        extensions = test_grp.getExtensions(R=[atomTypes[i] for i in ['C', 'O', 'H']])
+        extensions = test_grp.getExtensions(R=[ATOMTYPES[i] for i in ['C', 'O', 'H']])
         extensions = [a[0] for a in extensions]
 
         for ext in extensions:

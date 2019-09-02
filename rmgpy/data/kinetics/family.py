@@ -61,7 +61,7 @@ from rmgpy.kinetics import Arrhenius, SurfaceArrhenius, SurfaceArrheniusBEP, Sti
                            StickingCoefficientBEP, ArrheniusBM
 from rmgpy.kinetics.uncertainties import RateUncertainty, rank_accuracy_map
 from rmgpy.molecule import Bond, GroupBond, Group, Molecule
-from rmgpy.molecule.atomtype import atomTypes
+from rmgpy.molecule.atomtype import ATOMTYPES
 from rmgpy.reaction import Reaction, same_species_lists
 from rmgpy.species import Species
 
@@ -3587,10 +3587,10 @@ class KineticsFamily(Database):
         rxns = template_rxn_map[node.label]
 
         R = ['H', 'C', 'N', 'O', 'Si', 'S', 'Cl']  # set of possible R elements/atoms
-        R = [atomTypes[x] for x in R]
+        R = [ATOMTYPES[x] for x in R]
 
         RnH = R[:]
-        RnH.remove(atomTypes['H'])
+        RnH.remove(ATOMTYPES['H'])
 
         Run = [0, 1, 2, 3]
 

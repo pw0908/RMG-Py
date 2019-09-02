@@ -37,7 +37,7 @@ import re
 import warnings
 
 from rmgpy.exceptions import InvalidAdjacencyListError
-from rmgpy.molecule.atomtype import getAtomType
+from rmgpy.molecule.atomtype import get_atomtype
 from rmgpy.molecule.element import getElement, PeriodicSystem
 from rmgpy.molecule.group import GroupAtom, GroupBond
 from rmgpy.molecule.molecule import Atom, Bond
@@ -104,7 +104,7 @@ class ConsistencyChecker(object):
                 'Invalid valency for atom {symbol} ({type}) with {radicals} unpaired electrons, '
                 '{lonePairs} pairs of electrons, {charge} charge, and bonds [{bonds}].'.format(
                     symbol=atom.symbol,
-                    type=getAtomType(atom, atom.edges).label,
+                    type=get_atomtype(atom, atom.edges).label,
                     radicals=atom.radicalElectrons,
                     lonePairs=atom.lonePairs,
                     charge=atom.charge,
@@ -161,7 +161,7 @@ class ConsistencyChecker(object):
 
 ################################################################################
 
-def fromOldAdjacencyList(adjlist, group=False, saturateH=False):
+def from_old_adjacency_list(adjlist, group=False, saturate_h=False):
     """
     Convert a pre-June-2014 string adjacency list `adjlist` into a set of :class:`Atom` and
     :class:`Bond` objects. 
@@ -402,7 +402,7 @@ def fromOldAdjacencyList(adjlist, group=False, saturateH=False):
                     atom2.edges[atom1] = bond
 
         if not group:
-            if saturateH:
+            if saturate_h:
                 # Add explicit hydrogen atoms to complete structure if desired
                 new_atoms = []
                 for atom in atoms:
@@ -459,7 +459,7 @@ re_old_adjlist = re.compile(r'^\s*(\d*)\s+' +  # atom number digit
                             r'\s*$')  # the end!
 
 
-def fromAdjacencyList(adjlist, group=False, saturateH=False):
+def from_adjacency_list(adjlist, group=False, saturate_h=False):
     """
     Convert a string adjacency list `adjlist` into a set of :class:`Atom` and
     :class:`Bond` objects.
@@ -483,13 +483,13 @@ def fromAdjacencyList(adjlist, group=False, saturateH=False):
         logging.debug(
             "adjacency list:\n{1}\nline '{0}' looks like an intermediate style "
             "adjacency list".format(last_line, adjlist))
-        return fromOldAdjacencyList(adjlist, group=group, saturateH=saturateH)
+        return from_old_adjacency_list(adjlist, group=group, saturate_h=saturate_h)
     if re_old_adjlist.match(last_line):
         logging.debug(
             "Adjacency list:\n{1}\nline '{0}' looks like an old style adjacency list".format(last_line, adjlist))
         if not group:
             logging.debug("Will assume implicit H atoms")
-        return fromOldAdjacencyList(adjlist, group=group, saturateH=(not group))
+        return from_old_adjacency_list(adjlist, group=group, saturate_h=(not group))
 
     # Interpret the first line if it contains a label
     if len(lines[0].split()) == 1:
@@ -760,7 +760,7 @@ def fromAdjacencyList(adjlist, group=False, saturateH=False):
                 atom1.edges[atom2] = bond
                 atom2.edges[atom1] = bond
 
-    if saturateH:
+    if saturate_h:
         # Add explicit hydrogen atoms to complete structure if desired
         if not group:
             Saturator.saturate(atoms)
@@ -786,7 +786,8 @@ def fromAdjacencyList(adjlist, group=False, saturateH=False):
         return atoms, multiplicity
 
 
-def toAdjacencyList(atoms, multiplicity, label=None, group=False, removeH=False, removeLonePairs=False, oldStyle=False):
+def to_adjacency_list(atoms, multiplicity, label=None, group=False, remove_h=False, remove_lone_pairs=False,
+                      old_style=False):
     """
     Convert a chemical graph defined by a list of `atoms` into a string
     adjacency list.
@@ -794,14 +795,14 @@ def toAdjacencyList(atoms, multiplicity, label=None, group=False, removeH=False,
     if not atoms:
         return ''
 
-    if oldStyle:
-        return toOldAdjacencyList(atoms, multiplicity, label, group, removeH)
+    if old_style:
+        return to_old_adjacency_list(atoms, multiplicity, label, group, remove_h)
 
     adjlist = ''
 
     # Don't remove hydrogen atoms if the molecule consists only of hydrogen atoms
     try:
-        if removeH and all([atom.element.symbol == 'H' for atom in atoms]): removeH = False
+        if remove_h and all([atom.element.symbol == 'H' for atom in atoms]): remove_h = False
     except AttributeError:
         pass
 
@@ -822,7 +823,7 @@ def toAdjacencyList(atoms, multiplicity, label=None, group=False, removeH=False,
     atom_numbers = {}
     index = 0
     for atom in atoms:
-        if removeH and atom.element.symbol == 'H' and atom.label == '':
+        if remove_h and atom.element.symbol == 'H' and atom.label == '':
             continue
         atom_numbers[atom] = '{0:d}'.format(index + 1)
         index += 1
@@ -959,7 +960,7 @@ def toAdjacencyList(atoms, multiplicity, label=None, group=False, removeH=False,
     return adjlist
 
 
-def getOldElectronState(atom):
+def get_old_electron_state(atom):
     """
     Get the old adjacency list format electronic state
     """
@@ -997,7 +998,7 @@ def getOldElectronState(atom):
     return electron_state
 
 
-def toOldAdjacencyList(atoms, multiplicity=None, label=None, group=False, removeH=False):
+def to_old_adjacency_list(atoms, multiplicity=None, label=None, group=False, remove_h=False):
     """
     Convert a chemical graph defined by a list of `atoms` into a string old-style 
     adjacency list that can be used in RMG-Java.  Currently not working for groups.
@@ -1016,8 +1017,8 @@ def toOldAdjacencyList(atoms, multiplicity=None, label=None, group=False, remove
 
     # Don't remove hydrogen atoms if the molecule consists only of hydrogen atoms
     try:
-        if removeH and all([atom.element.symbol == 'H' for atom in atoms]):
-            removeH = False
+        if remove_h and all([atom.element.symbol == 'H' for atom in atoms]):
+            remove_h = False
     except AttributeError:
         pass
 
@@ -1028,7 +1029,7 @@ def toOldAdjacencyList(atoms, multiplicity=None, label=None, group=False, remove
     atom_numbers = {}
     index = 0
     for atom in atoms:
-        if removeH and atom.element.symbol == 'H' and atom.label == '': continue
+        if remove_h and atom.element.symbol == 'H' and atom.label == '': continue
         atom_numbers[atom] = '{0:d}'.format(index + 1)
         index += 1
 
@@ -1043,7 +1044,7 @@ def toOldAdjacencyList(atoms, multiplicity=None, label=None, group=False, remove
             # Atom type
             atom_types[atom] = '{0}'.format(atom.element.symbol)
             # Electron state(s)
-            atom_electron_states[atom] = '{0}'.format(getOldElectronState(atom))
+            atom_electron_states[atom] = '{0}'.format(get_old_electron_state(atom))
 
     # Determine field widths
     atom_number_width = max([len(s) for s in atom_numbers.values()]) + 1

@@ -59,7 +59,7 @@ import rmgpy.molecule.resonance as resonance
 import rmgpy.molecule.translator as translator
 from rmgpy.exceptions import DependencyError
 from rmgpy.molecule.adjlist import Saturator
-from rmgpy.molecule.atomtype import AtomType, atomTypes, getAtomType, AtomTypeError
+from rmgpy.molecule.atomtype import AtomType, ATOMTYPES, get_atomtype, AtomTypeError
 from rmgpy.molecule.element import BDEs
 from rmgpy.molecule.graph import Vertex, Edge, Graph, getVertexConnectivityValue
 from rmgpy.molecule.kekulize import kekulize
@@ -161,7 +161,7 @@ class Atom(Vertex):
         self.connectivity2 = d['connectivity2']
         self.connectivity3 = d['connectivity3']
         self.sortingLabel = d['sortingLabel']
-        self.atomType = atomTypes[d['atomType']] if d['atomType'] else None
+        self.atomType = ATOMTYPES[d['atomType']] if d['atomType'] else None
         self.lonePairs = d['lonePairs']
 
     def __hash__(self):
@@ -277,7 +277,7 @@ class Atom(Vertex):
             if self.atomType is None:
                 return False
             for a in atom.atomType:
-                if self.atomType.isSpecificCaseOf(a):
+                if self.atomType.is_specific_case_of(a):
                     break
             else:
                 return False
@@ -1339,7 +1339,7 @@ class Molecule(Graph):
         environment) and complete (i.e. are as detailed as possible).
         
         If `raiseException` is `False`, then the generic atomType 'R' will
-        be prescribed to any atom when getAtomType fails. Currently used for
+        be prescribed to any atom when get_atomtype fails. Currently used for
         resonance hybrid atom types.
         """
         # Because we use lonepairs to match atomtypes and default is -100 when unspecified,
@@ -1348,13 +1348,13 @@ class Molecule(Graph):
 
         for atom in self.vertices:
             try:
-                atom.atomType = getAtomType(atom, atom.edges)
+                atom.atomType = get_atomtype(atom, atom.edges)
             except AtomTypeError:
                 if logSpecies:
                     logging.error("Could not update atomtypes for this molecule:\n{0}".format(self.toAdjacencyList()))
                 if raiseException:
                     raise
-                atom.atomType = atomTypes['R']
+                atom.atomType = ATOMTYPES['R']
 
     def updateMultiplicity(self):
         """
@@ -1689,9 +1689,9 @@ class Molecule(Graph):
         Skips the first line (assuming it's a label) unless `withLabel` is
         ``False``.
         """
-        from .adjlist import fromAdjacencyList
+        from .adjlist import from_adjacency_list
 
-        self.vertices, self.multiplicity = fromAdjacencyList(adjlist, group=False, saturateH=saturateH)
+        self.vertices, self.multiplicity = from_adjacency_list(adjlist, group=False, saturate_h=saturateH)
         self.updateAtomTypes()
         self.identifyRingMembership()
 
@@ -1823,9 +1823,9 @@ class Molecule(Graph):
         """
         Convert the molecular structure to a string adjacency list.
         """
-        from .adjlist import toAdjacencyList
-        result = toAdjacencyList(self.vertices, self.multiplicity, label=label, group=False, removeH=removeH,
-                                 removeLonePairs=removeLonePairs, oldStyle=oldStyle)
+        from .adjlist import to_adjacency_list
+        result = to_adjacency_list(self.vertices, self.multiplicity, label=label, group=False, remove_h=removeH,
+                                   remove_lone_pairs=removeLonePairs, old_style=oldStyle)
         return result
 
     def find_H_bonds(self):
