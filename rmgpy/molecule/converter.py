@@ -62,7 +62,7 @@ def to_rdkit_mol(mol, remove_h=True, return_mapping=False, sanitize=True):
 
     # Sort the atoms before converting to ensure output is consistent
     # between different runs
-    mol.sortAtoms()
+    mol.sort_atoms()
     atoms = mol.vertices
     rd_atom_indices = {}  # dictionary of RDKit atom indices
     rdkitmol = Chem.rdchem.EditableMol(Chem.rdchem.Mol())
@@ -89,12 +89,12 @@ def to_rdkit_mol(mol, remove_h=True, return_mapping=False, sanitize=True):
     # Add the bonds
     for atom1 in mol.vertices:
         for atom2, bond in atom1.edges.items():
-            if bond.isHydrogenBond():
+            if bond.is_hydrogen_bond():
                 continue
             index1 = atoms.index(atom1)
             index2 = atoms.index(atom2)
             if index1 < index2:
-                order_string = bond.getOrderStr()
+                order_string = bond.get_order_str()
                 order = orders[order_string]
                 rdkitmol.AddBond(index1, index2, order)
 
@@ -169,18 +169,18 @@ def from_rdkit_mol(mol, rdkitmol):
                     order = 1.5
 
                 bond = mm.Bond(mol.vertices[i], mol.vertices[j], order)
-                mol.addBond(bond)
+                mol.add_bond(bond)
 
     # We need to update lone pairs first because the charge was set by RDKit
-    mol.updateLonePairs()
+    mol.update_lone_pairs()
     # Set atom types and connectivity values
     mol.update()
 
     # Assume this is always true
     # There are cases where 2 radical_electrons is a singlet, but
     # the triplet is often more stable,
-    mol.multiplicity = mol.getRadicalCount() + 1
-    # mol.updateAtomTypes()
+    mol.multiplicity = mol.get_radical_count() + 1
+    # mol.update_atomtypes()
 
     return mol
 
@@ -221,7 +221,7 @@ def to_ob_mol(mol, return_mapping=False):
         raise DependencyError('OpenBabel is not installed. Please install or use RDKit.')
 
     # Sort the atoms to ensure consistent output
-    mol.sortAtoms()
+    mol.sort_atoms()
     atoms = mol.vertices
 
     ob_atom_ids = {}  # dictionary of OB atom IDs
@@ -236,7 +236,7 @@ def to_ob_mol(mol, return_mapping=False):
     orders = {1: 1, 2: 2, 3: 3, 4: 4, 1.5: 5}
     for atom1 in mol.vertices:
         for atom2, bond in atom1.edges.items():
-            if bond.isHydrogenBond():
+            if bond.is_hydrogen_bond():
                 continue
             index1 = atoms.index(atom1)
             index2 = atoms.index(atom2)
@@ -259,7 +259,7 @@ def from_ob_mol(mol, obmol):
     """
     # Below are the declared variables for cythonizing the module
     # cython.declare(i=cython.int)
-    # cython.declare(radicalElectrons=cython.int, charge=cython.int, lonePairs=cython.int)
+    # cython.declare(radical_electrons=cython.int, charge=cython.int, lone_pairs=cython.int)
     # cython.declare(atom=mm.Atom, atom1=mm.Atom, atom2=mm.Atom, bond=mm.Bond)
     if openbabel is None:
         raise DependencyError('OpenBabel is not installed. Please install or use RDKit.')
@@ -294,17 +294,17 @@ def from_ob_mol(mol, obmol):
         bond = mm.Bond(mol.vertices[obbond.GetBeginAtomIdx() - 1],
                        mol.vertices[obbond.GetEndAtomIdx() - 1],
                        oborder)  # python array indices start at 0
-        mol.addBond(bond)
+        mol.add_bond(bond)
 
     # Set atom types and connectivity values
-    mol.updateConnectivityValues()
-    mol.updateAtomTypes()
-    mol.updateMultiplicity()
-    mol.identifyRingMembership()
+    mol.update_connectivity_values()
+    mol.update_atomtypes()
+    mol.update_multiplicity()
+    mol.identify_ring_membership()
 
     # Assume this is always true
-    # There are cases where 2 radicalElectrons is a singlet, but
+    # There are cases where 2 radical_electrons is a singlet, but
     # the triplet is often more stable,
-    mol.multiplicity = mol.getRadicalCount() + 1
+    mol.multiplicity = mol.get_radical_count() + 1
 
     return mol

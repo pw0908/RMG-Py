@@ -164,7 +164,7 @@ cdef class SurfaceReactor(ReactionSystem):
         for spec, index in self.speciesIndex.items():
             if index >= self.numCoreSpecies:
                 continue
-            if spec.containsSurfaceSite():
+            if spec.contains_surface_site():
                 species_on_surface[index] = 1
         for rxn, index in self.reactionIndex.items():
             if rxn.isSurfaceReaction():

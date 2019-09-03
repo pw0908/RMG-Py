@@ -56,7 +56,7 @@ class RDKitTest(unittest.TestCase):
 
     def test_lone_pair_retention(self):
         """Test that we don't lose any lone pairs on round trip RDKit conversion."""
-        mol = Molecule().fromAdjacencyList("""
+        mol = Molecule().from_adjacency_list("""
 1 C u0 p0 c0 {2,D} {3,S} {4,S}
 2 O u0 p2 c0 {1,D}
 3 H u0 p0 c0 {1,S}
@@ -69,12 +69,12 @@ class RDKitTest(unittest.TestCase):
         except AtomTypeError as e:
             self.fail('Could not convert from RDKitMol: ' + e.message)
         else:
-            self.assertTrue(mol.isIsomorphic(mol2))
+            self.assertTrue(mol.is_isomorphic(mol2))
 
     def test_atom_mapping_1(self):
         """Test that to_rdkit_mol returns correct indices and atom mappings."""
         bond_order_dict = {'SINGLE': 1, 'DOUBLE': 2, 'TRIPLE': 3, 'AROMATIC': 1.5}
-        mol = Molecule().fromSMILES('C1CCC=C1C=O')
+        mol = Molecule().from_smiles('C1CCC=C1C=O')
         rdkitmol, rd_atom_indices = to_rdkit_mol(mol, remove_h=False, return_mapping=True)
         for atom in mol.atoms:
             # Check that all atoms are found in mapping
@@ -111,13 +111,13 @@ class RDKitTest(unittest.TestCase):
 6 H u0 p0 c0 {5,S}
         """
 
-        mol = Molecule().fromAdjacencyList(adjlist)
+        mol = Molecule().from_adjacency_list(adjlist)
         rdkitmol, rd_atom_indices = to_rdkit_mol(mol, remove_h=True, return_mapping=True)
 
         heavy_atoms = [at for at in mol.atoms if at.number != 1]
         for at1 in heavy_atoms:
             for at2 in heavy_atoms:
-                if mol.hasBond(at1, at2):
+                if mol.has_bond(at1, at2):
                     try:
                         rdkitmol.GetBondBetweenAtoms(rd_atom_indices[at1], rd_atom_indices[at2])
                     except RuntimeError:
@@ -129,26 +129,26 @@ class ConverterTest(unittest.TestCase):
     def setUp(self):
         """Function run before each test in this class."""
         self.test_mols = [
-            Molecule().fromSMILES('C'),
-            Molecule().fromSMILES('O'),
-            Molecule().fromSMILES('N'),
-            Molecule().fromSMILES('S'),
-            Molecule().fromSMILES('[CH2]C'),
-            Molecule().fromSMILES('[CH]C'),
-            Molecule().fromSMILES('C=CC=C'),
-            Molecule().fromSMILES('C#C[CH2]'),
-            Molecule().fromSMILES('c1ccccc1'),
-            Molecule().fromSMILES('[13CH3]C'),
-            Molecule().fromSMILES('O=CCO').generate_H_bonded_structures()[0],
+            Molecule().from_smiles('C'),
+            Molecule().from_smiles('O'),
+            Molecule().from_smiles('N'),
+            Molecule().from_smiles('S'),
+            Molecule().from_smiles('[CH2]C'),
+            Molecule().from_smiles('[CH]C'),
+            Molecule().from_smiles('C=CC=C'),
+            Molecule().from_smiles('C#C[CH2]'),
+            Molecule().from_smiles('c1ccccc1'),
+            Molecule().from_smiles('[13CH3]C'),
+            Molecule().from_smiles('O=CCO').generate_h_bonded_structures()[0],
         ]
-        self.test_Hbond_free_mol = Molecule().fromSMILES('O=CCO')
+        self.test_Hbond_free_mol = Molecule().from_smiles('O=CCO')
 
     def test_rdkit_round_trip(self):
         """Test conversion to and from RDKitMol"""
         for mol in self.test_mols:
             rdkit_mol = to_rdkit_mol(mol)
             new_mol = from_rdkit_mol(Molecule(), rdkit_mol)
-            self.assertTrue(mol.isIsomorphic(new_mol) or self.test_Hbond_free_mol.isIsomorphic(new_mol))
+            self.assertTrue(mol.is_isomorphic(new_mol) or self.test_Hbond_free_mol.is_isomorphic(new_mol))
             self.assertEqual(mol.get_element_count(), new_mol.get_element_count())
 
     def test_ob_round_trip(self):
@@ -156,5 +156,5 @@ class ConverterTest(unittest.TestCase):
         for mol in self.test_mols:
             ob_mol = to_ob_mol(mol)
             new_mol = from_ob_mol(Molecule(), ob_mol)
-            self.assertTrue(mol.isIsomorphic(new_mol) or self.test_Hbond_free_mol.isIsomorphic(new_mol))
+            self.assertTrue(mol.is_isomorphic(new_mol) or self.test_Hbond_free_mol.is_isomorphic(new_mol))
             self.assertEqual(mol.get_element_count(), new_mol.get_element_count())

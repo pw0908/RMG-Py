@@ -155,8 +155,8 @@ class ArkaneSpecies(RMGObject):
                 self.conformer = species.conformer
                 self.xyz = self.update_xyz_string()
         elif species.molecule is not None and len(species.molecule) > 0:
-            self.smiles = species.molecule[0].toSMILES()
-            self.adjacency_list = species.molecule[0].toAdjacencyList()
+            self.smiles = species.molecule[0].to_smiles()
+            self.adjacency_list = species.molecule[0].to_adjacency_list()
             try:
                 inchi = toInChI(species.molecule[0], backend='try-all', aug_level=0)
             except ValueError:

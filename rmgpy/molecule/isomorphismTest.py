@@ -82,7 +82,7 @@ def createMolecule(element, u1, c1):
     logging.info('Creating molecule: {0}'.format(adjlist))
     mol = None
     try:
-        mol = Molecule().fromAdjacencyList(adjlist)
+        mol = Molecule().from_adjacency_list(adjlist)
     except (ValueError, InvalidAdjacencyListError):
         # Either a non-neutral molecule, incompatible multiplcity, or an improper valence 
         # was assigned with this combination.
@@ -92,7 +92,7 @@ def createMolecule(element, u1, c1):
 
 def createGroup(element, u1, c1):
     adjlist = get_group_string(element, u1, c1)
-    return Group().fromAdjacencyList(adjlist), adjlist
+    return Group().from_adjacency_list(adjlist), adjlist
 
 
 def retrieve_unspecified_valency(atom_type, unpaired_electrons):
@@ -302,189 +302,189 @@ def testMultiplicity_mol_mol_distinct_multiplicity():
     """
     distinct multiplicity for both molecules set by user.
     """
-    mol = Molecule().fromAdjacencyList("""
+    mol = Molecule().from_adjacency_list("""
     multiplicity 1
     1 C u1 p0 c0 {2,S}
     2 C u0 p0 c0 {1,S} {3,S}
     3 C u1 p0 c0 {2,S}
-    """, saturateH=True)
+    """, saturate_h=True)
 
-    mol2 = Molecule().fromAdjacencyList("""
+    mol2 = Molecule().from_adjacency_list("""
     multiplicity 3
     1 C u1 p0 c0 {2,S}
     2 C u0 p0 c0 {1,S} {3,S}
     3 C u1 p0 c0 {2,S}
-    """, saturateH=True)
+    """, saturate_h=True)
 
-    assert_false(mol.isIsomorphic(mol2))
-    assert_false(len(mol.findIsomorphism(mol2)) > 0)
+    assert_false(mol.is_isomorphic(mol2))
+    assert_false(len(mol.find_isomorphism(mol2)) > 0)
 
 
 def testMultiplicity_mol_mol_identical_multiplicity():
     """
     identical multiplicity for both molecules set by user.
     """
-    mol = Molecule().fromAdjacencyList("""
+    mol = Molecule().from_adjacency_list("""
     multiplicity 3
     1 C u2 p0 c0
-    """, saturateH=True)
+    """, saturate_h=True)
 
-    mol2 = Molecule().fromAdjacencyList("""
+    mol2 = Molecule().from_adjacency_list("""
     multiplicity 3
     1 C u2 p0 c0
-    """, saturateH=True)
+    """, saturate_h=True)
 
-    assert_true(mol.isIsomorphic(mol2))
-    assert_true(len(mol.findIsomorphism(mol2)) > 0)
+    assert_true(mol.is_isomorphic(mol2))
+    assert_true(len(mol.find_isomorphism(mol2)) > 0)
 
 
 def testMultiplicity_mol_not_specified_mol_specified():
     """
     Multiplicity not set for one of two molecules
     """
-    mol = Molecule().fromAdjacencyList("""
+    mol = Molecule().from_adjacency_list("""
     1 C u2 p0 c0
-    """, saturateH=True)
+    """, saturate_h=True)
 
-    mol2 = Molecule().fromAdjacencyList("""
+    mol2 = Molecule().from_adjacency_list("""
     multiplicity 3
     1 C u2 p0 c0
-    """, saturateH=True)
+    """, saturate_h=True)
 
-    assert_true(mol.isIsomorphic(mol2))
-    assert_true(len(mol.findIsomorphism(mol2)) > 0)
+    assert_true(mol.is_isomorphic(mol2))
+    assert_true(len(mol.find_isomorphism(mol2)) > 0)
 
 
 def testMultiplicity_mol_not_specified_mol_not_specified():
     """
     Both multiplicities not set.
     """
-    mol = Molecule().fromAdjacencyList("""
+    mol = Molecule().from_adjacency_list("""
     1 C u2 p0 c0
-    """, saturateH=True)
+    """, saturate_h=True)
 
-    mol2 = Molecule().fromAdjacencyList("""
+    mol2 = Molecule().from_adjacency_list("""
     1 C u2 p0 c0
-    """, saturateH=True)
+    """, saturate_h=True)
 
-    assert_true(mol.isIsomorphic(mol2))
-    assert_true(len(mol.findIsomorphism(mol2)) > 0)
+    assert_true(mol.is_isomorphic(mol2))
+    assert_true(len(mol.find_isomorphism(mol2)) > 0)
 
 
 def test_isomorphism_R():
-    mol = Molecule().fromAdjacencyList("""
+    mol = Molecule().from_adjacency_list("""
     1 C u0 p0 c0
-    """, saturateH=True)
+    """, saturate_h=True)
 
-    gp = Group().fromAdjacencyList("""
+    gp = Group().from_adjacency_list("""
     1 R u0 p0 c0
     """)
 
-    assert_true(len(mol.findSubgraphIsomorphisms(gp)) > 0)
+    assert_true(len(mol.find_subgraph_isomorphisms(gp)) > 0)
 
 
 def test_isomorphism_mol_group_not_identical():
     """
     Testing multiplicities in mol and group that don't match
     """
-    mol = Molecule().fromAdjacencyList("""
+    mol = Molecule().from_adjacency_list("""
     1 C u0 p0 c0
-    """, saturateH=True)
+    """, saturate_h=True)
 
-    gp = Group().fromAdjacencyList("""
+    gp = Group().from_adjacency_list("""
     multiplicity [2]
     1 R u0 p0 c0
     """)
-    assert_false(mol.isSubgraphIsomorphic(gp))
-    assert_false(len(mol.findSubgraphIsomorphisms(gp)) > 0)
+    assert_false(mol.is_subgraph_isomorphic(gp))
+    assert_false(len(mol.find_subgraph_isomorphisms(gp)) > 0)
 
 
 def test_isomorphism_group_group():
     """
     Testing multiplicities in group vs. group 
     """
-    gp1 = Group().fromAdjacencyList("""
+    gp1 = Group().from_adjacency_list("""
     1 R u0 p0 c0
     """)
 
-    gp2 = Group().fromAdjacencyList("""
+    gp2 = Group().from_adjacency_list("""
     multiplicity [2]
     1 R u0 p0 c0
     """)
 
-    gp3 = Group().fromAdjacencyList("""
+    gp3 = Group().from_adjacency_list("""
     1 C u0 p0 c0
     """)
 
-    assert_false(gp1.isSubgraphIsomorphic(gp2))
-    assert_false(len(gp1.findSubgraphIsomorphisms(gp2)) > 0)
+    assert_false(gp1.is_subgraph_isomorphic(gp2))
+    assert_false(len(gp1.find_subgraph_isomorphisms(gp2)) > 0)
 
-    assert_true(gp2.isSubgraphIsomorphic(gp1))
-    assert_true(len(gp2.findSubgraphIsomorphisms(gp1)) > 0)
+    assert_true(gp2.is_subgraph_isomorphic(gp1))
+    assert_true(len(gp2.find_subgraph_isomorphisms(gp1)) > 0)
 
-    assert_false(gp2.isIdentical(gp1))
+    assert_false(gp2.is_identical(gp1))
 
-    assert_true(gp3.isSubgraphIsomorphic(gp1))
-    assert_true(len(gp3.findSubgraphIsomorphisms(gp1)) > 0)
-    assert_false(gp3.isSubgraphIsomorphic(gp2))
-    assert_false(len(gp3.findSubgraphIsomorphisms(gp2)) > 0)
+    assert_true(gp3.is_subgraph_isomorphic(gp1))
+    assert_true(len(gp3.find_subgraph_isomorphisms(gp1)) > 0)
+    assert_false(gp3.is_subgraph_isomorphic(gp2))
+    assert_false(len(gp3.find_subgraph_isomorphisms(gp2)) > 0)
 
 
 def test_isomorphism_sulfurGroup_sulfurMolecule():
     """
     Test isormophism check of a CS group vs. a sulfur containing molecule
     """
-    gp1 = Group().fromAdjacencyList("""
+    gp1 = Group().from_adjacency_list("""
 1 S  u0 {2,S} {3,S}
 2 H  u0 {1,S}
 3 C u0 {1,S} {4,D}
 4 S  u0 {3,D}
 """)
 
-    gp2 = Group().fromAdjacencyList("""
+    gp2 = Group().from_adjacency_list("""
 1 S  u0 {2,S} {3,S}
 2 H  u0 {1,S}
 3 CS u0 {1,S} {4,D}
 4 S  u0 {3,D}
 """)
 
-    mol = Molecule().fromAdjacencyList("""
+    mol = Molecule().from_adjacency_list("""
 1 S  0 {2,S} {3,S}
 2 H  0 {1,S}
 3 C 0 {1,S} {4,D} {5,S}
 4 S 0 {3,D}
 5 H 0 {3,S}
 """)
-    assert_true(mol.isSubgraphIsomorphic(gp1))
+    assert_true(mol.is_subgraph_isomorphic(gp1))
 
-    assert_true(mol.isSubgraphIsomorphic(gp2))
+    assert_true(mol.is_subgraph_isomorphic(gp2))
 
 
 def test_isotope_subgraph_isomorphism_molecule_and_group():
     """
     Checks that subgraph isomorphism works with enriched molecules and groups
     """
-    methanei = Molecule().fromAdjacencyList("""
+    methanei = Molecule().from_adjacency_list("""
     1 C u0 p0 c0 i13 {2,S} {3,S} {4,S} {5,S}
     2 H u0 p0 c0 {1,S}
     3 H u0 p0 c0 {1,S}
     4 H u0 p0 c0 {1,S}
     5 H u0 p0 c0 {1,S}
     """)
-    methane = Molecule().fromAdjacencyList("""
+    methane = Molecule().from_adjacency_list("""
     1 C u0 p0 c0 {2,S} {3,S} {4,S} {5,S}
     2 H u0 p0 c0 {1,S}
     3 H u0 p0 c0 {1,S}
     4 H u0 p0 c0 {1,S}
     5 H u0 p0 c0 {1,S}
     """)
-    group_methane = Group().fromAdjacencyList("""
+    group_methane = Group().from_adjacency_list("""
     1 C  u0 {2,S} {3,S} {4,S} {5,S}
     2 H  u0 {1,S}
     3 H  u0 {1,S}
     4 H  u0 {1,S}
     5 H  u0 {1,S}
     """)
-    assert_true(methanei.isSubgraphIsomorphic(group_methane))
-    assert_true(methane.isSubgraphIsomorphic(group_methane))
-    assert_false(methanei.isIsomorphic(methane))
+    assert_true(methanei.is_subgraph_isomorphic(group_methane))
+    assert_true(methane.is_subgraph_isomorphic(group_methane))
+    assert_false(methanei.is_isomorphic(methane))

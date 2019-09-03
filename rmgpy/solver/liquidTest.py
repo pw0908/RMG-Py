@@ -64,7 +64,7 @@ class LiquidReactorCheck(unittest.TestCase):
 
         Tlist = [300, 400, 500, 600, 800, 1000, 1500]
         self.CH4 = Species(
-            molecule=[Molecule().fromSMILES("C")],
+            molecule=[Molecule().from_smiles("C")],
             thermo=ThermoData(
                 Tdata=(Tlist, "K"),
                 Cpdata=([8.615, 9.687, 10.963, 12.301, 14.841, 16.976, 20.528], "cal/(mol*K)"),
@@ -72,7 +72,7 @@ class LiquidReactorCheck(unittest.TestCase):
                 S298=(44.472, "cal/(mol*K)"))
         )
         self.CH3 = Species(
-            molecule=[Molecule().fromSMILES("[CH3]")],
+            molecule=[Molecule().from_smiles("[CH3]")],
             thermo=ThermoData(
                 Tdata=(Tlist, "K"),
                 Cpdata=([9.397, 10.123, 10.856, 11.571, 12.899, 14.055, 16.195], "cal/(mol*K)"),
@@ -80,7 +80,7 @@ class LiquidReactorCheck(unittest.TestCase):
                 S298=(45.174, "cal/(mol*K)"))
         )
         self.C2H6 = Species(
-            molecule=[Molecule().fromSMILES("CC")],
+            molecule=[Molecule().from_smiles("CC")],
             thermo=ThermoData(
                 Tdata=(Tlist, "K"),
                 Cpdata=([12.684, 15.506, 18.326, 20.971, 25.500, 29.016, 34.595], "cal/(mol*K)"),
@@ -88,7 +88,7 @@ class LiquidReactorCheck(unittest.TestCase):
                 S298=(54.799, "cal/(mol*K)"))
         )
         self.C2H5 = Species(
-            molecule=[Molecule().fromSMILES("C[CH2]")],
+            molecule=[Molecule().from_smiles("C[CH2]")],
             thermo=ThermoData(
                 Tdata=(Tlist, "K"),
                 Cpdata=([11.635, 13.744, 16.085, 18.246, 21.885, 24.676, 29.107], "cal/(mol*K)"),
@@ -97,7 +97,7 @@ class LiquidReactorCheck(unittest.TestCase):
         )
 
         self.H2 = Species(
-            molecule=[Molecule().fromSMILES("[H][H]")],
+            molecule=[Molecule().from_smiles("[H][H]")],
             thermo=ThermoData(
                 Tdata=(Tlist, "K"),
                 Cpdata=([6.89, 6.97, 6.99, 7.01, 7.08, 7.22, 7.72], "cal/(mol*K)"),

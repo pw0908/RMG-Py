@@ -1077,7 +1077,7 @@ def get_w0(actions, rxn):
     aDict = {}
     for r in rxn.reactants:
         m = r.molecule[0]
-        aDict.update(m.getLabeledAtoms())
+        aDict.update(m.get_all_labeled_atoms())
         if mol:
             mol = mol.merge(m)
         else:
@@ -1091,10 +1091,10 @@ def get_w0(actions, rxn):
 
         if act[0] == 'BREAK_BOND':
             bd = mol.getBond(aDict[act[1]], aDict[act[3]])
-            wb += bd.getBDE()
+            wb += bd.get_bde()
         elif act[0] == 'FORM_BOND':
             bd = Bond(aDict[act[1]], aDict[act[3]], act[2])
-            wf += bd.getBDE()
+            wf += bd.get_bde()
         elif act[0] == 'CHANGE_BOND':
             bd1 = mol.getBond(aDict[act[1]], aDict[act[3]])
 
@@ -1113,8 +1113,8 @@ def get_w0(actions, rxn):
             if bd2.order == 0:
                 bd2bde = 0.0
             else:
-                bd2bde = bd2.getBDE()
-            bdediff = bd2bde - bd1.getBDE()
+                bd2bde = bd2.get_bde()
+            bdediff = bd2bde - bd1.get_bde()
             if bdediff > 0:
                 wf += abs(bdediff)
             else:

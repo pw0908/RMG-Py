@@ -89,7 +89,7 @@ class KineticsGroups(Database):
                 group[0:8].upper() == 'NOT AND{'):
             item = make_logic_node(group)
         else:
-            item = Group().fromAdjacencyList(group)
+            item = Group().from_adjacency_list(group)
 
         if label in self.entries:
             raise DatabaseError("Duplicate group name {label} found in kinetics groups for {family} "
@@ -170,17 +170,17 @@ class KineticsGroups(Database):
                     # Check that this reactant has each of the atom labels in this group.
                     # If it is a LogicNode, the atom_list is empty and
                     # it will proceed directly to the descend_tree step.
-                    if not all([reactant.containsLabeledAtom(label) for label in atom_list]):
+                    if not all([reactant.contains_labeled_atom(label) for label in atom_list]):
                         continue  # don't try to match this structure - the atoms aren't there!
                     # Match structures
-                    atoms = reactant.getLabeledAtoms()
+                    atoms = reactant.get_all_labeled_atoms()
                     # Descend the tree, making sure to match atomlabels exactly using strict = True
                     matched_node = self.descend_tree(reactant, atoms, root=entry, strict=True)
                     if matched_node is not None:
                         template.append(matched_node)
                     # else:
                     #    logging.warning("Couldn't find match for {0} in {1}".format(entry,atom_list))
-                    #    logging.warning(reactant.toAdjacencyList())
+                    #    logging.warning(reactant.to_adjacency_list())
 
             # Get fresh templates (with duplicate nodes back in)
             forward_template = self.top[:]
@@ -201,16 +201,16 @@ class KineticsGroups(Database):
             for reactant in reaction.reactants:
                 if isinstance(reactant, Species):
                     for mol in reactant.molecule:
-                        logging.debug(mol.toAdjacencyList())
+                        logging.debug(mol.to_adjacency_list())
                 else:
-                    logging.debug(reactant.toAdjacencyList())
+                    logging.debug(reactant.to_adjacency_list())
             logging.debug('products:')
             for product in reaction.products:
                 if isinstance(product, Species):
                     for mol in product.molecule:
-                        logging.debug(mol.toAdjacencyList())
+                        logging.debug(mol.to_adjacency_list())
                 else:
-                    logging.debug(product.toAdjacencyList())
+                    logging.debug(product.to_adjacency_list())
             raise UndeterminableKineticsError(reaction, message=msg)
 
         return template

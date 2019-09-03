@@ -309,9 +309,9 @@ class KineticsJob(object):
                 for spc in self.reaction.reactants + self.reaction.products]):
             self.arkane_species.update_species_attributes(self.reaction.transition_state)
             self.arkane_species.reaction_label = self.reaction.label
-            self.arkane_species.reactants = [{'label': spc.label, 'adjacency_list': spc.molecule[0].toAdjacencyList()}
+            self.arkane_species.reactants = [{'label': spc.label, 'adjacency_list': spc.molecule[0].to_adjacency_list()}
                                              for spc in self.reaction.reactants]
-            self.arkane_species.products = [{'label': spc.label, 'adjacency_list': spc.molecule[0].toAdjacencyList()}
+            self.arkane_species.products = [{'label': spc.label, 'adjacency_list': spc.molecule[0].to_adjacency_list()}
                                             for spc in self.reaction.products]
             self.arkane_species.save_yaml(path=output_directory)
 

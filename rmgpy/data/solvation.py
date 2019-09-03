@@ -56,9 +56,9 @@ def save_entry(f, entry):
     f.write('    label = "{0}",\n'.format(entry.label))
 
     if isinstance(entry.item, Species):
-        if Molecule(SMILES=entry.item.molecule[0].toSMILES()).isIsomorphic(entry.item.molecule[0]):
+        if Molecule(smiles=entry.item.molecule[0].to_smiles()).is_isomorphic(entry.item.molecule[0]):
             # The SMILES representation accurately describes the molecule, so we can save it that way.
-            f.write('    molecule = "{0}",\n'.format(entry.item.molecule[0].toSMILES()))
+            f.write('    molecule = "{0}",\n'.format(entry.item.molecule[0].to_smiles()))
         else:
             f.write('    molecule = \n')
             f.write('"""\n')
@@ -67,7 +67,7 @@ def save_entry(f, entry):
     elif isinstance(entry.item, Group):
         f.write('    group = \n')
         f.write('"""\n')
-        f.write(entry.item.toAdjacencyList())
+        f.write(entry.item.to_adjacency_list())
         f.write('""",\n')
     elif entry.item is not None:
         f.write('    group = "{0}",\n'.format(entry.item))
@@ -251,7 +251,7 @@ class SoluteData(object):
                 raise DatabaseError('McGowan volume not available for element {}'.format(atom.element.nubmer))
 
             # divide contribution in half since all bonds would be counted twice this way
-            Vtot -= len(molecule.getBonds(atom)) * 6.56 / 2
+            Vtot -= len(molecule.get_bonds(atom)) * 6.56 / 2
 
         self.V = Vtot / 100  # division by 100 to get units correct.
 
@@ -418,7 +418,7 @@ class SoluteGroups(Database):
                 group[0:8].upper() == 'NOT AND{'):
             item = make_logic_node(group)
         else:
-            item = Group().fromAdjacencyList(group)
+            item = Group().from_adjacency_list(group)
         self.entries[label] = Entry(
             index=index,
             label=label,
@@ -682,7 +682,7 @@ class SolvationDatabase(object):
         :class:`DatabaseError` is raised.
         """
         for label, entry in library.entries.items():
-            if species.isIsomorphic(entry.item) and entry.data is not None:
+            if species.is_isomorphic(entry.item) and entry.data is not None:
                 return deepcopy(entry.data), library, entry
         return None
 
@@ -700,8 +700,8 @@ class SolvationDatabase(object):
         count = 0
         comments = []
         for molecule in species.molecule:
-            molecule.clearLabeledAtoms()
-            molecule.updateAtomTypes()
+            molecule.clear_labeled_atoms()
+            molecule.update_atomtypes()
             sdata = self.estimate_solute_via_group_additivity(molecule)
             solute_data.S += sdata.S
             solute_data.B += sdata.B
@@ -734,37 +734,37 @@ class SolvationDatabase(object):
             added_to_pairs[atom] = 0
             if atom.lonePairs > 0:
                 charge = atom.charge  # Record this so we can conserve it when checking
-                bonds = saturated_struct.getBonds(atom)
+                bonds = saturated_struct.get_bonds(atom)
                 sum_bond_orders = 0
                 for key, bond in bonds.items():
                     sum_bond_orders += bond.order  # We should always have 2 'B' bonds (but what about Cbf?)
                 if ATOMTYPES['Val4'] in atom.atomType.generic:  # Carbon, Silicon
                     while atom.radicalElectrons + charge + sum_bond_orders < 4:
-                        atom.decrementLonePairs()
-                        atom.incrementRadical()
-                        atom.incrementRadical()
+                        atom.decrement_lone_pairs()
+                        atom.increment_radical()
+                        atom.increment_radical()
                         added_to_pairs[atom] += 1
                 if ATOMTYPES['Val5'] in atom.atomType.generic:  # Nitrogen
                     while atom.radicalElectrons + charge + sum_bond_orders < 3:
-                        atom.decrementLonePairs()
-                        atom.incrementRadical()
-                        atom.incrementRadical()
+                        atom.decrement_lone_pairs()
+                        atom.increment_radical()
+                        atom.increment_radical()
                         added_to_pairs[atom] += 1
                 if ATOMTYPES['Val6'] in atom.atomType.generic:  # Oxygen, sulfur
                     while atom.radicalElectrons + charge + sum_bond_orders < 2:
-                        atom.decrementLonePairs()
-                        atom.incrementRadical()
-                        atom.incrementRadical()
+                        atom.decrement_lone_pairs()
+                        atom.increment_radical()
+                        atom.increment_radical()
                         added_to_pairs[atom] += 1
                 if ATOMTYPES['Val7'] in atom.atomType.generic:  # Chlorine
                     while atom.radicalElectrons + charge + sum_bond_orders < 1:
-                        atom.decrementLonePairs()
-                        atom.incrementRadical()
-                        atom.incrementRadical()
+                        atom.decrement_lone_pairs()
+                        atom.increment_radical()
+                        atom.increment_radical()
                         added_to_pairs[atom] += 1
 
         saturated_struct.update()
-        saturated_struct.updateLonePairs()
+        saturated_struct.update_lone_pairs()
 
         return saturated_struct, added_to_pairs
 
@@ -773,22 +773,22 @@ class SolvationDatabase(object):
         # Remove hydrogen bonds and restore the radical
         for atom in added_to_radicals:
             for H, bond in added_to_radicals[atom]:
-                saturated_struct.removeBond(bond)
-                saturated_struct.removeAtom(H)
-                atom.incrementRadical()
+                saturated_struct.remove_bond(bond)
+                saturated_struct.remove_atom(H)
+                atom.increment_radical()
 
         # Change transformed lone pairs back
         for atom in added_to_pairs:
             if added_to_pairs[atom] > 0:
                 for pair in range(1, added_to_pairs[atom]):
-                    saturated_struct.decrementRadical()
-                    saturated_struct.decrementRadical()
-                    saturated_struct.incrementLonePairs()
+                    saturated_struct.decrement_radical()
+                    saturated_struct.decrement_radical()
+                    saturated_struct.increment_lone_pairs()
 
         # Update Abraham 'A' H-bonding parameter for unsaturated struct
         for atom in saturated_struct.atoms:
             # Iterate over heavy (non-hydrogen) atoms
-            if atom.isNonHydrogen() and atom.radicalElectrons > 0:
+            if atom.is_non_hydrogen() and atom.radicalElectrons > 0:
                 for electron in range(1, atom.radicalElectrons):
                     # Get solute data for radical group    
                     try:
@@ -808,7 +808,7 @@ class SolvationDatabase(object):
         # For thermo estimation we need the atoms to already be sorted because we
         # iterate over them; if the order changes during the iteration then we
         # will probably not visit the right atoms, and so will get the thermo wrong
-        molecule.sortAtoms()
+        molecule.sort_atoms()
 
         # Create the SoluteData object with the intercepts from the Platts groups
         solute_data = SoluteData(
@@ -838,7 +838,7 @@ class SolvationDatabase(object):
         # based on the valency
         for atom in saturated_struct.atoms:
             # Iterate over heavy (non-hydrogen) atoms
-            if atom.isNonHydrogen():
+            if atom.is_non_hydrogen():
                 # Get initial solute data from main group database. Every atom must
                 # be found in the main abraham database
                 try:
@@ -846,7 +846,7 @@ class SolvationDatabase(object):
                 except KeyError:
                     logging.error("Couldn't find in main abraham database:")
                     logging.error(saturated_struct)
-                    logging.error(saturated_struct.toAdjacencyList())
+                    logging.error(saturated_struct.to_adjacency_list())
                     raise
                 # Get solute data for non-atom centered groups (being found in this group
                 # database is optional)    
@@ -963,7 +963,7 @@ class SolvationDatabase(object):
         """
         for spec in rmg.initialSpecies:
             if solvent_structure is not None:
-                spec.isSolvent = spec.isIsomorphic(solvent_structure)
+                spec.isSolvent = spec.is_isomorphic(solvent_structure)
             else:
                 spec.isSolvent = rmg.solvent == spec.label
         if not any([spec.isSolvent for spec in rmg.initialSpecies]):

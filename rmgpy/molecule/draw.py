@@ -179,9 +179,9 @@ class MoleculeDrawer(object):
         self.implicitHydrogens = {}
         surface_sites = []
         for atom in self.molecule.atoms:
-            if atom.isHydrogen() and atom.label == '':
+            if atom.is_hydrogen() and atom.label == '':
                 atoms_to_remove.append(atom)
-            elif atom.isSurfaceSite():
+            elif atom.is_surface_site():
                 surface_sites.append(atom)
         if len(atoms_to_remove) < len(self.molecule.atoms) - len(surface_sites):
             for atom in atoms_to_remove:
@@ -190,15 +190,15 @@ class MoleculeDrawer(object):
                         self.implicitHydrogens[atom2] += 1
                     except KeyError:
                         self.implicitHydrogens[atom2] = 1
-                self.molecule.removeAtom(atom)
+                self.molecule.remove_atom(atom)
 
         # Generate information about any cycles present in the molecule, as
         # they will need special attention
         self._find_ring_groups()
         # Handle carbon monoxide special case
-        if self.molecule.getFormula() == 'CO' and len(atoms_to_remove) == 0:
+        if self.molecule.get_formula() == 'CO' and len(atoms_to_remove) == 0:
             # RDKit does not accept atom type O4tc
-            self.molecule.removeAtom(self.molecule.atoms[-1])
+            self.molecule.remove_atom(self.molecule.atoms[-1])
             self.symbols = ['CO']
             self.molecule.atoms[0].charge = 0  # don't label the C as - if you're not drawing the O with a +
             self.coordinates = np.array([[0, 0]], np.float64)
@@ -216,7 +216,7 @@ class MoleculeDrawer(object):
                 self._generate_atom_labels()
 
             except (ValueError, np.linalg.LinAlgError) as e:
-                logging.error('Error while drawing molecule {0}: {1}'.format(molecule.toSMILES(), e))
+                logging.error('Error while drawing molecule {0}: {1}'.format(molecule.to_smiles(), e))
                 import sys, traceback
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 traceback.print_exc()
@@ -234,34 +234,34 @@ class MoleculeDrawer(object):
         # Handle some special cases
         if self.symbols == ['H', 'H']:
             # Render as H2 instead of H-H
-            self.molecule.removeAtom(self.molecule.atoms[-1])
+            self.molecule.remove_atom(self.molecule.atoms[-1])
             self.symbols = ['H2']
             self.coordinates = np.array([[0, 0]], np.float64)
-        elif molecule.isIsomorphic(Molecule(SMILES='[O][O]')):
+        elif molecule.is_isomorphic(Molecule(smiles='[O][O]')):
             # Render as O2 instead of O-O
-            self.molecule.removeAtom(self.molecule.atoms[-1])
+            self.molecule.remove_atom(self.molecule.atoms[-1])
             self.molecule.atoms[0].radicalElectrons = 0
             self.symbols = ['O2']
             self.coordinates = np.array([[0, 0]], np.float64)
         elif self.symbols == ['OH', 'O'] or self.symbols == ['O', 'OH']:
             # Render as HO2 instead of HO-O or O-OH
-            self.molecule.removeAtom(self.molecule.atoms[-1])
+            self.molecule.remove_atom(self.molecule.atoms[-1])
             self.symbols = ['O2H']
             self.coordinates = np.array([[0, 0]], np.float64)
         elif self.symbols == ['OH', 'OH']:
             # Render as H2O2 instead of HO-OH or O-OH
-            self.molecule.removeAtom(self.molecule.atoms[-1])
+            self.molecule.remove_atom(self.molecule.atoms[-1])
             self.symbols = ['O2H2']
             self.coordinates = np.array([[0, 0]], np.float64)
         elif self.symbols == ['O', 'C', 'O']:
             # Render as CO2 instead of O=C=O
-            self.molecule.removeAtom(self.molecule.atoms[0])
-            self.molecule.removeAtom(self.molecule.atoms[-1])
+            self.molecule.remove_atom(self.molecule.atoms[0])
+            self.molecule.remove_atom(self.molecule.atoms[-1])
             self.symbols = ['CO2']
             self.coordinates = np.array([[0, 0]], np.float64)
         elif self.symbols == ['H', 'H', 'X']:
             # Render as H2::X instead of crashing on H-H::X (vdW bond)
-            self.molecule.removeAtom(self.molecule.atoms[0])
+            self.molecule.remove_atom(self.molecule.atoms[0])
             self.symbols = ['H2', 'X']
             self.coordinates = np.array([[0, -0.5], [0, 0.5]], np.float64) * self.options['bondLength']
 
@@ -308,7 +308,7 @@ class MoleculeDrawer(object):
         """
 
         # Find all of the cycles in the molecule
-        self.cycles = self.molecule.getSmallestSetOfSmallestRings()
+        self.cycles = self.molecule.get_smallest_set_of_smallest_rings()
         self.ringSystems = []
 
         # If the molecule contains cycles, find them and group them
@@ -343,10 +343,10 @@ class MoleculeDrawer(object):
             self.coordinates[0, :] = [0.0, 0.0]
             return self.coordinates
         elif natoms == 2:
-            if atoms[0].isSurfaceSite():
+            if atoms[0].is_surface_site():
                 self.coordinates[0, :] = [0.0, -0.5]
                 self.coordinates[1, :] = [0.0, 0.5]
-            elif atoms[1].isSurfaceSite():
+            elif atoms[1].is_surface_site():
                 self.coordinates[0, :] = [0.0, 0.5]
                 self.coordinates[1, :] = [0.0, -0.5]
             else:
@@ -436,11 +436,11 @@ class MoleculeDrawer(object):
                 coordinates[:, 1] = temp[:, 0]
 
         # For surface species, rotate them so the site is at the bottom.
-        if self.molecule.containsSurfaceSite():
+        if self.molecule.contains_surface_site():
             if len(self.molecule.atoms) == 1:
                 return coordinates
             for site in self.molecule.atoms:
-                if site.isSurfaceSite():
+                if site.is_surface_site():
                     break
             else:
                 raise Exception("Can't find surface site")
@@ -495,7 +495,7 @@ class MoleculeDrawer(object):
         paths = [path for path in paths if len(path) == length]
 
         # Prefer the paths with the most carbon atoms
-        carbons = [sum([1 for atom in path if atom.isCarbon()]) for path in paths]
+        carbons = [sum([1 for atom in path if atom.is_carbon()]) for path in paths]
         max_carbons = max(carbons)
         paths = [path for path, carbon in zip(paths, carbons) if carbon == max_carbons]
 
@@ -520,7 +520,7 @@ class MoleculeDrawer(object):
             if atom2 not in atoms0:
                 atoms = atoms0[:]
                 atoms.append(atom2)
-                if not self.molecule.isAtomInCycle(atom2):
+                if not self.molecule.is_atom_in_cycle(atom2):
                     paths.extend(self._find_straight_chain_paths(atoms))
         if len(paths) == 0:
             paths.append(atoms0[:])
@@ -673,7 +673,7 @@ class MoleculeDrawer(object):
         # Second atom goes on x-axis (for now; this could be improved!)
         index1 = self.molecule.atoms.index(atoms[1])
         vector = np.array([1.0, 0.0], np.float64)
-        if atoms[0].bonds[atoms[1]].isTriple():
+        if atoms[0].bonds[atoms[1]].is_triple():
             rotate_positive = False
         else:
             rotate_positive = True
@@ -695,7 +695,7 @@ class MoleculeDrawer(object):
             # Angle of next bond depends on the number of bonds to the start atom
             num_bonds = len(atom1.bonds)
             if num_bonds == 2:
-                if (bond0.isTriple() or bond.isTriple()) or (bond0.isDouble() and bond.isDouble()):
+                if (bond0.is_triple() or bond.is_triple()) or (bond0.is_double() and bond.is_double()):
                     # Rotate by 0 degrees towards horizontal axis (to get angle of 180)
                     angle = 0.0
                 else:
@@ -875,7 +875,7 @@ class MoleculeDrawer(object):
             angle = 0.0
             if num_bonds == 2:
                 bond0, bond = list(atom1.bonds.values())
-                if (bond0.isTriple() or bond.isTriple()) or (bond0.isDouble() and bond.isDouble()):
+                if (bond0.is_triple() or bond.is_triple()) or (bond0.is_double() and bond.is_double()):
                     angle = math.pi
                 else:
                     angle = 2 * math.pi / 3
@@ -937,7 +937,7 @@ class MoleculeDrawer(object):
         while changed:
             changed = False
             for i in range(len(symbols)):
-                if (symbols[i] == '' and all([(bond.isDouble() or bond.isTriple()) for bond in atoms[i].bonds.values()])
+                if (symbols[i] == '' and all([(bond.is_double() or bond.is_triple()) for bond in atoms[i].bonds.values()])
                         and any([symbols[atoms.index(atom)] != '' for atom in atoms[i].bonds])):
                     symbols[i] = atoms[i].symbol
                     changed = True
@@ -971,7 +971,7 @@ class MoleculeDrawer(object):
         draw_lone_pairs = False
 
         for atom in atoms:
-            if atom.isNitrogen():
+            if atom.is_nitrogen():
                 draw_lone_pairs = True
 
         left = 0.0
@@ -998,7 +998,7 @@ class MoleculeDrawer(object):
             for atom1, atom2 in zip(cycle[0:-1], cycle[1:]):
                 cycle_bonds.append(atom1.bonds[atom2])
             cycle_bonds.append(cycle[0].bonds[cycle[-1]])
-            if all([bond.isBenzene() for bond in cycle_bonds]):
+            if all([bond.is_benzene() for bond in cycle_bonds]):
                 # We've found an aromatic ring, so draw a circle in the center to represent the benzene bonds
                 center = np.zeros(2, np.float64)
                 for atom in cycle:
@@ -1090,7 +1090,7 @@ class MoleculeDrawer(object):
                     self.molecule.atoms[atom2] in cycle:
                 all_benzenes = True
                 for index in range(len(cycle)):
-                    if not cycle[index - 1].bonds[cycle[index]].isBenzene():
+                    if not cycle[index - 1].bonds[cycle[index]].is_benzene():
                         all_benzenes = False
                         break
                 if all_benzenes:
@@ -1106,7 +1106,7 @@ class MoleculeDrawer(object):
         du = math.cos(angle + math.pi / 2)
         dv = math.sin(angle + math.pi / 2)
         if self.symbols[atom1] != '' or self.symbols[atom2] != '':
-            if bond.isQuadruple():
+            if bond.is_quadruple():
                 # Draw quadruple bond centered on bond axis
                 du *= 1.5
                 dv *= 1.5
@@ -1116,26 +1116,26 @@ class MoleculeDrawer(object):
                 dv *= 2.2
                 self._draw_line(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
                 self._draw_line(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
-            elif bond.isTriple():
+            elif bond.is_triple():
                 # Draw triple bond centered on bond axis
                 du *= 3
                 dv *= 3
                 self._draw_line(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
                 self._draw_line(cr, x1, y1, x2, y2)
                 self._draw_line(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
-            elif 2 < bond.getOrderNum() < 3:
+            elif 2 < bond.get_order_num() < 3:
                 du *= 3
                 dv *= 3
                 self._draw_line(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
                 self._draw_line(cr, x1, y1, x2, y2)
                 self._draw_line(cr, x1 + du, y1 + dv, x2 + du, y2 + dv, dashed=True)
-            elif bond.isDouble():
+            elif bond.is_double():
                 # Draw double bond centered on bond axis
                 du *= 1.6
                 dv *= 1.6
                 self._draw_line(cr, x1 - du, y1 - dv, x2 - du, y2 - dv)
                 self._draw_line(cr, x1 + du, y1 + dv, x2 + du, y2 + dv)
-            elif 1 < bond.getOrderNum() < 2 and not is_aromatic:
+            elif 1 < bond.get_order_num() < 2 and not is_aromatic:
                 # Draw dashed double bond centered on bond axis
                 du *= 1.6
                 dv *= 1.6
@@ -1147,33 +1147,33 @@ class MoleculeDrawer(object):
             # Draw bond on skeleton
             self._draw_line(cr, x1, y1, x2, y2)
             # Draw other bonds
-            if bond.isDouble():
+            if bond.is_double():
                 du *= 3.2
                 dv *= 3.2
                 dx = 2 * dx / bond_length
                 dy = 2 * dy / bond_length
                 self._draw_line(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy)
-            elif bond.isTriple():
+            elif bond.is_triple():
                 du *= 3
                 dv *= 3
                 dx = 2 * dx / bond_length
                 dy = 2 * dy / bond_length
                 self._draw_line(cr, x1 - du + dx, y1 - dv + dy, x2 - du - dx, y2 - dv - dy)
                 self._draw_line(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy)
-            elif 1 < bond.getOrderNum() < 2 and not is_aromatic:
+            elif 1 < bond.get_order_num() < 2 and not is_aromatic:
                 du *= 3.2
                 dv *= 3.2
                 dx = 2 * dx / bond_length
                 dy = 2 * dy / bond_length
                 self._draw_line(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy, dashed=True)
-            elif 2 < bond.getOrderNum() < 3:
+            elif 2 < bond.get_order_num() < 3:
                 du *= 3
                 dv *= 3
                 dx = 2 * dx / bond_length
                 dy = 2 * dy / bond_length
                 self._draw_line(cr, x1 - du + dx, y1 - dv + dy, x2 - du - dx, y2 - dv - dy)
                 self._draw_line(cr, x1 + du + dx, y1 + dv + dy, x2 + du - dx, y2 + dv - dy, dashed=True)
-            elif bond.isQuadruple():
+            elif bond.is_quadruple():
                 du *= 3
                 dv *= 3
                 dx = 2 * dx / bond_length
@@ -1578,9 +1578,9 @@ class MoleculeDrawer(object):
         dictionary = {}
         for atom1 in self.molecule.atoms:
             for atom2, bond in atom1.bonds.items():
-                if not bond.isSingle():
-                    dictionary[bond] = bond.getOrderNum()
-                    bond.setOrderNum(1)
+                if not bond.is_single():
+                    dictionary[bond] = bond.get_order_num()
+                    bond.set_order_num(1)
         return dictionary
 
     def _replace_bonds(self, bond_order_dictionary):
@@ -1589,7 +1589,7 @@ class MoleculeDrawer(object):
         which is obtained from _make_single_bonds().
         """
         for bond, order in bond_order_dictionary.items():
-            bond.setOrderNum(order)
+            bond.set_order_num(order)
 
 
 ################################################################################

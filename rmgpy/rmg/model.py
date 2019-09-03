@@ -96,7 +96,7 @@ class ReactionModel:
         unique_species = []
         for spec in other.species:
             for spec0 in final_model.species:
-                if spec.isIsomorphic(spec0):
+                if spec.is_isomorphic(spec0):
                     common_species[spec] = spec0
                     if spec0.label not in ['Ar', 'N2', 'Ne', 'He']:
                         if not spec0.thermo.isIdenticalTo(spec.thermo):
@@ -111,7 +111,7 @@ class ReactionModel:
         unique_reactions = []
         for rxn in other.reactions:
             for rxn0 in final_model.reactions:
-                if rxn.isIsomorphic(rxn0, eitherDirection=True):
+                if rxn.is_isomorphic(rxn0, eitherDirection=True):
                     common_reactions[rxn] = rxn0
                     if not rxn0.kinetics.is_identical_to(rxn.kinetics):
                         print('Reaction {0} kinetics from model 1 did not match that of model 2.'.format(str(rxn0)))
@@ -244,14 +244,14 @@ class CoreEdgeReactionModel:
                 return spec
 
         # If not found in cache, check all species with matching formula
-        formula = molecule.getFormula()
+        formula = molecule.get_formula()
         try:
             species_list = self.speciesDict[formula]
         except KeyError:
             pass
         else:
             for spec in species_list:
-                if spec.isIsomorphic(molecule, strict=False):
+                if spec.is_isomorphic(molecule, strict=False):
                     self.speciesCache.pop()
                     self.speciesCache.insert(0, spec)
                     return spec
@@ -297,7 +297,7 @@ class CoreEdgeReactionModel:
 
         spec.creationIteration = self.iterationNum
         spec.generate_resonance_structures()
-        spec.molecularWeight = Quantity(spec.molecule[0].getMolecularWeight() * 1000., "amu")
+        spec.molecularWeight = Quantity(spec.molecule[0].get_molecular_weight() * 1000., "amu")
 
         if generateThermo:
             self.generateThermo(spec)
@@ -1345,7 +1345,7 @@ class CoreEdgeReactionModel:
                         self.reactionDict[family][reactant1][reactant2].remove(tempRxnToBeDeleted)
 
         # remove from the global list of species, to free memory
-        formula = spec.molecule[0].getFormula()
+        formula = spec.molecule[0].get_formula()
         self.speciesDict[formula].remove(spec)
         if spec in self.speciesCache:
             self.speciesCache.remove(spec)

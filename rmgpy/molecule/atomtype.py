@@ -236,7 +236,7 @@ For example:
 - N3d is nitrogen with valence=3 (i.e., 3 electrons are able to form bonds or remain as radicals) with one double bond
 - S2tc is a charged sulfur with valence=2 with a triple bonds
 - Oa is atomic oxygen, i.e., a closed shell atom
-Some charged atom types were merged together, and are marked as '*Composite atomType'
+Some charged atom types were merged together, and are marked as '*Composite atomtype'
 """
 
 ATOMTYPES = {}
@@ -402,7 +402,7 @@ ATOMTYPES['N5tc'] = AtomType('N5tc', generic=['R', 'R!H', 'N', 'Val5'], specific
 # examples for N5tc: C[N+]#[C-] isocyano group, N#[N+][O-], [NH+]#[C-] (note that C- has p1 here), [N+]#[C-] (note that C- has p1 here), [O-][N+]#C (one of the res structures of Fulminic acid), C[N+]#[C-] (note that C- has p1 here)
 ATOMTYPES['N5b'] = AtomType('N5b', generic=['R', 'R!H', 'N', 'Val5'], specific=[],
                             single=[0,1], all_double=[0], r_double=[0], o_double=[0], s_double=[0], triple=[0], quadruple=[], benzene=[2], lone_pairs=[0], charge=[0, +1])
-# examples for N5b: Pyrrole, Indole, Benzimidazole, Purine; Note that this is the only N atomType with valence 5 which isn't necessarily charged.
+# examples for N5b: Pyrrole, Indole, Benzimidazole, Purine; Note that this is the only N atomtype with valence 5 which isn't necessarily charged.
 ATOMTYPES['N5bd'] = AtomType('N5bd', generic=['R', 'R!H', 'N', 'Val5'], specific=[],
                              single=[0], all_double=[1], r_double=[], o_double=[], s_double=[], triple=[0], quadruple=[], benzene=[2], lone_pairs=[0], charge=[0])
 # examples for N5bd: AdjList """1 N u0 p0 c0 {2,B} {6,B} {7,D} 2 C u0 p0 {1,B} {3,B} {8,S} 3 C u0 p0 {2,B} {4,B} {9,S} 4 C u0 p0 {3,B} {5,B} {10,S} 5 C u0 p0 {4,B} {6,B} {11,S} 6 N u0 p1 {1,B} {5,B} 7 O u0 p2 c0 {1,D} 8 H u0 p0 {2,S} 9 H u0 p0 {3,S} 10 H u0 p0 {4,S} 11 H u0 p0 {5,S}"""
@@ -476,7 +476,7 @@ ATOMTYPES['S2d'] = AtomType('S2d', generic=['R', 'R!H', 'S', 'Val6'], specific=[
 # examples for S2d: S=S, C=S, S=O, S=N, S=C=S, S=C=O, S=C=S...
 ATOMTYPES['S2dc'] = AtomType('S2dc', generic=['R', 'R!H', 'S', 'Val6'], specific=[],
                              single=[0,1], all_double=[1, 2], r_double=[], o_double=[], s_double=[], triple=[0], quadruple=[], benzene=[0], lone_pairs=[2], charge=[-1])
-# *Composite atomType; examples for S2dc: [SH-]=[N+]
+# *Composite atomtype; examples for S2dc: [SH-]=[N+]
 ATOMTYPES['S2tc'] = AtomType('S2tc', generic=['R', 'R!H', 'S', 'Val6'], specific=[],  # (shared electrons = 10)
                              single=[0], all_double=[0], r_double=[], o_double=[], s_double=[], triple=[1], quadruple=[], benzene=[0], lone_pairs=[2], charge=[-1])
 # examples for S2tc: [S-]#[NH+]
@@ -494,7 +494,7 @@ ATOMTYPES['S4dd'] = AtomType('S4dd', generic=['R', 'R!H', 'S', 'Val6'], specific
 # examples for S4dd: O=S=O
 ATOMTYPES['S4dc'] = AtomType('S4dc', generic=['R', 'R!H', 'S', 'Val6'], specific=[],
                              single=[0,1,2,3,4,5], all_double=[1, 2], r_double=[], o_double=[], s_double=[], triple=[0], quadruple=[], benzene=[0], lone_pairs=[1], charge=[-1, +1])
-# *Composite atomType; examples for S4dc: [CH2-][S+]=C {where the [CH2-] has a lone pair}, [O+][S-](=O)=O, [O-][S+]=C, [NH-][S+]=C {where the [NH-] has two lone pairs}, [O-][S+]=O
+# *Composite atomtype; examples for S4dc: [CH2-][S+]=C {where the [CH2-] has a lone pair}, [O+][S-](=O)=O, [O-][S+]=C, [NH-][S+]=C {where the [NH-] has two lone pairs}, [O-][S+]=O
 ATOMTYPES['S4b'] = AtomType('S4b', generic=['R', 'R!H', 'S', 'Val6'], specific=[],
                             single=[0], all_double=[0], r_double=[0], o_double=[0], s_double=[0], triple=[0], quadruple=[], benzene=[2], lone_pairs=[1], charge=[0])
 # examples for S4b: Thiophene, Benzothiophene, Benzo[c]thiophene, Thiazole, Benzothiazole...
@@ -503,7 +503,7 @@ ATOMTYPES['S4t'] = AtomType('S4t', generic=['R', 'R!H', 'S', 'Val6'], specific=[
 # examples for S4t: C#S, C#SO, C#[S]
 ATOMTYPES['S4tdc'] = AtomType('S4tdc', generic=['R', 'R!H', 'S', 'Val6'], specific=[],
                               single=[0,1,2], all_double=[0, 1, 2], r_double=[], o_double=[], s_double=[], triple=[1, 2], quadruple=[], benzene=[0], lone_pairs=[1], charge=[-1, +1])
-# *Composite atomType; examples for S4tdc: [C-]#[S+]
+# *Composite atomtype; examples for S4tdc: [C-]#[S+]
 ATOMTYPES['S6s'] = AtomType('S6s', generic=['R', 'R!H', 'S', 'Val6'], specific=[],  # (shared electrons = 6-12)
                             single=[0,1,2,3,4,5,6], all_double=[0], r_double=[0], o_double=[0], s_double=[0], triple=[0], quadruple=[0], benzene=[0], lone_pairs=[0], charge=[0])
 # examples for S6s: H6S, F6S
@@ -521,7 +521,7 @@ ATOMTYPES['S6ddd'] = AtomType('S6ddd', generic=['R', 'R!H', 'S', 'Val6'], specif
 # examples for S6ddd: O=S(=O)(=O)
 ATOMTYPES['S6dc'] = AtomType('S6dc', generic=['R', 'R!H', 'S', 'Val6'], specific=[],
                              single=[0,1,2,3,4,5], all_double=[1, 2, 3], r_double=[], o_double=[], s_double=[], triple=[0], quadruple=[0], benzene=[0], lone_pairs=[0], charge=[-1, +1, +2])
-# *Composite atomType; examples for S6dc: O=[S+2]([O-])[O-], [CH-]=[SH3+], [CH-]=[SH2+]O, [CH-][SH2+], O=[S+](=O)[O-], [OH+]=[S-](=O)=O
+# *Composite atomtype; examples for S6dc: O=[S+2]([O-])[O-], [CH-]=[SH3+], [CH-]=[SH2+]O, [CH-][SH2+], O=[S+](=O)[O-], [OH+]=[S-](=O)=O
 ATOMTYPES['S6t'] = AtomType('S6t', generic=['R', 'R!H', 'S', 'Val6'], specific=[],  # (shared electrons = 9-12)
                             single=[0,1,2,3], all_double=[0], r_double=[], o_double=[], s_double=[], triple=[1], quadruple=[], benzene=[0], lone_pairs=[0], charge=[0])
 # examples for S6t: H3S#N
@@ -533,7 +533,7 @@ ATOMTYPES['S6tt'] = AtomType('S6tt', generic=['R', 'R!H', 'S', 'Val6'], specific
 # examples for S6tt: N#S#N
 ATOMTYPES['S6tdc'] = AtomType('S6tdc', generic=['R', 'R!H', 'S', 'Val6'], specific=[],
                               single=[0,1,2,3,4], all_double=[0, 1, 2], r_double=[], o_double=[], s_double=[], triple=[1, 2], quadruple=[], benzene=[0], lone_pairs=[0], charge=[-1, +1])
-# *Composite atomType; examples for S6tdc: [SH2+]#[C-], [N-]=[S+]#N
+# *Composite atomtype; examples for S6tdc: [SH2+]#[C-], [N-]=[S+]#N
 
 ATOMTYPES['Cl'] = AtomType('Cl', generic=['R', 'R!H', 'Val7'], specific=['Cl1s'])
 ATOMTYPES['Cl1s'] = AtomType('Cl1s', generic=['R', 'R!H', 'Cl', 'Val7'], specific=[],
@@ -664,7 +664,7 @@ ATOMTYPES['I1s'].set_actions(increment_bond=[], decrement_bond=[], form_bond=['I
 ATOMTYPES['F'].set_actions(increment_bond=[], decrement_bond=[], form_bond=['F'], break_bond=['F'], increment_radical=['F'], decrement_radical=['F'], increment_lone_pair=[], decrement_lone_pair=[])
 ATOMTYPES['F1s'].set_actions(increment_bond=[], decrement_bond=[], form_bond=['F1s'], break_bond=['F1s'], increment_radical=['F1s'], decrement_radical=['F1s'], increment_lone_pair=[], decrement_lone_pair=[])
 
-#these are ordered on priority of picking if we encounter a more general atomType for make
+#these are ordered on priority of picking if we encounter a more general atomtype for make
 allElements=['H', 'C', 'O', 'N', 'S', 'Si', 'Cl', 'F', 'I', 'Ne', 'Ar', 'He', 'X']
 #list of elements that do not have more specific atomTypes
 nonSpecifics=['H', 'He', 'Ne', 'Ar',]
@@ -680,7 +680,7 @@ for atomType in ATOMTYPES.values():
 
 def get_features(atom, bonds):
     """
-    Returns a list of features needed to determine atomType for :class:'Atom'
+    Returns a list of features needed to determine atomtype for :class:'Atom'
     or :class:'GroupAtom' object 'atom and with local bond structure `bonds`,
     a ``dict`` containing atom-bond pairs.
     """
@@ -692,26 +692,26 @@ def get_features(atom, bonds):
     # Count numbers of each higher-order bond type
     single = r_double = o_double = s_double = triple = benzene = quadruple = 0
     for atom2, bond12 in bonds.items():
-        if bond12.isSingle():
+        if bond12.is_single():
             single += 1
-        elif bond12.isDouble():
-            if atom2.isOxygen():
+        elif bond12.is_double():
+            if atom2.is_oxygen():
                 o_double += 1
-            elif atom2.isSulfur():
+            elif atom2.is_sulfur():
                 s_double += 1
             else:
                 # r_double is for double bonds NOT to oxygen or Sulfur
                 r_double += 1
-        elif bond12.isTriple():
+        elif bond12.is_triple():
             triple += 1
-        elif bond12.isBenzene():
+        elif bond12.is_benzene():
             benzene += 1
-        elif bond12.isQuadruple():
+        elif bond12.is_quadruple():
             quadruple += 1
 
     # all_double is for all double bonds, to anything
     all_double = r_double + o_double + s_double
-    # Warning: some parts of code assume this list matches the list returned by countBonds()
+    # Warning: some parts of code assume this list matches the list returned by count_bonds()
     # possibly the two methods could be merged or one could call the other.
     features = [single, all_double, r_double, o_double, s_double, triple, quadruple, benzene, atom.lonePairs, atom.charge]
 
@@ -729,7 +729,7 @@ def get_atomtype(atom, bonds):
 
     # Use element and counts to determine proper atom type
     atom_symbol = atom.symbol
-    # These elements do not do not have a more specific atomType
+    # These elements do not do not have a more specific atomtype
     if atom_symbol in nonSpecifics:
         return ATOMTYPES[atom_symbol]
 

@@ -120,7 +120,7 @@ class Parse_H_LayerTest(unittest.TestCase):
 
     def test_OCO(self):
         smi = 'O=C-O'
-        inchi = Molecule().fromSMILES(smi).toInChI()
+        inchi = Molecule().from_smiles(smi).to_inchi()
         mobile_hs = _parse_H_layer(inchi)
         expected = [[2, 3]]
         self.assertTrue(mobile_hs == expected)
@@ -228,7 +228,7 @@ class CreateULayerTest(unittest.TestCase):
 
         u_layers = []
         for adjlist in [adjlist1, adjlist2]:
-            mol = Molecule().fromAdjacencyList(adjlist)
+            mol = Molecule().from_adjacency_list(adjlist)
             u_layer = create_augmented_layers(mol)[0]
             u_layers.append(u_layer)
 
@@ -237,22 +237,22 @@ class CreateULayerTest(unittest.TestCase):
 
 class ExpectedLonePairsTest(unittest.TestCase):
     def test_SingletCarbon(self):
-        mol = Molecule(atoms=[Atom(element='C', lonePairs=1)])
+        mol = Molecule(atoms=[Atom(element='C', lone_pairs=1)])
         unexpected = _has_unexpected_lone_pairs(mol)
         self.assertTrue(unexpected)
 
     def test_NormalCarbon(self):
-        mol = Molecule(atoms=[Atom(element='C', lonePairs=0)])
+        mol = Molecule(atoms=[Atom(element='C', lone_pairs=0)])
         unexpected = _has_unexpected_lone_pairs(mol)
         self.assertFalse(unexpected)
 
     def test_NormalOxygen(self):
-        mol = Molecule(atoms=[Atom(element='O', lonePairs=2)])
+        mol = Molecule(atoms=[Atom(element='O', lone_pairs=2)])
         unexpected = _has_unexpected_lone_pairs(mol)
         self.assertFalse(unexpected)
 
     def test_Oxygen_3LP(self):
-        mol = Molecule(atoms=[Atom(element='O', lonePairs=3)])
+        mol = Molecule(atoms=[Atom(element='O', lone_pairs=3)])
         unexpected = _has_unexpected_lone_pairs(mol)
         self.assertTrue(unexpected)
 
@@ -260,7 +260,7 @@ class ExpectedLonePairsTest(unittest.TestCase):
 class CreateAugmentedLayersTest(unittest.TestCase):
     def test_Methane(self):
         smi = 'C'
-        mol = Molecule().fromSMILES(smi)
+        mol = Molecule().from_smiles(smi)
         ulayer, player = create_augmented_layers(mol)
         self.assertTrue(not ulayer)
         self.assertTrue(not player)
@@ -272,7 +272,7 @@ multiplicity 1
 2 H u0 p0 c0 {1,S}
 3 H u0 p0 c0 {1,S}
 """
-        mol = Molecule().fromAdjacencyList(adjlist)
+        mol = Molecule().from_adjacency_list(adjlist)
         ulayer, player = create_augmented_layers(mol)
         self.assertTrue(not ulayer)
         self.assertEquals(P_LAYER_PREFIX + '1', player)
@@ -284,7 +284,7 @@ multiplicity 3
 2 H u0 p0 c0 {1,S}
 3 H u0 p0 c0 {1,S}
 """
-        mol = Molecule().fromAdjacencyList(adjlist)
+        mol = Molecule().from_adjacency_list(adjlist)
         ulayer, player = create_augmented_layers(mol)
         self.assertEquals(U_LAYER_PREFIX + '1,1', ulayer)
         self.assertTrue(not player)
@@ -301,7 +301,7 @@ multiplicity 3
 3 O u0 p3 c-1 {4,S}
 4 N u0 p0 c+1 {1,D} {2,S} {3,S}
 """
-        mol = Molecule().fromAdjacencyList(adjlist)
+        mol = Molecule().from_adjacency_list(adjlist)
         ulayer, player = create_augmented_layers(mol)
         self.assertTrue(not ulayer)
         self.assertTrue(player.contains(P_LAYER_PREFIX + '1(0)'))
@@ -311,7 +311,7 @@ class ResetLonePairsTest(unittest.TestCase):
 
     def test_Methane(self):
         smi = 'C'
-        mol = Molecule().fromSMILES(smi)
+        mol = Molecule().from_smiles(smi)
         p_indices = []
 
         _reset_lone_pairs(mol, p_indices)
@@ -326,7 +326,7 @@ multiplicity 1
 2 H u0 p0 c0 {1,S}
 3 H u0 p0 c0 {1,S}
 """
-        mol = Molecule().fromAdjacencyList(adjlist)
+        mol = Molecule().from_adjacency_list(adjlist)
         p_indices = [1]
 
         _reset_lone_pairs(mol, p_indices)

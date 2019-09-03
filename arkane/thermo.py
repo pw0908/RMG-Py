@@ -226,7 +226,7 @@ class ThermoJob(object):
                                 break
                 if not is_species_in_dict:
                     with open(spec_dict_path, 'a') as f:
-                        f.write(species.molecule[0].toAdjacencyList(removeH=False, label=species.label))
+                        f.write(species.molecule[0].to_adjacency_list(remove_h=False, label=species.label))
                         f.write('\n')
         return chemkin_thermo_string
 

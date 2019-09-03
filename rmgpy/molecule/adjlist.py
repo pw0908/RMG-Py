@@ -52,8 +52,8 @@ class Saturator(object):
         appropriate number of hydrogen atoms.
 
         The required number of hydrogen atoms per heavy atom is determined as follows:
-        H's =     max number of valence electrons - atom.radicalElectrons
-                    - 2* atom.lonePairs - order - atom.charge
+        H's =     max number of valence electrons - atom.radical_electrons
+                    - 2* atom.lone_pairs - order - atom.charge
 
         """
         new_atoms = []
@@ -64,7 +64,7 @@ class Saturator(object):
                 raise InvalidAdjacencyListError(
                     'Cannot add hydrogens to adjacency list: Unknown orbital for atom "{0}".'.format(atom.symbol))
 
-            order = atom.getBondOrdersForAtom()
+            order = atom.get_total_bond_order()
 
             number_of_h_to_be_added = max_number_of_valence_electrons - atom.radicalElectrons - 2 * atom.lonePairs - int(
                 order) - atom.charge
@@ -73,7 +73,7 @@ class Saturator(object):
                 raise InvalidAdjacencyListError('Incorrect electron configuration on atom.')
 
             for _ in range(number_of_h_to_be_added):
-                a = Atom(element='H', radicalElectrons=0, charge=0, label='', lonePairs=0)
+                a = Atom(element='H', radical_electrons=0, charge=0, label='', lone_pairs=0)
                 b = Bond(atom, a, 'S')
                 new_atoms.append(a)
                 atom.bonds[a] = b
@@ -94,7 +94,7 @@ class ConsistencyChecker(object):
             return  # because we can't check it.
 
         valence = PeriodicSystem.valence_electrons[atom.symbol]
-        order = atom.getBondOrdersForAtom()
+        order = atom.get_total_bond_order()
 
         theoretical = valence - order - atom.radicalElectrons - 2 * atom.lonePairs
 
@@ -318,11 +318,11 @@ def from_old_adjacency_list(adjlist, group=False, saturate_h=False):
             if group:
                 if lone_pairs_of_electrons is not None:
                     lone_pairs_of_electrons = [additional + lone_pairs_of_electrons for additional in additional_lone_pairs]
-                atom = GroupAtom(atomType=atom_type,
-                                 radicalElectrons=sorted(set(radical_electrons)),
+                atom = GroupAtom(atomtype=atom_type,
+                                 radical_electrons=sorted(set(radical_electrons)),
                                  charge=None,
                                  label=label,
-                                 lonePairs=lone_pairs_of_electrons,
+                                 lone_pairs=lone_pairs_of_electrons,
                                  # Assign lone_pairs_of_electrons as None if it is not explicitly provided
                                  )
 
@@ -335,10 +335,10 @@ def from_old_adjacency_list(adjlist, group=False, saturate_h=False):
                     lone_pairs_of_electrons = PeriodicSystem.lone_pairs[atom_type[0]] + additional_lone_pairs[0]
 
                 atom = Atom(element=atom_type[0],
-                            radicalElectrons=radical_electrons[0],
+                            radical_electrons=radical_electrons[0],
                             charge=0,
                             label=label,
-                            lonePairs=lone_pairs_of_electrons,
+                            lone_pairs=lone_pairs_of_electrons,
                             )
             # Add the atom to the list
             atoms.append(atom)
@@ -411,12 +411,12 @@ def from_old_adjacency_list(adjlist, group=False, saturate_h=False):
                     except KeyError:
                         raise InvalidAdjacencyListError('Error in adjacency list:\n{1}\nCannot add hydrogens: Unknown '
                                                         'valence for atom "{0}".'.format(atom.symbol, adjlist))
-                    radical = atom.radicalElectrons
-                    order = atom.getBondOrdersForAtom()
+                    radical = atom.radical_electrons
+                    order = atom.get_total_bond_order()
                     count = valence - radical - int(order) - 2 * (
-                                atom.lonePairs - PeriodicSystem.lone_pairs[atom.symbol])
+                            atom.lone_pairs - PeriodicSystem.lone_pairs[atom.symbol])
                     for i in range(count):
-                        a = Atom(element='H', radicalElectrons=0, charge=0, label='', lonePairs=0)
+                        a = Atom(element='H', radical_electrons=0, charge=0, label='', lone_pairs=0)
                         b = Bond(atom, a, 'S')
                         new_atoms.append(a)
                         atom.bonds[a] = b
@@ -426,8 +426,8 @@ def from_old_adjacency_list(adjlist, group=False, saturate_h=False):
             # Calculate the multiplicity for the molecule and update the charges on each atom
             n_rad = 0  # total number of radical electrons
             for atom in atoms:
-                atom.updateCharge()
-                n_rad += atom.radicalElectrons
+                atom.update_charge()
+                n_rad += atom.radical_electrons
             multiplicity = n_rad + 1  # 2 s + 1, where s is the combined spin of unpaired electrons (s = 1/2 per unpaired electron)
 
         else:
@@ -772,7 +772,7 @@ def from_adjacency_list(adjlist, group=False, saturate_h=False):
         for atom in atoms:
             ConsistencyChecker.check_partial_charge(atom)
 
-        n_rad = sum([atom.radicalElectrons for atom in atoms])
+        n_rad = sum([atom.radical_electrons for atom in atoms])
         absolute_spin_per_electron = 1 / 2.
         if multiplicity is None:
             multiplicity = 2 * (n_rad * absolute_spin_per_electron) + 1
@@ -942,16 +942,16 @@ def to_adjacency_list(atoms, multiplicity, label=None, group=False, remove_h=Fal
                 # preference is for string representation, backs down to number
                 # numbers if doesn't work
                 try:
-                    adjlist += code.format(','.join(bond.getOrderStr()))
+                    adjlist += code.format(','.join(bond.get_order_str()))
                 except ValueError:
-                    adjlist += code.format(','.join(str(bond.getOrderNum())))
+                    adjlist += code.format(','.join(str(bond.get_order_num())))
             else:
                 # preference is for string representation, backs down to number
                 # numbers if doesn't work
                 try:
-                    adjlist += bond.getOrderStr()
+                    adjlist += bond.get_order_str()
                 except ValueError:
-                    adjlist += str(bond.getOrderNum())
+                    adjlist += str(bond.get_order_num())
             adjlist += '}'
 
         # Each atom begins on a new line
@@ -1083,11 +1083,11 @@ def to_old_adjacency_list(atoms, multiplicity=None, label=None, group=False, rem
             # Bond type(s)
             if group:
                 if len(bond.order) == 1:
-                    adjlist += bond.getOrderStr()[0]
+                    adjlist += bond.get_order_str()[0]
                 else:
-                    adjlist += '{{{0}}}'.format(','.join(bond.getOrderStr()))
+                    adjlist += '{{{0}}}'.format(','.join(bond.get_order_str()))
             else:
-                adjlist += bond.getOrderStr()
+                adjlist += bond.get_order_str()
             adjlist += '}'
 
         # Each atom begins on a new line

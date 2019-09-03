@@ -46,13 +46,13 @@ def calculateAtomSymmetryNumber(molecule, atom):
 
     single = double = triple = benzene = num_neighbors = 0  # note that 0 is immutable
     for bond in atom.edges.values():
-        if bond.isSingle():
+        if bond.is_single():
             single += 1
-        elif bond.isDouble():
+        elif bond.is_double():
             double += 1
-        elif bond.isTriple():
+        elif bond.is_triple():
             triple += 1
-        elif bond.isBenzene():
+        elif bond.is_benzene():
             benzene += 1
         num_neighbors += 1
 
@@ -64,7 +64,7 @@ def calculateAtomSymmetryNumber(molecule, atom):
     molecule0 = molecule
     molecule = molecule0.copy(True)
     atom = molecule.vertices[molecule0.vertices.index(atom)]
-    molecule.removeAtom(atom)
+    molecule.remove_atom(atom)
     groups = molecule.split()
 
     # Determine equivalence of functional groups around atom
@@ -72,7 +72,7 @@ def calculateAtomSymmetryNumber(molecule, atom):
     for group1 in groups:
         for group2 in groups:
             if group1 is not group2 and group2 not in group_isomorphism[group1]:
-                group_isomorphism[group1][group2] = group1.isIsomorphic(group2)
+                group_isomorphism[group1][group2] = group1.is_isomorphic(group2)
                 group_isomorphism[group2][group1] = group_isomorphism[group1][group2]
             elif group1 is group2:
                 group_isomorphism[group1][group1] = True
@@ -169,9 +169,9 @@ def calculateBondSymmetryNumber(molecule, atom1, atom2):
         elif len(molecule.vertices) == 2:
             symmetry_number = 2
         else:
-            molecule.removeBond(bond)
+            molecule.remove_bond(bond)
             structure = molecule.copy(True)
-            molecule.addBond(bond)
+            molecule.add_bond(bond)
 
             atom1 = structure.atoms[molecule.atoms.index(atom1)]
             atom2 = structure.atoms[molecule.atoms.index(atom2)]
@@ -182,40 +182,40 @@ def calculateBondSymmetryNumber(molecule, atom1, atom2):
 
             fragment1, fragment2 = fragments
             if atom1 in fragment1.atoms:
-                fragment1.removeAtom(atom1)
+                fragment1.remove_atom(atom1)
             if atom2 in fragment1.atoms:
-                fragment1.removeAtom(atom2)
+                fragment1.remove_atom(atom2)
             if atom1 in fragment2.atoms:
-                fragment2.removeAtom(atom1)
+                fragment2.remove_atom(atom1)
             if atom2 in fragment2.atoms:
-                fragment2.removeAtom(atom2)
+                fragment2.remove_atom(atom2)
             groups1 = fragment1.split()
             groups2 = fragment2.split()
 
             # Test functional groups for symmetry
             if len(groups1) == len(groups2) == 1:
-                if groups1[0].isIsomorphic(groups2[0]):
+                if groups1[0].is_isomorphic(groups2[0]):
                     symmetry_number *= 2
             elif len(groups1) == len(groups2) == 2:
-                if groups1[0].isIsomorphic(groups2[0]) and groups1[1].isIsomorphic(groups2[1]):
+                if groups1[0].is_isomorphic(groups2[0]) and groups1[1].is_isomorphic(groups2[1]):
                     symmetry_number *= 2
-                elif groups1[1].isIsomorphic(groups2[0]) and groups1[0].isIsomorphic(groups2[1]):
+                elif groups1[1].is_isomorphic(groups2[0]) and groups1[0].is_isomorphic(groups2[1]):
                     symmetry_number *= 2
             elif len(groups1) == len(groups2) == 3:
-                if groups1[0].isIsomorphic(groups2[0]):
-                    if groups1[1].isIsomorphic(groups2[1]) and groups1[2].isIsomorphic(groups2[2]):
+                if groups1[0].is_isomorphic(groups2[0]):
+                    if groups1[1].is_isomorphic(groups2[1]) and groups1[2].is_isomorphic(groups2[2]):
                         symmetry_number *= 2
-                    elif groups1[1].isIsomorphic(groups2[2]) and groups1[2].isIsomorphic(groups2[1]):
+                    elif groups1[1].is_isomorphic(groups2[2]) and groups1[2].is_isomorphic(groups2[1]):
                         symmetry_number *= 2
-                elif groups1[0].isIsomorphic(groups2[1]):
-                    if groups1[1].isIsomorphic(groups2[2]) and groups1[2].isIsomorphic(groups2[0]):
+                elif groups1[0].is_isomorphic(groups2[1]):
+                    if groups1[1].is_isomorphic(groups2[2]) and groups1[2].is_isomorphic(groups2[0]):
                         symmetry_number *= 2
-                    elif groups1[1].isIsomorphic(groups2[0]) and groups1[2].isIsomorphic(groups2[2]):
+                    elif groups1[1].is_isomorphic(groups2[0]) and groups1[2].is_isomorphic(groups2[2]):
                         symmetry_number *= 2
-                elif groups1[0].isIsomorphic(groups2[2]):
-                    if groups1[1].isIsomorphic(groups2[0]) and groups1[2].isIsomorphic(groups2[1]):
+                elif groups1[0].is_isomorphic(groups2[2]):
+                    if groups1[1].is_isomorphic(groups2[0]) and groups1[2].is_isomorphic(groups2[1]):
                         symmetry_number *= 2
-                    elif groups1[1].isIsomorphic(groups2[1]) and groups1[2].isIsomorphic(groups2[0]):
+                    elif groups1[1].is_isomorphic(groups2[1]) and groups1[2].is_isomorphic(groups2[0]):
                         symmetry_number *= 2
 
     return symmetry_number
@@ -260,7 +260,7 @@ def calculateAxisSymmetryNumber(molecule):
     double_bonds = []
     for atom1 in molecule.vertices:
         for atom2 in atom1.edges:
-            if (atom1.edges[atom2].isDouble() or atom1.edges[atom2].order > 2) \
+            if (atom1.edges[atom2].is_double() or atom1.edges[atom2].order > 2) \
                     and molecule.vertices.index(atom1) < molecule.vertices.index(atom2):
                 double_bonds.append((atom1, atom2))
 
@@ -296,7 +296,7 @@ def calculateAxisSymmetryNumber(molecule):
         # Do nothing if axis is in cycle
         found = False
         for atom1, atom2 in bonds:
-            if molecule.isBondInCycle(atom1.edges[atom2]):
+            if molecule.is_bond_in_cycle(atom1.edges[atom2]):
                 found = True
         if found:
             continue
@@ -318,18 +318,18 @@ def calculateAxisSymmetryNumber(molecule):
         for atom1, atom2 in bonds:
             bond = atom1.edges[atom2]
             bond_list.append(bond)
-            molecule.removeBond(bond)
+            molecule.remove_bond(bond)
         structure = molecule.copy(True)
         terminal_atoms = [structure.vertices[molecule.vertices.index(atom)] for atom in terminal_atoms]
         for bond in bond_list:
-            molecule.addBond(bond)
+            molecule.add_bond(bond)
 
         atoms_to_remove = []
         for atom in structure.vertices:
             if len(atom.edges) == 0 and atom not in terminal_atoms:  # it's not bonded to anything
                 atoms_to_remove.append(atom)
         for atom in atoms_to_remove:
-            structure.removeAtom(atom)
+            structure.remove_atom(atom)
 
         # Split remaining fragments of structure
         end_fragments = structure.split()
@@ -348,7 +348,7 @@ def calculateAxisSymmetryNumber(molecule):
             for atom in terminal_atoms:
                 if atom in fragment.atoms:
                     terminal_atom = atom
-                    fragment.removeAtom(atom)
+                    fragment.remove_atom(atom)
                     break
             else:
                 continue
@@ -372,7 +372,7 @@ def calculateAxisSymmetryNumber(molecule):
             elif len(groups) == 1 and terminal_atom.radicalElectrons != 0:
                 symmetry_broken = True
             elif len(groups) == 2:
-                if not groups[0].isIsomorphic(groups[1]):
+                if not groups[0].is_isomorphic(groups[1]):
                     # this end has broken the symmetry of the axis
                     symmetry_broken = True
 
@@ -402,12 +402,12 @@ def calculateCyclicSymmetryNumber(molecule):
     symmetry_number = 1
 
     # for polycyclics, We should be getting the largest ring, not the smallest
-    single_rings, polycyclic_rings = molecule.getDisparateRings()
+    single_rings, polycyclic_rings = molecule.get_disparate_cycles()
     for ring in polycyclic_rings:
-        single_rings.append(molecule.getLargestRing(ring[0]))
+        single_rings.append(molecule.get_largest_ring(ring[0]))
     # Get symmetry number for each ring in structure & multiply
     for ring in single_rings:
-        ring = molecule._sortCyclicVertices(ring)
+        ring = molecule.sort_cyclic_vertices(ring)
         size = len(ring)
 
         # look for twisting rotation
@@ -554,18 +554,18 @@ def calculateSymmetryNumber(molecule):
     symmetry_number = 1
 
     for atom in molecule.vertices:
-        if not molecule.isAtomInCycle(atom):
+        if not molecule.is_atom_in_cycle(atom):
             symmetry_number *= calculateAtomSymmetryNumber(molecule, atom)
 
     for atom1 in molecule.vertices:
         for atom2 in list(atom1.edges):  # Make a copy of the list of neighbors since we modify the dictionary
             if (molecule.vertices.index(atom1) < molecule.vertices.index(atom2) and
-                    not molecule.isBondInCycle(atom1.edges[atom2])):
+                    not molecule.is_bond_in_cycle(atom1.edges[atom2])):
                 symmetry_number *= calculateBondSymmetryNumber(molecule, atom1, atom2)
 
     symmetry_number *= calculateAxisSymmetryNumber(molecule)
 
-    if molecule.isCyclic():
+    if molecule.is_cyclic():
         symmetry_number *= calculateCyclicSymmetryNumber(molecule)
 
     return symmetry_number

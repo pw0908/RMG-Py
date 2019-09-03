@@ -329,15 +329,15 @@ class PDepNetwork(rmgpy.pdep.network.Network):
         for conf in self.isomers + self.products + self.reactants:
             if len(conf.species) == len(self.source):
                 if len(self.source) == 1:
-                    if self.source[0].isIsomorphic(conf.species[0]):
+                    if self.source[0].is_isomorphic(conf.species[0]):
                         E0source = conf.E0
                         break
                 elif len(self.source) == 2:
-                    boo00 = self.source[0].isIsomorphic(conf.species[0])
-                    boo01 = self.source[0].isIsomorphic(conf.species[1])
+                    boo00 = self.source[0].is_isomorphic(conf.species[0])
+                    boo01 = self.source[0].is_isomorphic(conf.species[1])
                     if boo00 or boo01:  # if we found source[0]
-                        boo10 = self.source[1].isIsomorphic(conf.species[0])
-                        boo11 = self.source[1].isIsomorphic(conf.species[1])
+                        boo10 = self.source[1].is_isomorphic(conf.species[0])
+                        boo11 = self.source[1].is_isomorphic(conf.species[1])
                         if (boo00 and boo11) or (boo01 and boo10):
                             E0source = conf.E0
                             break

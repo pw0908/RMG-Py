@@ -236,14 +236,14 @@ def toSMILES(mol, backend='default'):
     # Dictionary lookups are O(1) so this should be fast.
     # The dictionary is defined at the top of this file.
     try:
-        if mol.isRadical():
-            output = RADICAL_LOOKUPS[mol.getFormula()]
+        if mol.is_radical():
+            output = RADICAL_LOOKUPS[mol.get_formula()]
         else:
-            output = MOLECULE_LOOKUPS[mol.getFormula()]
+            output = MOLECULE_LOOKUPS[mol.get_formula()]
     except KeyError:
         if backend == 'default':
             for atom in mol.atoms:
-                if atom.isNitrogen() or atom.isSulfur():
+                if atom.is_nitrogen() or atom.is_sulfur():
                     return _write(mol, 'smi', backend='openbabel')
             return _write(mol, 'smi', backend='rdkit')
         else:
@@ -359,7 +359,7 @@ def _rdkit_translator(input_object, identifier_type, mol=None):
         elif identifier_type == 'sma':
             output = Chem.MolToSmarts(rdkitmol)
         elif identifier_type == 'smi':
-            if input_object.isAromatic():
+            if input_object.is_aromatic():
                 output = Chem.MolToSmiles(rdkitmol)
             else:
                 output = Chem.MolToSmiles(rdkitmol, kekuleSmiles=True)
@@ -432,13 +432,13 @@ def _lookup(mol, identifier, identifier_type):
     if identifier_type.lower() == 'inchi':
         try:
             smi = INCHI_LOOKUPS[identifier.split('/', 1)[1]]
-            return mol.fromSMILES(smi)
+            return mol.from_smiles(smi)
         except KeyError:
             return None
     elif identifier_type.lower() == 'smi':
         try:
             adjList = SMILES_LOOKUPS[identifier]
-            return mol.fromAdjacencyList(adjList)
+            return mol.from_adjacency_list(adjList)
         except KeyError:
             return None
 
@@ -480,7 +480,7 @@ def _read(mol, identifier, identifier_type, backend):
 
     if _lookup(mol, identifier, identifier_type) is not None:
         if _check_output(mol, identifier):
-            mol.updateAtomTypes()
+            mol.update_atomtypes()
             return mol
 
     for option in _get_backend_list(backend):
@@ -492,7 +492,7 @@ def _read(mol, identifier, identifier_type, backend):
             raise NotImplementedError("Unrecognized backend {0}".format(option))
 
         if _check_output(mol, identifier):
-            mol.updateAtomTypes()
+            mol.update_atomtypes()
             return mol
         else:
             logging.debug('Backend {0} is not able to parse identifier {1}'.format(option, identifier))
@@ -530,7 +530,7 @@ def _write(mol, identifier_type, backend):
             return output
         else:
             logging.debug('Backend {0} is not able to generate {1} for this molecule:\n'
-                          '{2}'.format(option, identifier_type, mol.toAdjacencyList()))
+                          '{2}'.format(option, identifier_type, mol.to_adjacency_list()))
 
     raise ValueError("Unable to generate identifier type {0} with backend {1}.".format(identifier_type, backend))
 

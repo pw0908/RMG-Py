@@ -550,9 +550,9 @@ def _create_U_layer(mol, auxinfo):
         equivalent_atoms=list,
     )
 
-    if mol.getRadicalCount() == 0:
+    if mol.get_radical_count() == 0:
         return None
-    elif mol.getFormula() == 'H':
+    elif mol.get_formula() == 'H':
         return U_LAYER_PREFIX + '1'
 
     # create preliminary u-layer:
@@ -636,16 +636,16 @@ def create_augmented_layers(mol):
     as to ensure the atoms with the lowest indices are used to compose the string.
     """
 
-    if mol.getRadicalCount() == 0 and not _has_unexpected_lone_pairs(mol):
+    if mol.get_radical_count() == 0 and not _has_unexpected_lone_pairs(mol):
         return None, None
-    elif mol.getFormula() == 'H':
+    elif mol.get_formula() == 'H':
         return U_LAYER_PREFIX + '1', None
     else:
         molcopy = mol.copy(deep=True)
 
         hydrogens = [at for at in molcopy.atoms if at.number == 1]
         for h in hydrogens:
-            molcopy.removeAtom(h)
+            molcopy.remove_atom(h)
 
         rdkitmol = to_rdkit_mol(molcopy)
         _, auxinfo = Chem.MolToInchiAndAuxInfo(rdkitmol, options='-SNon')  # suppress stereo warnings
@@ -679,7 +679,7 @@ def _fix_triplet_to_singlet(mol, p_indices):
 
     for at in mol.atoms:
         index = mol.atoms.index(at) + 1
-        if mol.getRadicalCount() == 2 and index in p_indices:
+        if mol.get_radical_count() == 2 and index in p_indices:
             at.lonePairs += 1
             at.radicalElectrons -= 2
             p_indices.remove(index)
@@ -719,10 +719,10 @@ def _convert_4_atom_3_bond_path(start):
         bonds = path[1::2]  # odd
         for bond in bonds[::2]:  # even
             assert isinstance(bond, Bond)
-            bond.decrementOrder()
+            bond.decrement_order()
         for bond in bonds[1::2]:  # odd bonds
             assert isinstance(bond, Bond)
-            bond.incrementOrder()
+            bond.increment_order()
 
         return True
 
@@ -750,7 +750,7 @@ def _convert_3_atom_2_bond_path(start, mol):
 
         for at in mol.atoms:
             if at.number == 8:
-                order = at.getBondOrdersForAtom()
+                order = at.get_total_bond_order()
                 not_correct = order >= 4
                 if not_correct:
                     return False
@@ -830,7 +830,7 @@ def _fix_adjacent_charges(mol):
         if at.charge != 0:
             for neigh, bond in at.bonds.items():
                 if neigh.charge != 0:
-                    bond.incrementOrder()
+                    bond.increment_order()
                     at.charge += 1 if at.charge < 0 else -1
                     neigh.charge += 1 if neigh.charge < 0 else -1
 
@@ -845,7 +845,7 @@ def _fix_charge(mol, u_indices):
         return
 
     is_charged = sum([abs(at.charge) for at in mol.atoms]) != 0
-    is_correct = mol.getRadicalCount() == (mol.multiplicity - 1)
+    is_correct = mol.get_radical_count() == (mol.multiplicity - 1)
     if mol.multiplicity < 3 or is_correct or not is_charged:
         return
 
@@ -871,7 +871,7 @@ def _reset_lone_pairs(mol, p_indices):
         if count != 0:
             at.lonePairs = count
         else:
-            order = at.getBondOrdersForAtom()
+            order = at.get_total_bond_order()
             at.lonePairs = (elements.PeriodicSystem.valence_electrons[
                                 at.symbol] - order - at.radicalElectrons - at.charge) / 2
 
@@ -890,18 +890,18 @@ def _fix_oxygen_unsaturated_bond(mol, u_indices):
     """
 
     for at in mol.atoms:
-        if at.isOxygen() and at.radicalElectrons == 1 and at.lonePairs == 1:
-            bonds = mol.getBonds(at)
+        if at.is_oxygen() and at.radicalElectrons == 1 and at.lonePairs == 1:
+            bonds = mol.get_bonds(at)
             oxygen = at
             for atom2, bond in bonds.items():
-                if bond.isTriple():
-                    bond.decrementOrder()
+                if bond.is_triple():
+                    bond.decrement_order()
                     oxygen.radicalElectrons -= 1
                     atom2.radicalElectrons += 1
                     oxygen.lonePairs += 1
                     return
-        elif at.isOxygen() and at.charge == 1 and at.lonePairs == 1:
-            bonds = mol.getBonds(at)
+        elif at.is_oxygen() and at.charge == 1 and at.lonePairs == 1:
+            bonds = mol.get_bonds(at)
             oxygen = at
 
             start = oxygen
@@ -916,17 +916,17 @@ def _fix_oxygen_unsaturated_bond(mol, u_indices):
                 bonds = path[1::2]  # odd elements
                 for bond in bonds[::2]:  # even bonds
                     assert isinstance(bond, Bond)
-                    bond.decrementOrder()
+                    bond.decrement_order()
                 for bond in bonds[1::2]:  # odd bonds
                     assert isinstance(bond, Bond)
-                    bond.incrementOrder()
+                    bond.increment_order()
                 break
             else:
                 for atom2, bond in bonds.items():
-                    if not bond.isSingle() and atom2.charge == 0:
+                    if not bond.is_single() and atom2.charge == 0:
                         oxygen.charge -= 1
                         if (mol.atoms.index(atom2) + 1) in u_indices:
-                            bond.decrementOrder()
+                            bond.decrement_order()
                             atom2.radicalElectrons += 1
                             u_indices.remove(mol.atoms.index(atom2) + 1)
                         oxygen.lonePairs += 1
@@ -943,7 +943,7 @@ def _is_unsaturated(mol):
                    bond=Bond)
     for atom in mol.atoms:
         for bond in atom.bonds.values():
-            if not bond.isSingle():
+            if not bond.is_single():
                 return True
 
     return False
@@ -954,10 +954,10 @@ def _convert_unsaturated_bond_to_triplet(bond):
     Decrements the bond if it is unsatured, and adds an unpaired
     electron to each of the atoms connected by the bond.
     """
-    if not bond.isSingle():
+    if not bond.is_single():
         for at in (bond.atom1, bond.atom2):
             at.radicalElectrons += 1
-        bond.decrementOrder()
+        bond.decrement_order()
         return True
     return False
 
@@ -998,13 +998,13 @@ def _fix_mobile_h(mol, inchi, u1, u2):
         for at, bond in original.bonds.items():
             if at.number == 1:
                 hydrogen = at
-                mol.removeBond(bond)
+                mol.remove_bond(bond)
                 break
 
         new_h_bond = Bond(new_partner, hydrogen, order='S')
-        mol.addBond(new_h_bond)
+        mol.add_bond(new_h_bond)
 
-        mol.getBond(central, new_partner).decrementOrder()
+        mol.get_bond(central, new_partner).decrement_order()
 
         central.radicalElectrons += 1
         original.radicalElectrons += 1
@@ -1027,10 +1027,10 @@ def _fix_butadiene_path(start, end):
         bonds = path[1::2]  # odd elements
         for bond in bonds[::2]:  # even bonds
             assert isinstance(bond, Bond)
-            bond.decrementOrder()
+            bond.decrement_order()
         for bond in bonds[1::2]:  # odd bonds
             assert isinstance(bond, Bond)
-            bond.incrementOrder()
+            bond.increment_order()
 
         return True
 
@@ -1054,8 +1054,8 @@ def _fix_unsaturated_bond_to_biradical(mol, inchi, u_indices):
     for u1, u2 in combos:
         atom1 = mol.atoms[u1 - 1]  # convert to 0-based index for atoms in molecule
         atom2 = mol.atoms[u2 - 1]  # convert to 0-based index for atoms in molecule
-        if mol.hasBond(atom1, atom2):
-            b = mol.getBond(atom1, atom2)
+        if mol.has_bond(atom1, atom2):
+            b = mol.get_bond(atom1, atom2)
             isFixed = _convert_unsaturated_bond_to_triplet(b)
             if isFixed:
                 break
@@ -1077,7 +1077,7 @@ def _fix_unsaturated_bond_to_biradical(mol, inchi, u_indices):
         raise Exception(
             'Could not convert an unsaturated bond into a biradical for the \
             indices {} provided in the molecule: {}.'
-                .format(u_indices, mol.toAdjacencyList())
+                .format(u_indices, mol.to_adjacency_list())
         )
 
 
@@ -1092,17 +1092,17 @@ def _fix_unsaturated_bond(mol, indices, aug_inchi):
     of atoms that should be unpaired electrons left.
     """
 
-    correct = mol.getRadicalCount() == (mol.multiplicity - 1)
+    correct = mol.get_radical_count() == (mol.multiplicity - 1)
 
     if not correct and not indices:
         raise Exception('Cannot correct {} based on {} by converting unsaturated bonds into unpaired electrons...' \
-                        .format(mol.toAdjacencyList(), aug_inchi))
+                        .format(mol.to_adjacency_list(), aug_inchi))
 
     unsaturated = _is_unsaturated(mol)
 
     while not correct and unsaturated and len(indices) > 1:
         mol = _fix_unsaturated_bond_to_biradical(mol, aug_inchi.inchi, indices)
-        correct = mol.getRadicalCount() == (mol.multiplicity - 1)
+        correct = mol.get_radical_count() == (mol.multiplicity - 1)
         unsaturated = _is_unsaturated(mol)
 
 
@@ -1121,9 +1121,9 @@ def _check_molecule(mol, aug_inchi):
                    at=Atom
                    )
 
-    ConsistencyChecker.check_multiplicity(mol.getRadicalCount(), mol.multiplicity)
+    ConsistencyChecker.check_multiplicity(mol.get_radical_count(), mol.multiplicity)
     _, u_indices, _ = decompose_aug_inchi(str(aug_inchi))
-    assert(mol.getRadicalCount() == len(u_indices))
+    assert(mol.get_radical_count() == len(u_indices))
 
     for at in mol.atoms:
         ConsistencyChecker.check_partial_charge(at)

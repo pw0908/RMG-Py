@@ -293,18 +293,18 @@ class Arkane(object):
         for rxn in reaction_list:
             for i, rspc in enumerate(rxn.reactants):
                 for spc in species_list:
-                    if spc.isIsomorphic(rspc):
+                    if spc.is_isomorphic(rspc):
                         rxn.reactants[i] = spc
                         break
             for i, rspc in enumerate(rxn.products):
                 for spc in species_list:
-                    if spc.isIsomorphic(rspc):
+                    if spc.is_isomorphic(rspc):
                         rxn.products[i] = spc
                         break
         del_inds = []
         for i, spc1 in enumerate(species_list):
             for j, spc2 in enumerate(species_list):
-                if j > i and spc1.isIsomorphic(spc2):
+                if j > i and spc1.is_isomorphic(spc2):
                     del_inds.append(j)
 
         for j in sorted(del_inds)[::-1]:
@@ -315,7 +315,7 @@ class Arkane(object):
             if species.thermo:
                 thermo_library.loadEntry(index=i + 1,
                                          label=species.label,
-                                         molecule=species.molecule[0].toAdjacencyList(),
+                                         molecule=species.molecule[0].to_adjacency_list(),
                                          thermo=species.thermo,
                                          shortDesc=species.thermo.comment)
             else:

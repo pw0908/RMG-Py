@@ -294,8 +294,8 @@ class TestCoreEdgeReactionModel(unittest.TestCase):
                 Species().fromSMILES('O')]
 
         for spc in spcs:
-            cerm.makeNewSpecies(spc, label=spc.molecule[0].toSMILES())
-            spc.label = spc.molecule[0].toSMILES()
+            cerm.makeNewSpecies(spc, label=spc.molecule[0].to_smiles())
+            spc.label = spc.molecule[0].to_smiles()
 
         thermo_dict = {'[OH]': NASA(polynomials=[NASAPolynomial(
                             coeffs=[3.51457, 2.92787e-05, -5.32168e-07, 1.0195e-09, -3.85947e-13, 3414.25, 2.10435],
@@ -348,7 +348,7 @@ class TestCoreEdgeReactionModel(unittest.TestCase):
         cerm.processNewReactions(newReactions=[reaction], newSpecies=[])  # adds CH2 and O to edge
 
         for spc in cerm.core.species + cerm.edge.species:
-            spc.thermo = thermo_dict[spc.molecule[0].toSMILES()]  # assign thermo
+            spc.thermo = thermo_dict[spc.molecule[0].to_smiles()]  # assign thermo
 
         cerm.setThermodynamicFilteringParameters(Tmax=300.0,
                                                  toleranceThermoKeepSpeciesInEdge=1000.0,
@@ -359,8 +359,8 @@ class TestCoreEdgeReactionModel(unittest.TestCase):
         cerm.thermoFilterSpecies(
             cerm.edge.species)  # should not do anythinb because toleranceThermoKeepSpeciesInEdge is high
 
-        difset = set([x.molecule[0].toSMILES() for x in cerm.edge.species]) - set(
-            [x.molecule[0].toSMILES() for x in cerm.core.species])
+        difset = set([x.molecule[0].to_smiles() for x in cerm.edge.species]) - set(
+            [x.molecule[0].to_smiles() for x in cerm.core.species])
 
         self.assertEquals(len(difset), 2)  # no change in edge
 
@@ -372,8 +372,8 @@ class TestCoreEdgeReactionModel(unittest.TestCase):
 
         cerm.thermoFilterSpecies(cerm.edge.species)  # should remove stuff since CH2 and O have high thermo
 
-        difset = set([x.molecule[0].toSMILES() for x in cerm.edge.species]) - set(
-            [x.molecule[0].toSMILES() for x in cerm.core.species])
+        difset = set([x.molecule[0].to_smiles() for x in cerm.edge.species]) - set(
+            [x.molecule[0].to_smiles() for x in cerm.core.species])
 
         self.assertLess(len(difset), 2)  # edge is smaller
 
@@ -391,8 +391,8 @@ class TestCoreEdgeReactionModel(unittest.TestCase):
                 Species().fromSMILES('O')]
 
         for spc in spcs:
-            cerm.makeNewSpecies(spc, label=spc.molecule[0].toSMILES())
-            spc.label = spc.molecule[0].toSMILES()
+            cerm.makeNewSpecies(spc, label=spc.molecule[0].to_smiles())
+            spc.label = spc.molecule[0].to_smiles()
 
         thermo_dict = {'[OH]': NASA(polynomials=[NASAPolynomial(
                             coeffs=[3.51457, 2.92787e-05, -5.32168e-07, 1.0195e-09, -3.85947e-13, 3414.25, 2.10435],
@@ -443,7 +443,7 @@ class TestCoreEdgeReactionModel(unittest.TestCase):
         cerm.processNewReactions(newReactions=[reaction], newSpecies=[])  # add CH2 and O to edge
 
         for spc in cerm.core.species + cerm.edge.species:
-            spc.thermo = thermo_dict[spc.molecule[0].toSMILES()]  # assign thermo
+            spc.thermo = thermo_dict[spc.molecule[0].to_smiles()]  # assign thermo
 
         cerm.setThermodynamicFilteringParameters(Tmax=300.0,
                                                  toleranceThermoKeepSpeciesInEdge=1000.0,
@@ -451,15 +451,15 @@ class TestCoreEdgeReactionModel(unittest.TestCase):
                                                  maximumEdgeSpecies=1,
                                                  reactionSystems=[])
 
-        difset = set([x.molecule[0].toSMILES() for x in cerm.edge.species]) - set(
-            [x.molecule[0].toSMILES() for x in cerm.core.species])
+        difset = set([x.molecule[0].to_smiles() for x in cerm.edge.species]) - set(
+            [x.molecule[0].to_smiles() for x in cerm.core.species])
 
         self.assertEquals(len(difset), 2)  # no change because toleranceThermoKeepSpeciesInEdge is high
 
         cerm.thermoFilterDown(maximumEdgeSpecies=1)
 
-        difset = set([x.molecule[0].toSMILES() for x in cerm.edge.species]) - set(
-            [x.molecule[0].toSMILES() for x in cerm.core.species])
+        difset = set([x.molecule[0].to_smiles() for x in cerm.edge.species]) - set(
+            [x.molecule[0].to_smiles() for x in cerm.core.species])
 
         self.assertEquals(len(difset), 1)  # should be one because we thermo filtered down to one edge species
 
@@ -696,7 +696,7 @@ class TestEnlarge(unittest.TestCase):
 
     def test_enlarge_1_add_nonreactive_species(self):
         """Test that we can add a nonreactive species to CERM"""
-        m0 = Molecule(SMILES='[He]')
+        m0 = Molecule(smiles='[He]')
         spc0 = self.rmg.reactionModel.makeNewSpecies(m0, label='He', reactive=False)[0]
         self.rmg.reactionModel.enlarge(spc0)
 
@@ -705,14 +705,14 @@ class TestEnlarge(unittest.TestCase):
 
     def test_enlarge_2_add_reactive_species(self):
         """Test that we can add reactive species to CERM"""
-        m1 = Molecule(SMILES='CC')
+        m1 = Molecule(smiles='CC')
         spc1 = self.rmg.reactionModel.makeNewSpecies(m1, label='C2H4')[0]
         self.rmg.reactionModel.enlarge(spc1)
 
         self.assertEqual(len(self.rmg.reactionModel.core.species), 2)
         self.assertTrue(self.rmg.reactionModel.core.species[1].reactive)
 
-        m2 = Molecule(SMILES='[CH3]')
+        m2 = Molecule(smiles='[CH3]')
         spc2 = self.rmg.reactionModel.makeNewSpecies(m2, label='CH3')[0]
         self.rmg.reactionModel.enlarge(spc2)
 
@@ -728,18 +728,18 @@ class TestEnlarge(unittest.TestCase):
         )
 
         self.assertEqual(len(self.rmg.reactionModel.edge.species), 2)
-        smiles = set([spc.SMILES for spc in self.rmg.reactionModel.edge.species])
+        smiles = set([spc.smiles for spc in self.rmg.reactionModel.edge.species])
         self.assertEqual(smiles, {'[H]', 'C[CH2]'})
 
         # We expect either C-C bond scission to be in the core and C-H bond scission to be in the edge
         self.assertEqual(len(self.rmg.reactionModel.core.reactions), 1)
         rxn = self.rmg.reactionModel.core.reactions[0]
-        smiles = set([spc.SMILES for spc in rxn.reactants + rxn.products])
+        smiles = set([spc.smiles for spc in rxn.reactants + rxn.products])
         self.assertEqual(smiles, {'CC', '[CH3]'})
 
         self.assertEqual(len(self.rmg.reactionModel.edge.reactions), 1)
         rxn = self.rmg.reactionModel.edge.reactions[0]
-        smiles = set([spc.SMILES for spc in rxn.reactants + rxn.products])
+        smiles = set([spc.smiles for spc in rxn.reactants + rxn.products])
         self.assertEqual(smiles, {'CC', 'C[CH2]', '[H]'})
 
     def test_enlarge_4_create_pdep_network(self):

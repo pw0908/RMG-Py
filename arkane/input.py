@@ -522,17 +522,17 @@ def explorer(source, explore_tol=0.01, energy_tol=np.inf, flux_tol=0.0, bathGas=
 
 def SMILES(smiles):
     """Make a Molecule object from SMILES"""
-    return Molecule().fromSMILES(smiles)
+    return Molecule().from_smiles(smiles)
 
 
 def adjacencyList(adj):
     """Make a Molecule object from an adjacency list"""
-    return Molecule().fromAdjacencyList(adj)
+    return Molecule().from_adjacency_list(adj)
 
 
 def InChI(inchi):
     """Make a Molecule object from InChI"""
-    return Molecule().fromInChI(inchi)
+    return Molecule().from_inchi(inchi)
 
 
 def loadNecessaryDatabases():

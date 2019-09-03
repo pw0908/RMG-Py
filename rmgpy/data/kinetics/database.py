@@ -568,7 +568,7 @@ and immediately used in input files without any additional changes.
                     raise
 
         for reactant in molecules:
-            reactant.clearLabeledAtoms()
+            reactant.clear_labeled_atoms()
 
         return reaction_list
 

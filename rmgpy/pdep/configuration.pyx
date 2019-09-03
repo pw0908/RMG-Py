@@ -252,7 +252,7 @@ cdef class Configuration(object):
                 linear = False
                 for species in self.species:
                     for molecule in species.molecule:
-                        if molecule.isLinear(): 
+                        if molecule.is_linear():
                             linear = True
                             break
                 if linear:

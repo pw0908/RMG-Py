@@ -352,10 +352,10 @@ class Reaction:
 
         rxn_string = ''
         for i, species in enumerate(self.reactants):
-            adjlist = species.molecule[0].toAdjacencyList(removeH=False)
+            adjlist = species.molecule[0].to_adjacency_list(remove_h=False)
             rxn_string += "reactant{0}={1}__".format(i + 1, adjlist)
         for i, species in enumerate(self.products):
-            adjlist = species.molecule[0].toAdjacencyList(removeH=False)
+            adjlist = species.molecule[0].to_adjacency_list(remove_h=False)
             rxn_string += "product{0}={1}__".format(i + 1, adjlist)
 
         url = base_url + quote(rxn_string)
@@ -395,10 +395,10 @@ class Reaction:
         Return ``True`` if one or more reactants or products are surface species (or surface sites)
         """
         for spec in self.reactants:
-            if spec.containsSurfaceSite():
+            if spec.contains_surface_site():
                 return True
         for spec in self.products:
-            if spec.containsSurfaceSite():
+            if spec.contains_surface_site():
                 return True
         return False
 
@@ -666,7 +666,7 @@ class Reaction:
             rate_coefficient = self.kinetics.get_sticking_coefficient(T)
             adsorbate = None
             for r in self.reactants:
-                if r.containsSurfaceSite():
+                if r.contains_surface_site():
                     rate_coefficient /= surfaceSiteDensity
                 else:
                     if adsorbate is None:
@@ -1205,11 +1205,11 @@ class Reaction:
             for reactant, product in self.pairs:
                 new_pair = []
                 for reactant0 in self.reactants:
-                    if reactant0.isIsomorphic(reactant):
+                    if reactant0.is_isomorphic(reactant):
                         new_pair.append(reactant0)
                         break
                 for product0 in self.products:
-                    if product0.isIsomorphic(product):
+                    if product0.is_isomorphic(product):
                         new_pair.append(product0)
                         break
                 new_pairs.append(new_pair)
@@ -1288,9 +1288,9 @@ class Reaction:
         Returns the reduced mass of the products if reverse is ``True``
         """
         if reverse:
-            mass_list = [spc.molecule[0].getMolecularWeight() for spc in self.products]
+            mass_list = [spc.molecule[0].get_molecular_weight() for spc in self.products]
         else:
-            mass_list = [spc.molecule[0].getMolecularWeight() for spc in self.reactants]
+            mass_list = [spc.molecule[0].get_molecular_weight() for spc in self.reactants]
         reduced_mass = reduce((lambda x, y: x * y), mass_list) / sum(mass_list)
         return reduced_mass
 
@@ -1331,7 +1331,7 @@ def same_species_lists(list1, list2, check_identical=False, only_check_label=Fal
     Args:
         list1 (list):                          list of :class:`Species` or :class:`Molecule` objects
         list2 (list):                          list of :class:`Species` or :class:`Molecule` objects
-        check_identical (bool, optional):      if ``True``, use isIdentical comparison and compare atom IDs
+        check_identical (bool, optional):      if ``True``, use is_identical comparison and compare atom IDs
         only_check_label (bool, optional):     if ``True``, only compare the label attribute of each species
         generate_initial_map (bool, optional): if ``True``, initialize map by pairing atoms with same labels
         strict (bool, optional):               if ``False``, perform isomorphism ignoring electrons
@@ -1345,9 +1345,9 @@ def same_species_lists(list1, list2, check_identical=False, only_check_label=Fal
         if _only_check_label:
             return str(object1) == str(object2)
         elif _check_identical:
-            return object1.isIdentical(object2, strict=_strict)
+            return object1.is_identical(object2, strict=_strict)
         else:
-            return object1.isIsomorphic(object2, generateInitialMap=_generate_initial_map, strict=_strict)
+            return object1.is_isomorphic(object2, generate_initial_map=_generate_initial_map, strict=_strict)
 
     if len(list1) == len(list2) == 1:
         if same(list1[0], list2[0]):

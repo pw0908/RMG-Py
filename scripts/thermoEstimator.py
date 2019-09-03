@@ -76,7 +76,7 @@ def runThermoEstimator(inputFile, library_flag):
             library.loadEntry(
                 index=len(library.entries) + 1,
                 label=species.label,
-                molecule=species.molecule[0].toAdjacencyList(),
+                molecule=species.molecule[0].to_adjacency_list(),
                 thermo=species.getThermoData().toThermoData(),
                 shortDesc=species.getThermoData().comment,
             )

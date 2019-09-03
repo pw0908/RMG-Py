@@ -119,7 +119,7 @@ class CanteraCondition(object):
         # ConvertMolFrac to SMILES for keys for display
         pretty_mol_frac = {}
         for key, value in self.molFrac.items():
-            pretty_mol_frac[key.molecule[0].toSMILES()] = value
+            pretty_mol_frac[key.molecule[0].to_smiles()] = value
         string += 'Initial Mole Fractions: {0}'.format(pretty_mol_frac.__repr__())
         return string
 
@@ -534,10 +534,10 @@ def getRMGSpeciesFromUserSpecies(userList, RMGList):
         user_species.generate_resonance_structures()
 
         for rmgSpecies in RMGList:
-            if user_species.isIsomorphic(rmgSpecies):
+            if user_species.is_isomorphic(rmgSpecies):
                 if user_species in mapping:
                     raise KeyError("The Species with SMIlES {0} has appeared twice in the species list!".format(
-                        user_species.molecule[0].toSMILES()))
+                        user_species.molecule[0].to_smiles()))
                 mapping[user_species] = rmgSpecies
                 break
         else:

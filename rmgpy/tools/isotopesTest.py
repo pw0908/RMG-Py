@@ -253,7 +253,7 @@ class IsotopesTest(unittest.TestCase):
 
         stripped = remove_isotope(ethi)
 
-        self.assertTrue(eth.isIsomorphic(stripped))
+        self.assertTrue(eth.is_isomorphic(stripped))
 
     def testInplaceRemoveIsotopeForReactions(self):
         """
@@ -290,7 +290,7 @@ class IsotopesTest(unittest.TestCase):
 
         redo_isotope(modified_atoms)
 
-        self.assertTrue(stored_labeled_rxn.isIsomorphic(labeled_rxn))
+        self.assertTrue(stored_labeled_rxn.is_isomorphic(labeled_rxn))
 
     def testEnsureReactionDirection(self):
         """
@@ -393,7 +393,7 @@ multiplicity 2
                             msg='ensureReactionDirection didnt flip the proper reactants and products')
 
             # ensure kinetics is correct
-            if any([dipropyli.isIsomorphic(reactant) for reactant in rxn.reactants]):
+            if any([dipropyli.is_isomorphic(reactant) for reactant in rxn.reactants]):
                 self.assertAlmostEqual(rxn.kinetics.A.value, 0.5,
                                        msg='The A value returned, {0}, is incorrect. '
                                            'Check the reactions degeneracy and how A.value is obtained. '
@@ -407,15 +407,15 @@ multiplicity 2
     def test_ensure_reaction_direction_with_multiple_TS(self):
         """Tests that ensure reaction direction can handle multiple transition states"""
         family = self.database.kinetics.families['intra_H_migration']
-        r = Molecule().fromSMILES("[CH2]CCC")
-        p = Molecule().fromSMILES("C[CH]CC")
+        r = Molecule().from_smiles("[CH2]CCC")
+        p = Molecule().from_smiles("C[CH]CC")
         rxn = TemplateReaction(reactants=[r], products=[p])
         family.add_atom_labels_for_reaction(reaction=rxn)
         rxn.template = family.get_reaction_template_labels(reaction=rxn)
         rxn.degeneracy = family.calculate_degeneracy(rxn)
         rxn.family = 'intra_H_migration'
         rxn.kinetics = Arrhenius(A=(1, 's^-1'))
-        ri = Molecule().fromAdjacencyList("""
+        ri = Molecule().from_adjacency_list("""
 multiplicity 2
 1  C u1 p0 c0 {2,S} {3,S} {4,S}
 2  H u0 p0 c0 {1,S}
@@ -431,7 +431,7 @@ multiplicity 2
 12 H u0 p0 c0 {6,S}
 13 H u0 p0 c0 {6,S}
 """)
-        pi = Molecule().fromAdjacencyList("""
+        pi = Molecule().from_adjacency_list("""
 multiplicity 2
 1  C u0 p0 c0 {2,S} {6,S} {7,S} {8,S}
 2  C u1 p0 c0 i13 {1,S} {3,S} {4,S}
@@ -813,10 +813,10 @@ multiplicity 2
                                products=product_pair,
                                family='H_Abstraction')
         labeled_reactants = get_labeled_reactants(rxn, self.family)
-        r1_labels = labeled_reactants[0].getLabeledAtoms()
+        r1_labels = labeled_reactants[0].get_all_labeled_atoms()
         self.assertIn("*1", list(r1_labels.keys()))
         self.assertIn("*2", list(r1_labels.keys()))
-        r2_labels = labeled_reactants[1].getLabeledAtoms()
+        r2_labels = labeled_reactants[1].get_all_labeled_atoms()
         self.assertIn("*3", list(r2_labels.keys()))
 
     def testGetReducedMass(self):
@@ -825,14 +825,14 @@ multiplicity 2
         """
         labels = ['*1', '*3']
         reactants = [
-            Molecule().fromAdjacencyList("""
+            Molecule().from_adjacency_list("""
 1 *1 C u0 p0 c0 {2,S} {3,S} {4,S} {5,S}
 2 *2 H u0 p0 c0 {1,S}
 3    H u0 p0 c0 {1,S}
 4    H u0 p0 c0 {1,S}
 5    H u0 p0 c0 {1,S}
 """),
-            Molecule().fromAdjacencyList("""
+            Molecule().from_adjacency_list("""
 multiplicity 2
 1 *3 H u1 p0 c0
 """)]
@@ -845,14 +845,14 @@ multiplicity 2
         """
         labels = ['*1', '*3']
         reactants = [
-            Molecule().fromAdjacencyList("""
+            Molecule().from_adjacency_list("""
 1 *1 C u0 p0 c0 i13 {2,S} {3,S} {4,S} {5,S}
 2 *2 H u0 p0 c0 {1,S}
 3    H u0 p0 c0 {1,S}
 4    H u0 p0 c0 {1,S}
 5    H u0 p0 c0 {1,S}
 """),
-            Molecule().fromAdjacencyList("""
+            Molecule().from_adjacency_list("""
 multiplicity 2
 1 *3 H u1 p0 c0
 """)]

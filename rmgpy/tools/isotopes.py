@@ -528,8 +528,8 @@ def correct_entropy(isotopomer, isotopeless):
     """
 
     # calculate -R ln (sigma) in SI units (J/K/mol)
-    s_isotopeless = - constants.R * math.log(isotopeless.getSymmetryNumber())
-    s_isotopomer = - constants.R * math.log(isotopomer.getSymmetryNumber())
+    s_isotopeless = - constants.R * math.log(isotopeless.get_symmetry_number())
+    s_isotopomer = - constants.R * math.log(isotopomer.get_symmetry_number())
 
     # convert species thermo to ThermoData object:
     nasa = isotopomer.thermo
@@ -651,7 +651,7 @@ def get_reduced_mass(labeled_molecules, labels, three_member_ts):
     if reduced_mass == 0. and combined_mass == 0:
         from rmgpy.exceptions import KineticsError
         raise KineticsError(
-            "Did not find a labeled atom in molecules {}".format([mol.toAdjacencyList() for mol in labeled_molecules]))
+            "Did not find a labeled atom in molecules {}".format([mol.to_adjacency_list() for mol in labeled_molecules]))
     if three_member_ts:  # actually convert to reduced mass using the mass of hydrogen
         reduced_mass = 1 / rmgpy.molecule.element.H.mass + 1 / combined_mass
     return 1. / reduced_mass
@@ -751,11 +751,11 @@ def ensure_correct_degeneracies(reaction_isotopomer_list, print_data=False, r_to
             spec = product_list.at[index, 'product']
             # if species already listed, add to its flux
             if product_list.at[index, 'product_struc_index'] == structure_index \
-                    and spec.isIsomorphic(species):
+                    and spec.is_isomorphic(species):
                 product_list.at[index, 'flux'] += flux
                 return product_list
         # add product to list
-        symmetry_ratio = product_structures[structure_index].getSymmetryNumber() / float(species.getSymmetryNumber())
+        symmetry_ratio = product_structures[structure_index].get_symmetry_number() / float(species.get_symmetry_number())
         return product_list.append({'product': species,
                                     'flux': flux,
                                     'product_struc_index': structure_index,
@@ -777,8 +777,8 @@ def ensure_correct_degeneracies(reaction_isotopomer_list, print_data=False, r_to
             remove_isotope(mol, inplace=True)
         for mol in unlabeled_rxn.products:
             remove_isotope(mol, inplace=True)
-    unlabeled_symmetry_reactants = np.prod([mol.getSymmetryNumber() for mol in unlabeled_rxn.reactants])
-    unlabeled_symmetry_products = np.prod([mol.getSymmetryNumber() for mol in unlabeled_rxn.products])
+    unlabeled_symmetry_reactants = np.prod([mol.get_symmetry_number() for mol in unlabeled_rxn.reactants])
+    unlabeled_symmetry_products = np.prod([mol.get_symmetry_number() for mol in unlabeled_rxn.products])
 
     # prepare index of structures (product_structures)
     for struc in unlabeled_rxn.reactants + unlabeled_rxn.products:
@@ -789,7 +789,7 @@ def ensure_correct_degeneracies(reaction_isotopomer_list, print_data=False, r_to
     for rxn in reaction_isotopomer_list:
         # find characteristic flux for the forward direction
         reactant_conc = 1.
-        reactant_conc /= np.prod([mol.getSymmetryNumber() for mol in rxn.reactants])
+        reactant_conc /= np.prod([mol.get_symmetry_number() for mol in rxn.reactants])
         reactant_conc *= unlabeled_symmetry_reactants
         if isinstance(rxn.kinetics, MultiArrhenius):
             rate = sum([arr.A.value_si for arr in rxn.kinetics.arrhenius])
@@ -813,7 +813,7 @@ def ensure_correct_degeneracies(reaction_isotopomer_list, print_data=False, r_to
 
         # get reverse flux using product symmetries
         product_conc = 1.
-        product_conc /= np.prod([mol.getSymmetryNumber() for mol in rxn.products])
+        product_conc /= np.prod([mol.get_symmetry_number() for mol in rxn.products])
         product_conc *= unlabeled_symmetry_products
         reactant_flux = product_conc * reverse_A_factor
 

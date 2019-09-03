@@ -119,10 +119,10 @@ class Species(object):
             logging.warning('Both InChI and SMILES provided for Species instantiation, '
                             'using InChI and ignoring SMILES.')
         if InChI:
-            self.molecule = [Molecule(InChI=InChI)]
+            self.molecule = [Molecule(inchi=InChI)]
             self._inchi = InChI
         elif SMILES:
-            self.molecule = [Molecule(SMILES=SMILES)]
+            self.molecule = [Molecule(smiles=SMILES)]
             self._smiles = SMILES
 
         # Check multiplicity of each molecule is the same
@@ -171,7 +171,7 @@ class Species(object):
         Return a string representation of the species, in the form 'label(id)'.
         """
         if not self.label:
-            self.label = self.molecule[0].toSMILES()
+            self.label = self.molecule[0].to_smiles()
         if self.index == -1:
             return self.label
         else:
@@ -232,7 +232,7 @@ class Species(object):
         """InChI string representation of this species. Read-only."""
         if self._inchi is None:
             if self.molecule:
-                self._inchi = self.molecule[0].InChI
+                self._inchi = self.molecule[0].inchi
         return self._inchi
 
     @property
@@ -244,7 +244,7 @@ class Species(object):
         """
         if self._smiles is None:
             if self.molecule:
-                self._smiles = self.molecule[0].SMILES
+                self._smiles = self.molecule[0].smiles
         return self._smiles
 
     @property
@@ -259,7 +259,7 @@ class Species(object):
     def molecularWeight(self):
         """The molecular weight of the species. (Note: value_si is in kg/molecule not kg/mol)"""
         if self._molecularWeight is None and self.molecule is not None and len(self.molecule) > 0:
-            self._molecularWeight = quantity.Mass(self.molecule[0].getMolecularWeight(), 'kg/mol')
+            self._molecularWeight = quantity.Mass(self.molecule[0].get_molecular_weight(), 'kg/mol')
         return self._molecularWeight
 
     @molecularWeight.setter
@@ -273,9 +273,9 @@ class Species(object):
         `molecule` is already greater than one, it is assumed that all of the
         resonance structures have already been generated.
         """
-        if len(self.molecule) == 1 or not self.molecule[0].atomIDValid():
-            if not self.molecule[0].atomIDValid():
-                self.molecule[0].assignAtomIDs()
+        if len(self.molecule) == 1 or not self.molecule[0].atom_ids_valid():
+            if not self.molecule[0].atom_ids_valid():
+                self.molecule[0].assign_atom_ids()
             self.molecule = self.molecule[0].generate_resonance_structures(keep_isomorphic=keep_isomorphic,
                                                                            filter_structures=filter_structures)
 
@@ -290,12 +290,12 @@ class Species(object):
         """
         if isinstance(other, Molecule):
             for molecule in self.molecule:
-                if molecule.isIsomorphic(other, generateInitialMap=generateInitialMap, strict=strict):
+                if molecule.is_isomorphic(other, generate_initial_map=generateInitialMap, strict=strict):
                     return True
         elif isinstance(other, Species):
             for molecule1 in self.molecule:
                 for molecule2 in other.molecule:
-                    if molecule1.isIsomorphic(molecule2, generateInitialMap=generateInitialMap, strict=strict):
+                    if molecule1.is_isomorphic(molecule2, generate_initial_map=generateInitialMap, strict=strict):
                         return True
         else:
             raise ValueError('Unexpected value "{0!r}" for other parameter;'
@@ -311,12 +311,12 @@ class Species(object):
         """
         if isinstance(other, Molecule):
             for molecule in self.molecule:
-                if molecule.isIdentical(other, strict=strict):
+                if molecule.is_identical(other, strict=strict):
                     return True
         elif isinstance(other, Species):
             for molecule1 in self.molecule:
                 for molecule2 in other.molecule:
-                    if molecule1.isIdentical(molecule2, strict=strict):
+                    if molecule1.is_identical(molecule2, strict=strict):
                         return True
         else:
             raise ValueError('Unexpected value "{0!r}" for other parameter;'
@@ -343,7 +343,7 @@ class Species(object):
         list in the `molecule` attribute. Does not generate resonance isomers
         of the loaded molecule.
         """
-        self.molecule = [Molecule().fromAdjacencyList(adjlist)]
+        self.molecule = [Molecule().from_adjacency_list(adjlist)]
         # If the first line is a label, then save it to the label attribute
         for label in adjlist.splitlines():
             if label.strip():
@@ -352,7 +352,7 @@ class Species(object):
             label = ''
         if len(label.split()) > 0 and not label.split()[0].isdigit():
             self.label = label.strip()
-        # Return a reference to itself so we can use e.g. Species().fromAdjacencyList()
+        # Return a reference to itself so we can use e.g. Species().from_adjacency_list()
         return self
 
     def fromSMILES(self, smiles):
@@ -362,15 +362,15 @@ class Species(object):
         list in the `molecule` attribute. Does not generate resonance isomers
         of the loaded molecule.
         """
-        self.molecule = [Molecule().fromSMILES(smiles)]
-        # Return a reference to itself so we can use e.g. Species().fromAdjacencyList()
+        self.molecule = [Molecule().from_smiles(smiles)]
+        # Return a reference to itself so we can use e.g. Species().from_adjacency_list()
         return self
 
     def toAdjacencyList(self):
         """
         Return a string containing each of the molecules' adjacency lists.
         """
-        output = '\n\n'.join([m.toAdjacencyList(label=self.label, removeH=False) for m in self.molecule])
+        output = '\n\n'.join([m.to_adjacency_list(label=self.label, remove_h=False) for m in self.molecule])
         return output
 
     def toChemkin(self):
@@ -439,11 +439,11 @@ class Species(object):
         """
         Return ``True`` if the species is adsorbed on a surface (or is itself a site), else ``False``.
         """
-        return self.molecule[0].containsSurfaceSite()
+        return self.molecule[0].contains_surface_site()
 
     def isSurfaceSite(self):
         "Return ``True`` if the species is a vacant surface site."
-        return self.molecule[0].isSurfaceSite()
+        return self.molecule[0].is_surface_site()
 
     def getPartitionFunction(self, T):
         """
@@ -553,18 +553,18 @@ class Species(object):
         Get the symmetry number for the species, which is the highest symmetry number amongst
         its resonance isomers and the resonance hybrid.  
         This function is currently used for website purposes and testing only as it
-        requires additional calculateSymmetryNumber calls.
+        requires additional calculate_symmetry_number calls.
         """
         if self.symmetryNumber < 1:
             cython.declare(resonanceHybrid=Molecule, maxSymmetryNum=cython.short)
             resonanceHybrid = self.getResonanceHybrid()
             try:
-                self.symmetryNumber = resonanceHybrid.getSymmetryNumber()
+                self.symmetryNumber = resonanceHybrid.get_symmetry_number()
             except KeyError:
                 logging.error('Wrong bond order generated by resonance hybrid.')
-                logging.error('Resonance Hybrid: {}'.format(resonanceHybrid.toAdjacencyList()))
+                logging.error('Resonance Hybrid: {}'.format(resonanceHybrid.to_adjacency_list()))
                 for index, mol in enumerate(self.molecule):
-                    logging.error("Resonance Structure {}: {}".format(index, mol.toAdjacencyList()))
+                    logging.error("Resonance Structure {}: {}".format(index, mol.to_adjacency_list()))
                 raise
         return self.symmetryNumber
 
@@ -604,7 +604,7 @@ class Species(object):
         new_mol = Molecule()
         original_atoms = atoms_from_structures[0]
         for atom1 in original_atoms:
-            atom = new_mol.addAtom(Atom(atom1.element))
+            atom = new_mol.add_atom(Atom(atom1.element))
             atom.id = atom1.id
 
         new_atoms = new_mol.atoms
@@ -614,7 +614,7 @@ class Species(object):
             for atom2 in atom1.bonds:
                 index2 = original_atoms.index(atom2)
                 bond = Bond(new_atoms[index1], new_atoms[index2], 0)
-                new_mol.addBond(bond)
+                new_mol.add_bond(bond)
 
         # set bonds to the proper value
         for structureNum, oldMol in enumerate(molecules):
@@ -625,27 +625,27 @@ class Species(object):
                 for atom2 in atom1.bonds:
                     index2 = old_atoms.index(atom2)
 
-                    new_bond = new_mol.getBond(new_atoms[index1], new_atoms[index2])
-                    old_bond_order = oldMol.getBond(old_atoms[index1], old_atoms[index2]).getOrderNum()
-                    new_bond.applyAction(('CHANGE_BOND', None, old_bond_order / num_resonance_structures / 2))
+                    new_bond = new_mol.get_bond(new_atoms[index1], new_atoms[index2])
+                    old_bond_order = oldMol.get_bond(old_atoms[index1], old_atoms[index2]).get_order_num()
+                    new_bond.apply_action(('CHANGE_BOND', None, old_bond_order / num_resonance_structures / 2))
                 # set radicals in resonance hybrid to maximum of all structures
                 if atom1.radicalElectrons > 0:
                     new_atoms[index1].radicalElectrons = max(atom1.radicalElectrons,
                                                              new_atoms[index1].radicalElectrons)
-        new_mol.updateAtomTypes(logSpecies=False, raiseException=False)
+        new_mol.update_atomtypes(log_species=False, raise_exception=False)
         return new_mol
 
     def calculateCp0(self):
         """
         Return the value of the heat capacity at zero temperature in J/mol*K.
         """
-        return self.molecule[0].calculateCp0()
+        return self.molecule[0].calculate_cp0()
 
     def calculateCpInf(self):
         """
         Return the value of the heat capacity at infinite temperature in J/mol*K.
         """
-        return self.molecule[0].calculateCpInf()
+        return self.molecule[0].calculate_cpinf()
 
     def has_reactive_molecule(self):
         """
@@ -697,7 +697,7 @@ class Species(object):
         self.generate_resonance_structures()
         for mol in self.molecule:
             try:
-                cand = [mol.toAugmentedInChI(), mol]
+                cand = [mol.to_augmented_inchi(), mol]
             except ValueError:
                 pass  # not all resonance structures can be parsed into InChI (e.g. if containing a hypervalance atom)
             else:
@@ -746,7 +746,7 @@ class Species(object):
             logging.debug('Could not obtain the transport database. Not generating transport...')
             raise
 
-        # count = sum([1 for atom in self.molecule[0].vertices if atom.isNonHydrogen()])
+        # count = sum([1 for atom in self.molecule[0].vertices if atom.is_non_hydrogen()])
         self.transportData = transport_db.get_transport_properties(self)[0]
 
     def getTransportData(self):
@@ -820,10 +820,10 @@ class Species(object):
         """
         if not self.molecule:
             try:
-                self.molecule = [Molecule(SMILES=structure)]
+                self.molecule = [Molecule(smiles=structure)]
             except ValueError:
                 try:
-                    self.molecule = [Molecule().fromAdjacencyList(structure)]
+                    self.molecule = [Molecule().from_adjacency_list(structure)]
                 except ValueError:
                     logging.error("Cannot understand the given structure '{0}' of species {1}. Could not "
                                   "interpret it as SMILES nor as adjacency list".format(structure, self.label))
