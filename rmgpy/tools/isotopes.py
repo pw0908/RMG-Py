@@ -693,11 +693,11 @@ def ensure_correct_symmetry(isotopmoper_list, isotopic_element='C'):
         if atom.element.symbol == isotopic_element:
             number_elements += 1
 
-    minimum_entropy = min([spec.getEntropy(298) for spec in isotopmoper_list])
+    minimum_entropy = min([spec.get_entropy(298) for spec in isotopmoper_list])
 
     count = 0.
     for spec in isotopmoper_list:
-        entropy_diff = spec.getEntropy(298) - minimum_entropy
+        entropy_diff = spec.get_entropy(298) - minimum_entropy
         count += math.exp(entropy_diff / constants.R)
     return abs(count - 2 ** number_elements) < 0.01
 

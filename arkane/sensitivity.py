@@ -229,9 +229,9 @@ class PDepSensitivity(object):
     `conditions`        A list of the conditions (each entry is a list of one T and one P quantities) at which the
                         sensitivity coefficients are calculated
     `job`               The PressureDependenceJob object
-    `rates`             A dictionary with netReactions as keys. Values are lists of forward rates from `job` for the
+    `rates`             A dictionary with net_reactions as keys. Values are lists of forward rates from `job` for the
                         respective path reaction at the respective `conditions` in the appropriate units
-    `sa_rates`          A dictionary with string representations of netReactions as keys. Values are dictionaries with
+    `sa_rates`          A dictionary with string representations of net_reactions as keys. Values are dictionaries with
                         Wells or TransitionStates as keys and each value is a list of forward rates from `job` at the
                         respective `conditions` after perturbing the corresponding well or TS's E0
     `sa_coefficients`   A dictionary with similar structure as `sa_rates`, containing the sensitivity coefficients

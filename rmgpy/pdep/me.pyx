@@ -39,7 +39,7 @@ import rmgpy.constants as constants
 ################################################################################
 
 
-cpdef generateFullMEMatrix(network, bint products=True):
+cpdef generate_full_me_matrix(network, bint products=True):
     """
     Generate the full master equation matrix for the network.
     """

@@ -319,7 +319,7 @@ cdef class HinderedRotor(Torsion):
             V = 0.5 * self._barrier.value_si * (1 - cos(self.symmetry * phi))
         return V
 
-    cpdef double getPartitionFunction(self, double T) except -1:
+    cpdef double get_partition_function(self, double T) except -1:
         """
         Return the value of the partition function :math:`Q(T)` at the
         specified temperature `T` in K.
@@ -357,7 +357,7 @@ cdef class HinderedRotor(Torsion):
 
         return Q
 
-    cpdef double getHeatCapacity(self, double T) except -100000000:
+    cpdef double get_heat_capacity(self, double T) except -100000000:
         """
         Return the heat capacity in J/mol*K for the degree of freedom at the
         specified temperature `T` in K.
@@ -374,9 +374,9 @@ cdef class HinderedRotor(Torsion):
             # Fourier series data found, so use it
             Tlow = T * 0.999
             Thigh = T * 1.001
-            logQlow = log(self.getPartitionFunction(Tlow))
-            logQhigh = log(self.getPartitionFunction(Thigh))
-            logQ = log(self.getPartitionFunction(T))
+            logQlow = log(self.get_partition_function(Tlow))
+            logQhigh = log(self.get_partition_function(Thigh))
+            logQ = log(self.get_partition_function(T))
             Cv = T * T * (logQhigh - 2 * logQ + logQlow) / ((Thigh - T) * (T - Tlow)) + 2 * T * (logQhigh - logQlow) / (Thigh - Tlow)
         else:
             # No Fourier data, so use the cosine potential data
@@ -389,7 +389,7 @@ cdef class HinderedRotor(Torsion):
             Cv = (x * x * exp_x / one_minus_exp_x / one_minus_exp_x - 0.5 + z * (z - BB - z * BB * BB))
         return Cv * constants.R
 
-    cpdef double getEnthalpy(self, double T) except 100000000:
+    cpdef double get_enthalpy(self, double T) except 100000000:
         """
         Return the enthalpy in J/mol for the degree of freedom at the
         specified temperature `T` in K.
@@ -406,11 +406,11 @@ cdef class HinderedRotor(Torsion):
             Tlow = T * 0.999
             Thigh = T * 1.001
             return (T *
-                    (log(self.getPartitionFunction(Thigh)) -
-                     log(self.getPartitionFunction(Tlow))) /
+                    (log(self.get_partition_function(Thigh)) -
+                     log(self.get_partition_function(Tlow))) /
                     (Thigh - Tlow)) * constants.R * T
 
-    cpdef double getEntropy(self, double T) except -100000000:
+    cpdef double get_entropy(self, double T) except -100000000:
         """
         Return the entropy in J/mol*K for the degree of freedom at the
         specified temperature `T` in K.
@@ -421,21 +421,21 @@ cdef class HinderedRotor(Torsion):
             if self.energies is None: self.solveSchrodingerEquation()
             E = self.energies
             e_kT = np.exp(-E / constants.R / T)
-            return np.log(self.getPartitionFunction(T)) * constants.R + np.sum(E * e_kT) / (T * np.sum(e_kT))
+            return np.log(self.get_partition_function(T)) * constants.R + np.sum(E * e_kT) / (T * np.sum(e_kT))
         else:
             # No Fourier data, so use the cosine potential data
             Tlow = T * 0.999
             Thigh = T * 1.001
-            return (log(self.getPartitionFunction(T)) +
-                    T * (log(self.getPartitionFunction(Thigh)) -
-                         log(self.getPartitionFunction(Tlow))) /
+            return (log(self.get_partition_function(T)) +
+                    T * (log(self.get_partition_function(Thigh)) -
+                         log(self.get_partition_function(Tlow))) /
                     (Thigh - Tlow)) * constants.R
 
     @cython.boundscheck(False)
     @cython.wraparound(False)
-    cpdef np.ndarray getSumOfStates(self, np.ndarray Elist, np.ndarray sumStates0=None):
+    cpdef np.ndarray get_sum_of_states(self, np.ndarray Elist, np.ndarray sumStates0=None):
         """
-        Return the sum of states :math:`N(E)` at the specified energies `Elist`
+        Return the sum of states :math:`N(E)` at the specified energies `e_list`
         in J/mol above the ground state. If an initial sum of states 
         `sumStates0` is given, the rotor sum of states will be convoluted into
         these states.
@@ -445,10 +445,10 @@ cdef class HinderedRotor(Torsion):
         cdef int i
 
         if sumStates0 is not None:
-            return schrodinger.convolve(sumStates0, self.getDensityOfStates(Elist))
+            return schrodinger.convolve(sumStates0, self.get_density_of_states(Elist))
         elif self.quantum:
             if self.energies is None: self.solveSchrodingerEquation()
-            sum_states = schrodinger.getSumOfStates(Elist, self.getLevelEnergy, self.getLevelDegeneracy, 0,
+            sum_states = schrodinger.get_sum_of_states(Elist, self.getLevelEnergy, self.getLevelDegeneracy, 0,
                                                     sumStates0) / self.symmetry
         elif self.semiclassical:
             raise NotImplementedError
@@ -472,10 +472,10 @@ cdef class HinderedRotor(Torsion):
 
     @cython.boundscheck(False)
     @cython.wraparound(False)
-    cpdef np.ndarray getDensityOfStates(self, np.ndarray Elist, np.ndarray densStates0=None):
+    cpdef np.ndarray get_density_of_states(self, np.ndarray Elist, np.ndarray densStates0=None):
         """
         Return the density of states :math:`\\rho(E) \\ dE` at the specified
-        energies `Elist` in J/mol above the ground state. If an initial density
+        energies `e_list` in J/mol above the ground state. If an initial density
         of states `densStates0` is given, the rotor density of states will be
         convoluted into these states.
         """
@@ -485,7 +485,7 @@ cdef class HinderedRotor(Torsion):
 
         if self.quantum:
             if self.energies is None: self.solveSchrodingerEquation()
-            dens_states = schrodinger.getDensityOfStates(_Elist, self.getLevelEnergy, self.getLevelDegeneracy, 0,
+            dens_states = schrodinger.get_density_of_states(_Elist, self.getLevelEnergy, self.getLevelDegeneracy, 0,
                                                          densStates0) / self.symmetry
         elif self.semiclassical:
             raise NotImplementedError
@@ -663,41 +663,41 @@ cdef class FreeRotor(Torsion):
         """
         return constants.hbar * constants.hbar / (2 * self._inertia.value_si) * constants.Na
 
-    cpdef double getPartitionFunction(self, double T) except -1:
+    cpdef double get_partition_function(self, double T) except -1:
         """
         Return the value of the partition function :math:`Q(T)` at the
         specified temperature `T` in K.
         """
         return np.sqrt(8 * np.pi ** 3 * constants.kB * T * self._inertia.value_si) / (self.symmetry * constants.h)
 
-    cpdef double getHeatCapacity(self, double T) except -100000000:
+    cpdef double get_heat_capacity(self, double T) except -100000000:
         """
         Return the heat capacity in J/mol*K for the degree of freedom at the
         specified temperature `T` in K.
         """
         return constants.R / 2.0
 
-    cpdef double getEnthalpy(self, double T) except 100000000:
+    cpdef double get_enthalpy(self, double T) except 100000000:
         """
         Return the enthalpy in J/mol for the degree of freedom at the
         specified temperature `T` in K.
         """
         return constants.R * T / 2.0
 
-    cpdef double getEntropy(self, double T) except -100000000:
+    cpdef double get_entropy(self, double T) except -100000000:
         """
         Return the entropy in J/mol*K for the degree of freedom at the
         specified temperature `T` in K.
         """
         cdef double Q
-        Q = self.getPartitionFunction(T)
+        Q = self.get_partition_function(T)
         return constants.R * (np.log(Q) + .5)
 
     @cython.boundscheck(False)
     @cython.wraparound(False)
-    cpdef np.ndarray getSumOfStates(self, np.ndarray Elist, np.ndarray sumStates0=None):
+    cpdef np.ndarray get_sum_of_states(self, np.ndarray Elist, np.ndarray sumStates0=None):
         """
-        Return the sum of states :math:`N(E)` at the specified energies `Elist`
+        Return the sum of states :math:`N(E)` at the specified energies `e_list`
         in J/mol above the ground state. 
         formula from
         Forst 1995 Journal of Computational Chemistry, Vol. 17, No. 8 954-961 (1996)

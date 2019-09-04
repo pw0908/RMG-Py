@@ -263,14 +263,14 @@ class PressureDependenceJob(object):
                                                                  reaction.kinetics.n.value_si,
                                                                  reaction.kinetics.Ea.value_si, reaction.label))
         if print_summary:
-            self.network.printSummary()
+            self.network.log_summary()
 
         if outputFile is not None:
             self.draw(os.path.dirname(outputFile), format)
 
         self.initialize()
 
-        self.K = self.network.calculateRateCoefficients(self.Tlist.value_si, self.Plist.value_si, self.method)
+        self.K = self.network.calculate_rate_coefficients(self.Tlist.value_si, self.Plist.value_si, self.method)
 
         self.fitInterpolationModels()
 
@@ -362,8 +362,8 @@ class PressureDependenceJob(object):
             Tmax=self.Tmax.value_si,
             Pmin=self.Pmin.value_si,
             Pmax=self.Pmax.value_si,
-            maximumGrainSize=maximum_grain_size,
-            minimumGrainCount=self.minimumGrainCount,
+            maximum_grain_size=maximum_grain_size,
+            minimum_grain_count=self.minimumGrainCount,
             activeJRotor=self.activeJRotor,
             activeKRotor=self.activeKRotor,
             rmgmode=self.rmgmode,
@@ -653,7 +653,7 @@ class PressureDependenceJob(object):
         """
         Save an Arkane input file for the pressure dependence job to `path` on disk.
         """
-        speciesList = self.network.getAllSpecies()
+        speciesList = self.network.get_all_species()
 
         # Add labels for species, reactions, transition states that don't have them
         for i, spec in enumerate(speciesList):
@@ -682,7 +682,7 @@ class PressureDependenceJob(object):
                         for mode in spec.conformer.modes:
                             f.write('        {0!r},\n'.format(mode))
                         f.write('    ],\n')
-                    f.write('    spinMultiplicity = {0:d},\n'.format(spec.conformer.spinMultiplicity))
+                    f.write('    spin_multiplicity = {0:d},\n'.format(spec.conformer.spinMultiplicity))
                     f.write('    opticalIsomers = {0:d},\n'.format(spec.conformer.opticalIsomers))
                 if spec.molecularWeight is not None:
                     f.write('    molecularWeight = {0!r},\n'.format(spec.molecularWeight))
@@ -707,7 +707,7 @@ class PressureDependenceJob(object):
                         for mode in ts.conformer.modes:
                             f.write('        {0!r},\n'.format(mode))
                         f.write('    ],\n')
-                    f.write('    spinMultiplicity = {0:d},\n'.format(ts.conformer.spinMultiplicity))
+                    f.write('    spin_multiplicity = {0:d},\n'.format(ts.conformer.spinMultiplicity))
                     f.write('    opticalIsomers = {0:d},\n'.format(ts.conformer.opticalIsomers))
                 if ts.frequency is not None:
                     f.write('    frequency = {0!r},\n'.format(ts.frequency))

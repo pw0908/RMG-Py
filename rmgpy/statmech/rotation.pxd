@@ -46,17 +46,17 @@ cdef class LinearRotor(Rotation):
     
     cpdef int getLevelDegeneracy(self, int J) except -1
     
-    cpdef double getPartitionFunction(self, double T) except -1
+    cpdef double get_partition_function(self, double T) except -1
         
-    cpdef double getHeatCapacity(self, double T) except -100000000
+    cpdef double get_heat_capacity(self, double T) except -100000000
 
-    cpdef double getEnthalpy(self, double T) except 100000000
+    cpdef double get_enthalpy(self, double T) except 100000000
 
-    cpdef double getEntropy(self, double T) except -100000000
+    cpdef double get_entropy(self, double T) except -100000000
 
-    cpdef np.ndarray getSumOfStates(self, np.ndarray Elist, np.ndarray sumStates0=?)
+    cpdef np.ndarray get_sum_of_states(self, np.ndarray Elist, np.ndarray sumStates0=?)
     
-    cpdef np.ndarray getDensityOfStates(self, np.ndarray Elist, np.ndarray densStates0=?)
+    cpdef np.ndarray get_density_of_states(self, np.ndarray Elist, np.ndarray densStates0=?)
 
 ################################################################################
 
@@ -66,17 +66,17 @@ cdef class NonlinearRotor(Rotation):
 
     cdef np.ndarray getRotationalConstantEnergy(self)
 
-    cpdef double getPartitionFunction(self, double T) except -1
+    cpdef double get_partition_function(self, double T) except -1
 
-    cpdef double getHeatCapacity(self, double T) except -100000000
+    cpdef double get_heat_capacity(self, double T) except -100000000
 
-    cpdef double getEnthalpy(self, double T) except 100000000
+    cpdef double get_enthalpy(self, double T) except 100000000
 
-    cpdef double getEntropy(self, double T) except -100000000
+    cpdef double get_entropy(self, double T) except -100000000
 
-    cpdef np.ndarray getSumOfStates(self, np.ndarray Elist, np.ndarray sumStates0=?)
+    cpdef np.ndarray get_sum_of_states(self, np.ndarray Elist, np.ndarray sumStates0=?)
 
-    cpdef np.ndarray getDensityOfStates(self, np.ndarray Elist, np.ndarray densStates0=?)
+    cpdef np.ndarray get_density_of_states(self, np.ndarray Elist, np.ndarray densStates0=?)
 
 ################################################################################
 
@@ -88,17 +88,17 @@ cdef class KRotor(Rotation):
 
     cpdef int getLevelDegeneracy(self, int J) except -1
 
-    cpdef double getPartitionFunction(self, double T) except -1
+    cpdef double get_partition_function(self, double T) except -1
 
-    cpdef double getHeatCapacity(self, double T) except -100000000
+    cpdef double get_heat_capacity(self, double T) except -100000000
 
-    cpdef double getEnthalpy(self, double T) except 100000000
+    cpdef double get_enthalpy(self, double T) except 100000000
 
-    cpdef double getEntropy(self, double T) except -100000000
+    cpdef double get_entropy(self, double T) except -100000000
 
-    cpdef np.ndarray getSumOfStates(self, np.ndarray Elist, np.ndarray sumStates0=?)
+    cpdef np.ndarray get_sum_of_states(self, np.ndarray Elist, np.ndarray sumStates0=?)
 
-    cpdef np.ndarray getDensityOfStates(self, np.ndarray Elist, np.ndarray densStates0=?)
+    cpdef np.ndarray get_density_of_states(self, np.ndarray Elist, np.ndarray densStates0=?)
 
 ################################################################################
 
@@ -110,14 +110,14 @@ cdef class SphericalTopRotor(Rotation):
     
     cpdef int getLevelDegeneracy(self, int J) except -1
     
-    cpdef double getPartitionFunction(self, double T) except -1
+    cpdef double get_partition_function(self, double T) except -1
     
-    cpdef double getHeatCapacity(self, double T) except -100000000
+    cpdef double get_heat_capacity(self, double T) except -100000000
 
-    cpdef double getEnthalpy(self, double T) except 100000000
+    cpdef double get_enthalpy(self, double T) except 100000000
 
-    cpdef double getEntropy(self, double T) except -100000000
+    cpdef double get_entropy(self, double T) except -100000000
 
-    cpdef np.ndarray getSumOfStates(self, np.ndarray Elist, np.ndarray sumStates0=?)
+    cpdef np.ndarray get_sum_of_states(self, np.ndarray Elist, np.ndarray sumStates0=?)
     
-    cpdef np.ndarray getDensityOfStates(self, np.ndarray Elist, np.ndarray densStates0=?)
+    cpdef np.ndarray get_density_of_states(self, np.ndarray Elist, np.ndarray densStates0=?)

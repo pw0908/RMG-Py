@@ -296,7 +296,7 @@ class StatMechJob(object):
             external_symmetry = None
 
         try:
-            spin_multiplicity = local_context['spinMultiplicity']
+            spin_multiplicity = local_context['spin_multiplicity']
         except KeyError:
             spin_multiplicity = 0
 
@@ -488,7 +488,7 @@ class StatMechJob(object):
                 if len(q) == 3:
                     # No potential scan is given, this is a free rotor
                     pivots, top, symmetry = q
-                    inertia = conformer.getInternalReducedMomentOfInertia(pivots, top) * constants.Na * 1e23
+                    inertia = conformer.get_internal_reduced_moment_of_inertia(pivots, top) * constants.Na * 1e23
                     rotor = FreeRotor(inertia=(inertia, "amu*angstrom^2"), symmetry=symmetry)
                     conformer.modes.append(rotor)
                     rotor_count += 1
@@ -545,7 +545,7 @@ class StatMechJob(object):
                         symmetry = determine_rotor_symmetry(v_list, self.species.label, pivots)
                     self.raw_hindered_rotor_data.append((self.species.label, rotor_count, symmetry, angle,
                                                          v_list, pivot_atoms, frozen_atoms))
-                    inertia = conformer.getInternalReducedMomentOfInertia(pivots, top) * constants.Na * 1e23
+                    inertia = conformer.get_internal_reduced_moment_of_inertia(pivots, top) * constants.Na * 1e23
 
                     cosine_rotor = HinderedRotor(inertia=(inertia, "amu*angstrom^2"), symmetry=symmetry)
                     cosine_rotor.fitCosinePotentialToData(angle, v_list)
@@ -674,7 +674,7 @@ class StatMechJob(object):
             z = coordinates[i, 2]
             f.write('#   {0} {1:9.4f} {2:9.4f} {3:9.4f}\n'.format(symbol_by_number[number[i]], x, y, z))
 
-        result = 'conformer(label={0!r}, E0={1!r}, modes={2!r}, spinMultiplicity={3:d}, opticalIsomers={4:d}'.format(
+        result = 'conformer(label={0!r}, E0={1!r}, modes={2!r}, spin_multiplicity={3:d}, opticalIsomers={4:d}'.format(
             self.species.label,
             conformer.E0,
             conformer.modes,
@@ -814,7 +814,7 @@ def projectRotors(conformer, F, rotors, linear, is_ts, getProjectedOutFreqs=Fals
     amass = np.sqrt(mass / constants.amu)
 
     # Rotation matrix
-    inertia = conformer.getMomentOfInertiaTensor()
+    inertia = conformer.get_moment_of_inertia_tensor()
     PMoI, Ixyz = np.linalg.eigh(inertia)
 
     external = 6

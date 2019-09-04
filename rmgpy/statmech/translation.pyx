@@ -113,7 +113,7 @@ cdef class IdealGasTranslation(Translation):
             else:
                 self._mass = quantity.Mass(value)
 
-    cpdef double getPartitionFunction(self, double T) except -1:
+    cpdef double get_partition_function(self, double T) except -1:
         """
         Return the value of the partition function :math:`Q(T)` at the
         specified temperature `T` in K.
@@ -127,7 +127,7 @@ cdef class IdealGasTranslation(Translation):
             Q = qt * (constants.kB * T) ** 2.5
         return Q
 
-    cpdef double getHeatCapacity(self, double T) except -100000000:
+    cpdef double get_heat_capacity(self, double T) except -100000000:
         """
         Return the heat capacity in J/mol*K for the degree of freedom at the
         specified temperature `T` in K.
@@ -139,7 +139,7 @@ cdef class IdealGasTranslation(Translation):
             Cv = 2.5
         return Cv * constants.R
 
-    cpdef double getEnthalpy(self, double T) except 100000000:
+    cpdef double get_enthalpy(self, double T) except 100000000:
         """
         Return the enthalpy in J/mol for the degree of freedom at the
         specified temperature `T` in K.
@@ -151,7 +151,7 @@ cdef class IdealGasTranslation(Translation):
             H = 2.5
         return H * constants.R * T
 
-    cpdef double getEntropy(self, double T) except -100000000:
+    cpdef double get_entropy(self, double T) except -100000000:
         """
         Return the entropy in J/mol*K for the degree of freedom at the
         specified temperature `T` in K.
@@ -160,12 +160,12 @@ cdef class IdealGasTranslation(Translation):
         if self.quantum:
             raise NotImplementedError('Quantum mechanical model not yet implemented for IdealGasTranslation.')
         else:
-            S = log(self.getPartitionFunction(T)) + 2.5
+            S = log(self.get_partition_function(T)) + 2.5
         return S * constants.R
 
-    cpdef np.ndarray getSumOfStates(self, np.ndarray Elist, np.ndarray sumStates0=None):
+    cpdef np.ndarray get_sum_of_states(self, np.ndarray Elist, np.ndarray sumStates0=None):
         """
-        Return the sum of states :math:`N(E)` at the specified energies `Elist`
+        Return the sum of states :math:`N(E)` at the specified energies `e_list`
         in J/mol above the ground state. If an initial sum of states 
         `sumStates0` is given, the rotor sum of states will be convoluted into
         these states.
@@ -175,7 +175,7 @@ cdef class IdealGasTranslation(Translation):
         if self.quantum:
             raise NotImplementedError('Quantum mechanical model not yet implemented for IdealGasTranslation.')
         elif sumStates0 is not None:
-            sum_states = schrodinger.convolve(sumStates0, self.getDensityOfStates(Elist))
+            sum_states = schrodinger.convolve(sumStates0, self.get_density_of_states(Elist))
         else:
             mass = self._mass.value_si
             Elist = Elist / constants.Na
@@ -183,10 +183,10 @@ cdef class IdealGasTranslation(Translation):
             sum_states = qt * Elist ** 2.5 / (sqrt(constants.pi) * 15.0 / 8.0)
         return sum_states
 
-    cpdef np.ndarray getDensityOfStates(self, np.ndarray Elist, np.ndarray densStates0=None):
+    cpdef np.ndarray get_density_of_states(self, np.ndarray Elist, np.ndarray densStates0=None):
         """
         Return the density of states :math:`\\rho(E) \\ dE` at the specified
-        energies `Elist` in J/mol above the ground state. If an initial density
+        energies `e_list` in J/mol above the ground state. If an initial density
         of states `densStates0` is given, the rotor density of states will be
         convoluted into these states.
         """

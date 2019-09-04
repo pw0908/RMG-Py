@@ -330,7 +330,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
             if len(conf.species) == len(self.source):
                 if len(self.source) == 1:
                     if self.source[0].is_isomorphic(conf.species[0]):
-                        E0source = conf.E0
+                        E0source = conf.e0
                         break
                 elif len(self.source) == 2:
                     boo00 = self.source[0].is_isomorphic(conf.species[0])
@@ -339,7 +339,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                         boo10 = self.source[1].is_isomorphic(conf.species[0])
                         boo11 = self.source[1].is_isomorphic(conf.species[1])
                         if (boo00 and boo11) or (boo01 and boo10):
-                            E0source = conf.E0
+                            E0source = conf.e0
                             break
         else:
             raise ValueError('No isomer, product or reactant channel is isomorphic to the source')
@@ -354,7 +354,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
 
     def get_rate_filtered_products(self, T, P, tol):
         """
-        determines the set of pathReactions that have fluxes less than
+        determines the set of path_reactions that have fluxes less than
         tol at steady state where all A => B + C reactions are irreversible
         and there is a constant flux from/to the source configuration of 1.0
         """
@@ -780,7 +780,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
         for products in self.products:
             for spec in products.species:
                 if spec.conformer is None:
-                    spec.conformer = Conformer(E0=spec.get_thermo_data().E0)
+                    spec.conformer = Conformer(e0=spec.get_thermo_data().E0)
 
         # Determine transition state energies on potential energy surface
         # In the absence of any better information, we simply set it to
@@ -808,10 +808,10 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                                 'type "{2!s}".'.format(rxn, self.index, rxn.kinetics.__class__))
             rxn.fixBarrierHeight(forcePositive=True)
             if rxn.network_kinetics is None:
-                E0 = sum([spec.conformer.E0.value_si for spec in rxn.reactants]) + rxn.kinetics.Ea.value_si
+                E0 = sum([spec.conformer.e0.value_si for spec in rxn.reactants]) + rxn.kinetics.Ea.value_si
             else:
-                E0 = sum([spec.conformer.E0.value_si for spec in rxn.reactants]) + rxn.network_kinetics.Ea.value_si
-            rxn.transition_state = rmgpy.species.TransitionState(conformer=Conformer(E0=(E0 * 0.001, "kJ/mol")))
+                E0 = sum([spec.conformer.e0.value_si for spec in rxn.reactants]) + rxn.network_kinetics.Ea.value_si
+            rxn.transition_state = rmgpy.species.TransitionState(conformer=Conformer(e0=(E0 * 0.001, "kJ/mol")))
 
         # Set collision model
         bath_gas = [spec for spec in reactionModel.core.species if not spec.reactive]
@@ -830,12 +830,12 @@ class PDepNetwork(rmgpy.pdep.network.Network):
             job.saveInputFile(
                 os.path.join(output_directory, 'pdep', 'network{0:d}_{1:d}.py'.format(self.index, len(self.isomers))))
 
-        self.printSummary(level=logging.INFO)
+        self.log_summary(level=logging.INFO)
 
         # Calculate the rate coefficients
         self.initialize(Tmin, Tmax, Pmin, Pmax, maximum_grain_size, minimum_grain_count, activeJRotor, activeKRotor,
                         rmgmode)
-        K = self.calculateRateCoefficients(Tlist, Plist, method)
+        K = self.calculate_rate_coefficients(Tlist, Plist, method)
 
         # Generate PDepReaction objects
         configurations = []

@@ -270,7 +270,7 @@ class TestReaction(unittest.TestCase):
         ethylene = Species(
             label='C2H4',
             conformer=Conformer(
-                E0=(44.7127, 'kJ/mol'),
+                e0=(44.7127, 'kJ/mol'),
                 modes=[
                     IdealGasTranslation(
                         mass=(28.0313, 'amu'),
@@ -290,29 +290,29 @@ class TestReaction(unittest.TestCase):
                         ),
                     ),
                 ],
-                spinMultiplicity=1,
-                opticalIsomers=1,
+                spin_multiplicity=1,
+                optical_isomers=1,
             ),
         )
 
         hydrogen = Species(
             label='H',
             conformer=Conformer(
-                E0=(211.794, 'kJ/mol'),
+                e0=(211.794, 'kJ/mol'),
                 modes=[
                     IdealGasTranslation(
                         mass=(1.00783, 'amu'),
                     ),
                 ],
-                spinMultiplicity=2,
-                opticalIsomers=1,
+                spin_multiplicity=2,
+                optical_isomers=1,
             ),
         )
 
         ethyl = Species(
             label='C2H5',
             conformer=Conformer(
-                E0=(111.603, 'kJ/mol'),
+                e0=(111.603, 'kJ/mol'),
                 modes=[
                     IdealGasTranslation(
                         mass=(29.0391, 'amu'),
@@ -338,15 +338,15 @@ class TestReaction(unittest.TestCase):
                         semiclassical=None,
                     ),
                 ],
-                spinMultiplicity=2,
-                opticalIsomers=1,
+                spin_multiplicity=2,
+                optical_isomers=1,
             ),
         )
 
         TS = TransitionState(
             label='TS',
             conformer=Conformer(
-                E0=(266.694, 'kJ/mol'),
+                e0=(266.694, 'kJ/mol'),
                 modes=[
                     IdealGasTranslation(
                         mass=(29.0391, 'amu'),
@@ -366,8 +366,8 @@ class TestReaction(unittest.TestCase):
                         ),
                     ),
                 ],
-                spinMultiplicity=2,
-                opticalIsomers=1,
+                spin_multiplicity=2,
+                optical_isomers=1,
             ),
             frequency=(-750.232, 'cm^-1'),
         )

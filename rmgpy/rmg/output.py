@@ -410,15 +410,15 @@ $(document).ready(function() {
             <tr>
                 <td>
                 {% if spec.thermo.Tmin.value_si <= 298 %}                    
-                {{ "%.2f"|format(spec.thermo.getEnthalpy(298) / 4184) }}
+                {{ "%.2f"|format(spec.thermo.get_enthalpy(298) / 4184) }}
                 {% endif %} </td>
                 <td>{% if spec.thermo.Tmin.value_si <= 298 %}
-                {{ "%.2f"|format(spec.thermo.getEntropy(298) / 4.184) }}
+                {{ "%.2f"|format(spec.thermo.get_entropy(298) / 4.184) }}
                 {% endif %}</td>
-                <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(300) / 4.184) }}</td>
-                <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(500) / 4.184) }}</td>
-                <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(1000) / 4.184) }}</td>
-                <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(1500) / 4.184) }}</td>
+                <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(300) / 4.184) }}</td>
+                <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(500) / 4.184) }}</td>
+                <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(1000) / 4.184) }}</td>
+                <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(1500) / 4.184) }}</td>
             </tr>
 <tr><td colspan="6" class="thermoComment">
 <div id="thermoComment" class="thermoComment">{{textwrap.fill(spec.thermo.comment,80).replace('\n','<br>')}}</div>
@@ -904,16 +904,16 @@ $(document).ready(function() {
                 </tr>
                 <tr>
                     <td>{% if spec1.thermo.Tmin.value_si <= 298 %}
-                    {{ "%.2f"|format(spec1.thermo.getEnthalpy(298) / 4184) }}
+                    {{ "%.2f"|format(spec1.thermo.get_enthalpy(298) / 4184) }}
                     {% endif %}</td>
                     <td>
                     {% if spec1.thermo.Tmin.value_si <= 298 %}
-                    {{ "%.2f"|format(spec1.thermo.getEntropy(298) / 4.184) }}
+                    {{ "%.2f"|format(spec1.thermo.get_entropy(298) / 4.184) }}
                     {% endif %}</td>
-                    <td>{{ "%.2f"|format(spec1.thermo.getHeatCapacity(300) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec1.thermo.getHeatCapacity(500) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec1.thermo.getHeatCapacity(1000) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec1.thermo.getHeatCapacity(1500) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec1.thermo.get_heat_capacity(300) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec1.thermo.get_heat_capacity(500) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec1.thermo.get_heat_capacity(1000) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec1.thermo.get_heat_capacity(1500) / 4.184) }}</td>
                 </tr>
                 <tr><td colspan="6" class="thermoComment">
 <div id="thermoComment" class="thermoComment">{{textwrap.fill(spec1.thermo.comment,80).replace('\n','<br>')}}</div>
@@ -943,15 +943,15 @@ $(document).ready(function() {
                 </tr>
                 <tr>
                     <td>{% if spec2.thermo.Tmin.value_si <= 298 %}
-                    {{ "%.2f"|format(spec2.thermo.getEnthalpy(298) / 4184) }}
+                    {{ "%.2f"|format(spec2.thermo.get_enthalpy(298) / 4184) }}
                     {% endif %}</td>
                     <td>{% if spec2.thermo.Tmin.value_si <= 298 %}
-                    {{ "%.2f"|format(spec2.thermo.getEntropy(298) / 4.184) }}
+                    {{ "%.2f"|format(spec2.thermo.get_entropy(298) / 4.184) }}
                     {% endif %}</td>
-                    <td>{{ "%.2f"|format(spec2.thermo.getHeatCapacity(300) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec2.thermo.getHeatCapacity(500) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec2.thermo.getHeatCapacity(1000) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec2.thermo.getHeatCapacity(1500) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec2.thermo.get_heat_capacity(300) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec2.thermo.get_heat_capacity(500) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec2.thermo.get_heat_capacity(1000) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec2.thermo.get_heat_capacity(1500) / 4.184) }}</td>
                 </tr>
                                 <tr><td colspan="6" class="thermoComment">
 <div id="thermoComment" class="thermoComment">{{textwrap.fill(spec2.thermo.comment,80).replace('\n','<br>')}}</div>
@@ -1011,16 +1011,16 @@ $(document).ready(function() {
                 </tr>
                 <tr>
                     <td>{% if spec.thermo.Tmin.value_si <= 298 %}
-                    {{ "%.2f"|format(spec.thermo.getEnthalpy(298) / 4184) }}
+                    {{ "%.2f"|format(spec.thermo.get_enthalpy(298) / 4184) }}
                     {% endif %}</td>
                     <td>
                     {% if spec.thermo.Tmin.value_si <= 298 %}
-                    {{ "%.2f"|format(spec.thermo.getEntropy(298) / 4.184) }}
+                    {{ "%.2f"|format(spec.thermo.get_entropy(298) / 4.184) }}
                     {% endif %}</td>
-                    <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(300) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(500) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(1000) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(1500) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(300) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(500) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(1000) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(1500) / 4.184) }}</td>
                 </tr>
                                 <tr><td colspan="6" class="thermoComment">
 <div id="thermoComment" class="thermoComment">{{textwrap.fill(spec.thermo.comment,80).replace('\n','<br>')}}</div>
@@ -1061,16 +1061,16 @@ $(document).ready(function() {
                 </tr>
                 <tr>
                     <td>{% if spec.thermo.Tmin.value_si <= 298 %}
-                    {{ "%.2f"|format(spec.thermo.getEnthalpy(298) / 4184) }}
+                    {{ "%.2f"|format(spec.thermo.get_enthalpy(298) / 4184) }}
                     {% endif %}</td>
                     <td>
                     {% if spec.thermo.Tmin.value_si <= 298 %}
-                    {{ "%.2f"|format(spec.thermo.getEntropy(298) / 4.184) }}
+                    {{ "%.2f"|format(spec.thermo.get_entropy(298) / 4.184) }}
                     {% endif %}</td>
-                    <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(300) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(500) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(1000) / 4.184) }}</td>
-                    <td>{{ "%.2f"|format(spec.thermo.getHeatCapacity(1500) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(300) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(500) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(1000) / 4.184) }}</td>
+                    <td>{{ "%.2f"|format(spec.thermo.get_heat_capacity(1500) / 4.184) }}</td>
                 </tr>
                                 <tr><td colspan="6" class="thermoComment">
 <div id="thermoComment" class="thermoComment">{{textwrap.fill(spec.thermo.comment,80).replace('\n','<br>')}}</div>

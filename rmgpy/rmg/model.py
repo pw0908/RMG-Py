@@ -1080,7 +1080,7 @@ class CoreEdgeReactionModel:
         reactionSystems is a list of reactionSystem objects
         """
         self.Tmax = Tmax
-        Gs = [spc.thermo.getFreeEnergy(Tmax) for spc in self.core.species]
+        Gs = [spc.thermo.get_free_energy(Tmax) for spc in self.core.species]
         self.Gmax = max(Gs)
         self.Gmin = min(Gs)
 
@@ -1097,7 +1097,7 @@ class CoreEdgeReactionModel:
         """
         Tmax = self.Tmax
         for spc in spcs:
-            G = spc.thermo.getFreeEnergy(Tmax)
+            G = spc.thermo.get_free_energy(Tmax)
             if G > self.Gfmax:
                 Gn = (G - self.Gmax) / (self.Gmax - self.Gmin)
                 logging.info('Removing species {0} with Gibbs energy {1} from edge because it\'s Gibbs number {2} is '
@@ -1127,7 +1127,7 @@ class CoreEdgeReactionModel:
             logging.info('Reached maximum number of edge species')
             logging.info('Attempting to remove excess edge species with Thermodynamic filtering')
             spcs = self.edge.species
-            Gfs = np.array([spc.thermo.getFreeEnergy(Tmax) for spc in spcs])
+            Gfs = np.array([spc.thermo.get_free_energy(Tmax) for spc in spcs])
             Gns = (Gfs - self.Gmax) / (self.Gmax - self.Gmin)
             inds = np.argsort(Gns)  # could actually do this with the Gfs, but want to print the Gn value later
             inds = inds[::-1]  # get in order of increasing Gf
@@ -1503,7 +1503,7 @@ class CoreEdgeReactionModel:
             self.addSpeciesToCore(spec)
 
         for rxn in self.newReactionList:
-            if self.pressureDependence and rxn.isUnimolecular():
+            if self.pressureDependence and rxn.is_unimolecular():
                 # If this is going to be run through pressure dependence code,
                 # we need to make sure the barrier is positive.
                 # ...but are Seed Mechanisms run through PDep? Perhaps not.
@@ -1603,7 +1603,7 @@ class CoreEdgeReactionModel:
             # Note that we haven't actually evaluated any fluxes at this point
             # Instead, we remove the comment below if the reaction is moved to
             # the core later in the mechanism generation
-            if not (self.pressureDependence and rxn.elementary_high_p and rxn.isUnimolecular()
+            if not (self.pressureDependence and rxn.elementary_high_p and rxn.is_unimolecular()
                     and isinstance(rxn, LibraryReaction) and isinstance(rxn.kinetics, Arrhenius)):
                 # Don't add to the edge library reactions that were already processed
                 self.addReactionToEdge(rxn)

@@ -64,7 +64,7 @@ from rmgpy.kinetics.arrhenius import Arrhenius  # Separate because we cimport fr
 from rmgpy.kinetics.diffusionLimited import diffusionLimiter
 from rmgpy.molecule.element import Element, element_list
 from rmgpy.molecule.molecule import Molecule, Atom
-from rmgpy.pdep.reaction import calculateMicrocanonicalRateCoefficient
+from rmgpy.pdep.reaction import calculate_microcanonical_rate_coefficient
 from rmgpy.species import Species
 
 ################################################################################
@@ -515,9 +515,9 @@ class Reaction:
         cython.declare(dHrxn=cython.double, reactant=Species, product=Species)
         dHrxn = 0.0
         for reactant in self.reactants:
-            dHrxn -= reactant.getEnthalpy(T)
+            dHrxn -= reactant.get_enthalpy(T)
         for product in self.products:
-            dHrxn += product.getEnthalpy(T)
+            dHrxn += product.get_enthalpy(T)
         return dHrxn
 
     def getEntropyOfReaction(self, T):
@@ -528,9 +528,9 @@ class Reaction:
         cython.declare(dSrxn=cython.double, reactant=Species, product=Species)
         dSrxn = 0.0
         for reactant in self.reactants:
-            dSrxn -= reactant.getEntropy(T)
+            dSrxn -= reactant.get_entropy(T)
         for product in self.products:
-            dSrxn += product.getEntropy(T)
+            dSrxn += product.get_entropy(T)
         return dSrxn
 
     def getFreeEnergyOfReaction(self, T):
@@ -542,13 +542,13 @@ class Reaction:
         dGrxn = 0.0
         for reactant in self.reactants:
             try:
-                dGrxn -= reactant.getFreeEnergy(T)
+                dGrxn -= reactant.get_free_energy(T)
             except Exception:
                 logging.error("Problem with reactant {!r} in reaction {!s}".format(reactant, self))
                 raise
         for product in self.products:
             try:
-                dGrxn += product.getFreeEnergy(T)
+                dGrxn += product.get_free_energy(T)
             except Exception:
                 logging.error("Problem with product {!r} in reaction {!s}".format(reactant, self))
                 raise
@@ -927,10 +927,10 @@ class Reaction:
         E0 = 0.0
         for spec in self.reactants:
             logging.debug('    Calculating Partition function for ' + spec.label)
-            Qreac *= spec.getPartitionFunction(T) / (constants.R * T / 101325.)
+            Qreac *= spec.get_partition_function(T) / (constants.R * T / 101325.)
             E0 -= spec.conformer.E0.value_si
         logging.debug('    Calculating Partition function for ' + self.transition_state.label)
-        Qts = self.transition_state.getPartitionFunction(T) / (constants.R * T / 101325.)
+        Qts = self.transition_state.get_partition_function(T) / (constants.R * T / 101325.)
         E0 += self.transition_state.conformer.E0.value_si
         k = (constants.kB * T / constants.h * Qts / Qreac) * math.exp(-E0 / constants.R / T)
 
@@ -951,8 +951,8 @@ class Reaction:
     def calculateMicrocanonicalRateCoefficient(self, Elist, Jlist, reacDensStates, prodDensStates=None, T=0.0):
         """
         Calculate the microcanonical rate coefficient :math:`k(E)` for the reaction
-        `reaction` at the energies `Elist` in J/mol. `reacDensStates` and 
-        `prodDensStates` are the densities of states of the reactant and product
+        `reaction` at the energies `e_list` in J/mol. `reac_dens_states` and
+        `prod_dens_states` are the densities of states of the reactant and product
         configurations for this reaction. If the reaction is irreversible, only the
         reactant density of states is required; if the reaction is reversible, then
         both are required. This function will try to use the best method that it
@@ -965,14 +965,14 @@ class Reaction:
           :math:`k_\\infty(T)` have been provided, then the inverse Laplace 
           transform method will be used.
     
-        The density of states for the product `prodDensStates` and the temperature
+        The density of states for the product `prod_dens_states` and the temperature
         of interest `T` in K can also be provided. For isomerization and association
-        reactions `prodDensStates` is required; for dissociation reactions it is
+        reactions `prod_dens_states` is required; for dissociation reactions it is
         optional. The temperature is used if provided in the detailed balance
         expression to determine the reverse kinetics, and in certain cases in the
         inverse Laplace transform method.
         """
-        return calculateMicrocanonicalRateCoefficient(self, Elist, Jlist, reacDensStates, prodDensStates, T)
+        return calculate_microcanonical_rate_coefficient(self, Elist, Jlist, reacDensStates, prodDensStates, T)
 
     def isBalanced(self):
         """
