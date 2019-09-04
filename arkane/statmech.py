@@ -404,7 +404,7 @@ class StatMechJob(object):
             # Sometimes the translational mode is not appended to modes for monoatomic species
             conformer.modes.append(IdealGasTranslation(mass=self.species.molecularWeight))
 
-        if conformer.spinMultiplicity == 0:
+        if conformer.spin_multiplicity == 0:
             raise ValueError("Could not read spin multiplicity from log file {0},\n"
                              "please specify the multiplicity in the input file.".format(self.path))
 
@@ -451,7 +451,7 @@ class StatMechJob(object):
                     self.bonds = self.species.molecule[0].enumerate_bonds()
                 bond_corrections = get_bac(self.modelChemistry, self.bonds, coordinates, number,
                                            bac_type=self.bondEnergyCorrectionType,
-                                           multiplicity=conformer.spinMultiplicity)
+                                           multiplicity=conformer.spin_multiplicity)
             else:
                 bond_corrections = 0
             e_electronic_with_corrections = e_electronic + atom_corrections + bond_corrections
@@ -466,7 +466,7 @@ class StatMechJob(object):
             logging.debug('         Scaled ZPE (0 K) = {0:g} kcal/mol'.format(zpe / 4184.))
             logging.debug('         E0 (0 K) = {0:g} kcal/mol'.format(e0 / 4184.))
 
-        conformer.E0 = (e0 * 0.001, "kJ/mol")
+        conformer.e0 = (e0 * 0.001, "kJ/mol")
 
         # If loading a transition state, also read the imaginary frequency
         if is_ts:
@@ -676,10 +676,10 @@ class StatMechJob(object):
 
         result = 'conformer(label={0!r}, E0={1!r}, modes={2!r}, spin_multiplicity={3:d}, opticalIsomers={4:d}'.format(
             self.species.label,
-            conformer.E0,
+            conformer.e0,
             conformer.modes,
-            conformer.spinMultiplicity,
-            conformer.opticalIsomers,
+            conformer.spin_multiplicity,
+            conformer.optical_isomers,
         )
         try:
             result += ', frequency={0!r}'.format(self.species.frequency)

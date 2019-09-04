@@ -489,9 +489,9 @@ $(document).ready(function() {
 </tr>
 <tr class="energy {{ rxn.get_source()|csssafe }} hide_energy">
     <td></td>
-    <td colspan="3"><b>H298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.getEnthalpyOfReaction(298)/4184) }}
-    <br><b>S298 (cal/mol*K)</b> = {{ '%0.2f'| format(rxn.getEntropyOfReaction(298)/4.184) }}
-    <br><b>G298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.getFreeEnergyOfReaction(298)/4184) }}</td>
+    <td colspan="3"><b>H298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.get_enthalpy_of_reaction(298)/4184) }}
+    <br><b>S298 (cal/mol*K)</b> = {{ '%0.2f'| format(rxn.get_entropy_of_reaction(298)/4.184) }}
+    <br><b>G298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.get_free_energy_of_reaction(298)/4184) }}</td>
     <td></td>
 </tr>
 <tr class="chemkin {{ rxn.get_source()|csssafe }} hide_chemkin">
@@ -1183,7 +1183,7 @@ $(document).ready(function() {
 
 <P><b>Fitted Reverse Kinetics:</b>
 {% if not rxn2.kinetics.is_pressure_dependent() %}
-{{rxn2.generateReverseRateCoefficient().to_html() }}
+{{rxn2.generate_reverse_rate_coefficient().to_html() }}
 {% else %} Pressure dependent
 {% endif %}
 {% endif %}
@@ -1204,14 +1204,14 @@ $(document).ready(function() {
 <tr width=100% class="energy">
 
     <td colspan="2" valign="top" width=50%>
-    <b>H298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn1.getEnthalpyOfReaction(298)/4184) }}
-    <br><b>S298 (cal/mol*K)</b> = {{ '%0.2f'| format(rxn1.getEntropyOfReaction(298)/4.184) }}
-    <br><b>G298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn1.getFreeEnergyOfReaction(298)/4184) }}
+    <b>H298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn1.get_enthalpy_of_reaction(298)/4184) }}
+    <br><b>S298 (cal/mol*K)</b> = {{ '%0.2f'| format(rxn1.get_entropy_of_reaction(298)/4.184) }}
+    <br><b>G298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn1.get_free_energy_of_reaction(298)/4184) }}
     </td>
     
-    <td colspan="2" valign="top" width=50%><b>H298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn2.getEnthalpyOfReaction(298)/4184) }}
-    <br><b>S298 (cal/mol*K)</b> = {{ '%0.2f'| format(rxn2.getEntropyOfReaction(298)/4.184) }}
-    <br><b>G298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn2.getFreeEnergyOfReaction(298)/4184) }}
+    <td colspan="2" valign="top" width=50%><b>H298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn2.get_enthalpy_of_reaction(298)/4184) }}
+    <br><b>S298 (cal/mol*K)</b> = {{ '%0.2f'| format(rxn2.get_entropy_of_reaction(298)/4.184) }}
+    <br><b>G298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn2.get_free_energy_of_reaction(298)/4184) }}
     </td>
 
 </tr>
@@ -1249,9 +1249,9 @@ $(document).ready(function() {
     </tr>
     <tr class="energy {{ rxn.get_source()|csssafe }} hide_energy">
     <td></td>
-    <td colspan="3"><b>H298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.getEnthalpyOfReaction(298)/4184) }}
-    <br><b>S298 (cal/mol*K)</b> = {{ '%0.2f'| format(rxn.getEntropyOfReaction(298)/4.184) }}
-    <br><b>G298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.getFreeEnergyOfReaction(298)/4184) }}</td>
+    <td colspan="3"><b>H298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.get_enthalpy_of_reaction(298)/4184) }}
+    <br><b>S298 (cal/mol*K)</b> = {{ '%0.2f'| format(rxn.get_entropy_of_reaction(298)/4.184) }}
+    <br><b>G298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.get_free_energy_of_reaction(298)/4184) }}</td>
     <td></td>
 </tr>
 
@@ -1283,9 +1283,9 @@ $(document).ready(function() {
     </tr>
     <tr class="energy {{ rxn.get_source()|csssafe }} hide_energy">
     <td></td>
-    <td colspan="3"><b>H298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.getEnthalpyOfReaction(298)/4184) }}
-    <br><b>S298 (cal/mol*K)</b> = {{ '%0.2f'| format(rxn.getEntropyOfReaction(298)/4.184) }}
-    <br><b>G298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.getFreeEnergyOfReaction(298)/4184) }}</td>
+    <td colspan="3"><b>H298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.get_enthalpy_of_reaction(298)/4184) }}
+    <br><b>S298 (cal/mol*K)</b> = {{ '%0.2f'| format(rxn.get_entropy_of_reaction(298)/4.184) }}
+    <br><b>G298 (kcal/mol)</b> = {{ '%0.2f'| format(rxn.get_free_energy_of_reaction(298)/4184) }}</td>
     <td></td>
 </tr>
     <tr class="chemkin {{ rxn.get_source()|csssafe }}">

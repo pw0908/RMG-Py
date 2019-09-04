@@ -73,7 +73,7 @@ class KineticsSensitivity(object):
         self.conditions = self.job.sensitivity_conditions
         self.f_rates = [self.job.reaction.kinetics.get_rate_coefficient(condition.value_si)
                         for condition in self.conditions]
-        kr = self.job.reaction.generateReverseRateCoefficient()
+        kr = self.job.reaction.generate_reverse_rate_coefficient()
         self.r_rates = [kr.get_rate_coefficient(condition.value_si) for condition in self.conditions]
         self.f_sa_rates = {}
         self.r_sa_rates = {}
@@ -92,7 +92,7 @@ class KineticsSensitivity(object):
             self.job.execute(outputFile=None, plot=False)  # run the perturbed job
             self.f_sa_rates[species] = [self.job.reaction.kinetics.get_rate_coefficient(condition.value_si)
                                         for condition in self.conditions]
-            kr = self.job.reaction.generateReverseRateCoefficient()
+            kr = self.job.reaction.generate_reverse_rate_coefficient()
             self.r_sa_rates[species] = [kr.get_rate_coefficient(condition.value_si)
                                         for condition in self.conditions]
             self.unperturb(species)
@@ -108,11 +108,11 @@ class KineticsSensitivity(object):
 
     def perturb(self, species):
         """Perturb a species' E0"""
-        species.conformer.E0.value_si += self.perturbation.value_si
+        species.conformer.e0.value_si += self.perturbation.value_si
 
     def unperturb(self, species):
         """Return the species' E0 to its original value"""
-        species.conformer.E0.value_si -= self.perturbation.value_si  # restore E0 to its original value
+        species.conformer.e0.value_si -= self.perturbation.value_si  # restore E0 to its original value
 
     def save(self):
         """Save the SA results as tabulated data"""
@@ -301,9 +301,9 @@ class PDepSensitivity(object):
         if unperturb:
             perturbation *= -1
         if isinstance(entry, TransitionState):
-            entry.conformer.E0 = quantity.Energy(entry.conformer.E0.value_si + perturbation, 'J/mol')
+            entry.conformer.e0 = quantity.Energy(entry.conformer.e0.value_si + perturbation, 'J/mol')
         elif isinstance(entry, Configuration):
-            entry.species[0].conformer.E0 = quantity.Energy(entry.species[0].conformer.E0.value_si + perturbation,
+            entry.species[0].conformer.e0 = quantity.Energy(entry.species[0].conformer.e0.value_si + perturbation,
                                                             'J/mol')
 
     def unperturb(self, entry):

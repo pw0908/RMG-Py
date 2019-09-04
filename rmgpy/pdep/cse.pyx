@@ -60,8 +60,8 @@ def apply_chemically_significant_eigenvalues_method(network, list lumping_order=
 
     temperature = network.T
     pressure = network.P
-    e_list = network.Elist
-    j_list = network.Jlist
+    e_list = network.e_list
+    j_list = network.j_list
     dens_states = network.dens_states
     g_nj = network.Gnj
     eq_ratios = network.eq_ratios

@@ -57,8 +57,8 @@ cpdef generate_full_me_matrix(network, bint products=True):
 
     temperature = network.T
     # pressure = network.P  # not used in this module
-    e_list = network.Elist
-    j_list = network.Jlist
+    e_list = network.e_list
+    j_list = network.j_list
     dens_states = network.densStates
     m_coll = network.Mcoll
     k_ij = network.Kij

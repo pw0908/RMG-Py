@@ -104,7 +104,7 @@ def compareModelKinetics(model1, model2):
         if rxn1.is_isomorphic(rxn2, either_direction=False):
             kinetics2.append(rxn2.get_rate_coefficient(T, P))
         else:
-            kinetics2.append(rxn2.get_rate_coefficient(T, P) / rxn2.getEquilibriumConstant(T))
+            kinetics2.append(rxn2.get_rate_coefficient(T, P) / rxn2.get_equilibrium_constant(T))
     fig, ax = plt.subplots(1, 1, figsize=(8, 6))
     plt.loglog(kinetics1, kinetics2, 'o', picker=5)
     xlim = plt.xlim()

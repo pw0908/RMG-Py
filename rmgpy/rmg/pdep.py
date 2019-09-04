@@ -193,7 +193,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                     raise PressureDependenceError('Path reaction {0} with no high-pressure-limit kinetics encountered '
                                                   'in PDepNetwork #{1:d} while evaluating leak flux.'.format(rxn, self.index))
             if rxn.products is self.source:
-                k = rxn.get_rate_coefficient(T, P) / rxn.getEquilibriumConstant(T)
+                k = rxn.get_rate_coefficient(T, P) / rxn.get_equilibrium_constant(T)
             else:
                 k = rxn.get_rate_coefficient(T, P)
         else:
@@ -371,7 +371,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                     val = kf * c[ind]
                 if rxn.products[0] in isomer_spcs:
                     ind2 = isomer_spcs.index(rxn.products[0])
-                    kr = rxn.get_rate_coefficient(T, P) / rxn.getEquilibriumConstant(T)
+                    kr = rxn.get_rate_coefficient(T, P) / rxn.get_equilibrium_constant(T)
                     val2 = kr * c[ind2]
 
                 if max(val, val2) < tol:
@@ -408,7 +408,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                 ind = None
             if rxn.products[0] in isomer_spcs:
                 ind2 = isomer_spcs.index(rxn.products[0])
-                kr = rxn.get_rate_coefficient(T, P) / rxn.getEquilibriumConstant(T)
+                kr = rxn.get_rate_coefficient(T, P) / rxn.get_equilibrium_constant(T)
                 A[ind2, ind2] -= kr
             else:
                 ind2 = None
@@ -422,7 +422,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                     kf = rxn.get_rate_coefficient(T, P)
                     b[ind2] += kf
                 elif rxn.products[0] == self.source:
-                    kr = rxn.get_rate_coefficient(T, P) / rxn.getEquilibriumConstant(T)
+                    kr = rxn.get_rate_coefficient(T, P) / rxn.get_equilibrium_constant(T)
                     b[ind] += kr
 
         if not bimolecular:
@@ -806,7 +806,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
             elif not isinstance(rxn.kinetics, Arrhenius) and rxn.network_kinetics is None:
                 raise Exception('Path reaction "{0}" in PDepNetwork #{1:d} has invalid kinetics '
                                 'type "{2!s}".'.format(rxn, self.index, rxn.kinetics.__class__))
-            rxn.fixBarrierHeight(forcePositive=True)
+            rxn.fix_barrier_height(force_positive=True)
             if rxn.network_kinetics is None:
                 E0 = sum([spec.conformer.e0.value_si for spec in rxn.reactants]) + rxn.kinetics.Ea.value_si
             else:
@@ -849,7 +849,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                 # Find the path reaction
                 net_reaction = None
                 for r in self.netReactions:
-                    if r.hasTemplate(configurations[j], configurations[i]):
+                    if r.has_template(configurations[j], configurations[i]):
                         net_reaction = r
                 # If net reaction does not already exist, make a new one
                 if net_reaction is None:
@@ -906,7 +906,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                 t = 0
                 p = len(Plist) - 1
                 for pathReaction in self.pathReactions:
-                    if pathReaction.isIsomerization():
+                    if pathReaction.is_isomerization():
                         # Don't check isomerization reactions, since their
                         # k(T,P) values potentially contain both direct and
                         # well-skipping contributions, and therefore could be
@@ -927,10 +927,10 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                     elif pathReaction.products == net_reaction.reactants and pathReaction.reactants == net_reaction.products:
                         if pathReaction.network_kinetics is not None:
                             kinf = pathReaction.network_kinetics.get_rate_coefficient(
-                                Tlist[t]) / pathReaction.getEquilibriumConstant(Tlist[t])
+                                Tlist[t]) / pathReaction.get_equilibrium_constant(Tlist[t])
                         else:
                             kinf = pathReaction.kinetics.get_rate_coefficient(
-                                Tlist[t]) / pathReaction.getEquilibriumConstant(Tlist[t])
+                                Tlist[t]) / pathReaction.get_equilibrium_constant(Tlist[t])
                         if K[t, p, i, j] > 2 * kinf:  # To allow for a small discretization error
                             logging.warning('k(T,P) for net reaction {0} exceeds high-P k(T) by {1:g} at {2:g} K, '
                                             '{3:g} bar'.format(net_reaction, K[t, p, i, j] / kinf, Tlist[t], Plist[p] / 1e5))

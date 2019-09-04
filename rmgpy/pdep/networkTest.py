@@ -256,7 +256,7 @@ class TestNetwork(unittest.TestCase):
 
     def test_collisionMatrixMemoryHandling(self):
         net = Network()
-        net.Elist = [1] * 10000
+        net.e_list = [1] * 10000
         net.E0 = 1.0
         niso = 100000000
         net.isomers = niso * [1]

@@ -57,8 +57,8 @@ cpdef apply_reservoir_state_method(network):
     cdef int i, j, n, r, s, u, v, row, iter
 
     temperature = network.T
-    e_list = network.Elist
-    j_list = network.Jlist
+    e_list = network.e_list
+    j_list = network.j_list
     dens_states = network.densStates
     m_coll = network.Mcoll
     k_ij = network.Kij

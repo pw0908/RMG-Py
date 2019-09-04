@@ -215,7 +215,7 @@ cdef class Configuration(object):
         """
         assert self.is_unimolecular()
         assert self.species[0].energyTransferModel is not None
-        return self.species[0].energyTransferModel.generate_collision_matrix(T, dens_states, e_list, Jlist)
+        return self.species[0].energyTransferModel.generate_collision_matrix(T, dens_states, e_list, j_list)
 
     cpdef calculate_density_of_states(self, np.ndarray e_list, bint active_j_rotor=True, bint active_k_rotor=True,
                                       bint rmgmode=False):
@@ -376,9 +376,9 @@ cdef class Configuration(object):
                 dens_states[r, 0] = f(e_list[r] - e0)
             dens_states[r0:, 0] = np.exp(dens_states[r0:, 0])
         else:
-            assert Jlist is not None
-            n_j = Jlist.shape[0]
-            d_j = Jlist[1] - Jlist[0]
+            assert j_list is not None
+            n_j = j_list.shape[0]
+            d_j = j_list[1] - j_list[0]
             dens_states = np.zeros((n_grains, n_j))
 
             b_list = []
@@ -393,7 +393,7 @@ cdef class Configuration(object):
                 b1 = b_list[0] * 11.962  # cm^-1 to J/mol
                 for r in range(r0, n_grains):
                     for s in range(n_j):
-                        j1 = Jlist[s]
+                        j1 = j_list[s]
                         e = e_list[r] - e0 - b1 * j1 * (j1 + 1)
                         if e < 0: break
                         dens_states[r,s] = (2 * j1 + 1) * exp(f(e)) * d_j
@@ -403,9 +403,9 @@ cdef class Configuration(object):
                 b2 = b_list[1] * 11.962
                 for r in range(r0, n_grains):
                     for s in range(n_j):
-                        j = Jlist[s]
+                        j = j_list[s]
                         for t in range(s + 1):
-                            j1 = Jlist[t]
+                            j1 = j_list[t]
                             j2 = j - j1
                             e = e_list[r] - e0 - b1 * j1 * (j1 + 1) - b2 * j2 * (j2 + 1)
                             if e > 0:
@@ -443,9 +443,9 @@ cdef class Configuration(object):
                 sum_states[r, 0] = f(e_list[r] - e0)
             sum_states[r0:, 0] = np.exp(sum_states[r0:, 0])
         else:
-            assert Jlist is not None
-            n_j = len(Jlist)
-            d_j = Jlist[1] - Jlist[0]
+            assert j_list is not None
+            n_j = len(j_list)
+            d_j = j_list[1] - j_list[0]
             sum_states = np.zeros((n_grains, n_j))
 
             b_list = []
@@ -461,7 +461,7 @@ cdef class Configuration(object):
                 b1 = b_list[0] * 11.962  # cm^-1 to J/mol
                 for r in range(r0, n_grains):
                     for s in range(n_j):
-                        j1 = Jlist[s]
+                        j1 = j_list[s]
                         e = e_list[r] - e0 - b1 * j1 * (j1 + 1)
                         if e < 0:
                             break
@@ -472,9 +472,9 @@ cdef class Configuration(object):
                 b2 = b_list[1] * 11.962
                 for r in range(r0, n_grains):
                     for s in range(n_j):
-                        j = Jlist[s]
+                        j = j_list[s]
                         for t in range(s + 1):
-                            j1 = Jlist[t]
+                            j1 = j_list[t]
                             j2 = j - j1
                             e = e_list[r] - e0 - b1 * j1 * (j1 + 1) - b2 * j2 * (j2 + 1)
                             if e > 0:

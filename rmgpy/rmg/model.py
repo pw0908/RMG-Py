@@ -443,10 +443,10 @@ class CoreEdgeReactionModel:
 
         # Generate the reaction pairs if not yet defined
         if forward.pairs is None:
-            forward.generatePairs()
+            forward.generate_pairs()
             if hasattr(forward, 'reverse'):
                 if forward.reverse:
-                    forward.reverse.generatePairs()
+                    forward.reverse.generate_pairs()
 
         # Note in the log
         if isinstance(forward, TemplateReaction):
@@ -490,7 +490,7 @@ class CoreEdgeReactionModel:
 
         # Generate the reaction pairs if not yet defined
         if forward.pairs is None:
-            forward.generatePairs()
+            forward.generate_pairs()
 
         # Set reaction index and increment the counter
         forward.index = self.reactionCounter + 1
@@ -633,12 +633,12 @@ class CoreEdgeReactionModel:
             #  correct barrier heights of estimated kinetics
             if isinstance(reaction, TemplateReaction) or isinstance(reaction,
                                                                     DepositoryReaction):  # i.e. not LibraryReaction
-                reaction.fixBarrierHeight()  # also converts ArrheniusEP to Arrhenius.
+                reaction.fix_barrier_height()  # also converts ArrheniusEP to Arrhenius.
 
-            if self.pressureDependence and reaction.isUnimolecular():
+            if self.pressureDependence and reaction.is_unimolecular():
                 # If this is going to be run through pressure dependence code,
                 # we need to make sure the barrier is positive.
-                reaction.fixBarrierHeight(forcePositive=True)
+                reaction.fix_barrier_height(force_positive=True)
 
         # Update unimolecular (pressure dependent) reaction networks
         if self.pressureDependence:
@@ -772,7 +772,7 @@ class CoreEdgeReactionModel:
             elif self.pressureDependence.maximumAtoms is not None and self.pressureDependence.maximumAtoms < isomer_atoms:
                 # The reaction involves so many atoms that pressure-dependent effects are assumed to be negligible
                 pdep = False
-            elif not (rxn.isIsomerization() or rxn.isDissociation() or rxn.isAssociation()):
+            elif not (rxn.is_isomerization() or rxn.is_dissociation() or rxn.is_association()):
                 # The reaction is not unimolecular in either direction, so it cannot be pressure-dependent
                 pdep = False
             elif isinstance(rxn, LibraryReaction):
@@ -870,7 +870,7 @@ class CoreEdgeReactionModel:
                                                                   estimator=self.kineticsEstimator,
                                                                   return_all_kinetics=False)
         # Get the gibbs free energy of reaction at 298 K
-        G298 = reaction.getFreeEnergyOfReaction(298)
+        G298 = reaction.get_free_energy_of_reaction(298)
         gibbs_is_positive = G298 > -1e-8
 
         if family.ownReverse and hasattr(reaction, 'reverse'):
@@ -1413,7 +1413,7 @@ class CoreEdgeReactionModel:
             spec_list.extend(rxn.products)
             for spec in spec_list:
                 i = spec.index - 1
-                nu = rxn.getStoichiometricCoefficient(spec)
+                nu = rxn.get_stoichiometric_coefficient(spec)
                 if nu != 0:
                     stoichiometry[i, j] = nu
         return stoichiometry.tocsr()
@@ -1465,7 +1465,7 @@ class CoreEdgeReactionModel:
             r, isNew = self.makeNewReaction(rxn)  # updates self.newSpeciesList and self.newReactionlist
             if not isNew:
                 logging.info("This library reaction was not new: {0}".format(rxn))
-            elif self.pressureDependence and rxn.elementary_high_p and rxn.isUnimolecular() \
+            elif self.pressureDependence and rxn.elementary_high_p and rxn.is_unimolecular() \
                     and isinstance(rxn, LibraryReaction) and isinstance(rxn.kinetics, Arrhenius):
                 # This unimolecular library reaction is flagged as `elementary_high_p` and has Arrhenius type kinetics.
                 # We should calculate a pressure-dependent rate for it
@@ -1510,7 +1510,7 @@ class CoreEdgeReactionModel:
                 for spec in itertools.chain(rxn.reactants, rxn.products):
                     submit(spec, self.solventName)
 
-                rxn.fixBarrierHeight(forcePositive=True)
+                rxn.fix_barrier_height(force_positive=True)
             self.addReactionToCore(rxn)
 
         # Check we didn't introduce unmarked duplicates
@@ -1562,7 +1562,7 @@ class CoreEdgeReactionModel:
             r, isNew = self.makeNewReaction(rxn)  # updates self.newSpeciesList and self.newReactionlist
             if not isNew:
                 logging.info("This library reaction was not new: {0}".format(rxn))
-            elif self.pressureDependence and rxn.elementary_high_p and rxn.isUnimolecular() \
+            elif self.pressureDependence and rxn.elementary_high_p and rxn.is_unimolecular() \
                     and isinstance(rxn, LibraryReaction) and isinstance(rxn.kinetics, Arrhenius):
                 # This unimolecular library reaction is flagged as `elementary_high_p` and has Arrhenius type kinetics.
                 # We should calculate a pressure-dependent rate for it
@@ -1771,10 +1771,10 @@ class CoreEdgeReactionModel:
                     if isinstance(reaction2,
                                   PDepReaction) and reaction.reactants == reaction2.products and reaction.products == reaction2.reactants:
                         # We've found the PDepReaction for the reverse direction
-                        dGrxn = reaction.getFreeEnergyOfReaction(300.)
+                        dGrxn = reaction.get_free_energy_of_reaction(300.)
                         kf = reaction.get_rate_coefficient(1000, 1e5)
-                        kr = reaction.get_rate_coefficient(1000, 1e5) / reaction.getEquilibriumConstant(1000)
-                        kf2 = reaction2.get_rate_coefficient(1000, 1e5) / reaction2.getEquilibriumConstant(1000)
+                        kr = reaction.get_rate_coefficient(1000, 1e5) / reaction.get_equilibrium_constant(1000)
+                        kf2 = reaction2.get_rate_coefficient(1000, 1e5) / reaction2.get_equilibrium_constant(1000)
                         kr2 = reaction2.get_rate_coefficient(1000, 1e5)
                         if kf / kf2 < 0.5 or kf / kf2 > 2.0:
                             # Most pairs of reactions should satisfy thermodynamic consistency (or at least be "close")

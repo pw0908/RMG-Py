@@ -676,19 +676,19 @@ class Network(object):
             # Compute the microcanonical rate coefficient k(E)
             reac_dens_states = dens_states[reac, :, :]
             prod_dens_states = dens_states[prod, :, :]
-            kf, kr = rxn.calculateMicrocanonicalRateCoefficient(self.e_list, self.j_list,
-                                                                reac_dens_states, prod_dens_states,
-                                                                temperature)
+            kf, kr = rxn.calculate_microcanonical_rate_coefficient(self.e_list, self.j_list,
+                                                                   reac_dens_states, prod_dens_states,
+                                                                   temperature)
 
             # Check for NaN (just to be safe)
             if np.isnan(kf).any() or np.isnan(kr).any():
                 raise NetworkError('One or more k(E) values is NaN for path reaction "{0}".'.format(rxn))
 
             # Determine the expected value of the rate coefficient k(T)
-            if rxn.canTST():
+            if rxn.can_tst():
                 # RRKM theory was used to compute k(E), so use TST to compute k(T)
                 logging.debug('Using RRKM rate for Expected kf')
-                kf_expected = rxn.calculateTSTRateCoefficient(temperature)
+                kf_expected = rxn.calculate_tst_rate_coefficient(temperature)
             else:
                 # ILT was used to compute k(E), so use high-P kinetics to compute k(T)
                 logging.debug('Using high pressure rate coefficient rate for Expected kf')

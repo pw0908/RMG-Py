@@ -99,18 +99,18 @@ def calculate_microcanonical_rate_coefficient(reaction,
 
     c0_inv = constants.R * T / 1.0e5
 
-    if reaction.canTST():
+    if reaction.can_tst():
         modes = reaction.transition_state.conformer.get_active_modes(active_j_rotor=active_j_rotor,
                                                                      active_k_rotor=active_k_rotor)
 
         # We've been provided with molecular degree of freedom data for the
         # transition state, so let's use the more accurate RRKM theory
         logging.debug('Calculating microcanonical rate coefficient using RRKM theory for {0}...'.format(reaction))
-        if reactant_states_known and (reaction.isIsomerization() or reaction.isDissociation()):
+        if reactant_states_known and (reaction.is_isomerization() or reaction.is_dissociation()):
             kf = apply_rrkm_theory(reaction.transition_state, e_list, j_list, reac_dens_states)
             kf *= c0_inv ** (len(reaction.reactants) - 1)
             forward = True
-        elif product_states_known and reaction.isAssociation():
+        elif product_states_known and reaction.is_association():
             kr = apply_rrkm_theory(reaction.transition_state, e_list, j_list, prod_dens_states)
             kr *= c0_inv ** (len(reaction.products) - 1)        
             forward = False
@@ -127,7 +127,7 @@ def calculate_microcanonical_rate_coefficient(reaction,
             kf = apply_inverse_laplace_transform_method(reaction.transition_state, kinetics, e_list, j_list, reac_dens_states, T)
             forward = True
         elif product_states_known:
-            kinetics = reaction.generateReverseRateCoefficient(network_kinetics=True)
+            kinetics = reaction.generate_reverse_rate_coefficient(network_kinetics=True)
             kr = apply_inverse_laplace_transform_method(reaction.transition_state, kinetics, e_list, j_list, prod_dens_states, T)
             forward = False
         else:

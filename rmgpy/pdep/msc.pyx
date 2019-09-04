@@ -53,8 +53,8 @@ cpdef apply_modified_strong_collision_method(network, str efficiency_model='defa
     cdef int i, j, n, r, s, start, src
 
     temperature = network.T
-    e_list = network.Elist
-    j_list = network.Jlist
+    e_list = network.e_list
+    j_list = network.j_list
     dens_states = network.densStates
     coll_freq = network.collFreq
     k_ij = network.Kij

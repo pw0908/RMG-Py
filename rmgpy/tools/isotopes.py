@@ -807,9 +807,9 @@ def ensure_correct_degeneracies(reaction_isotopomer_list, print_data=False, r_to
         if isinstance(rxn.kinetics, MultiArrhenius):
             reverse_A_factor = 0
             for arr in rxn.kinetics.arrhenius:
-                reverse_A_factor += arr.A.value_si / rxn.getEquilibriumConstant(298)
+                reverse_A_factor += arr.A.value_si / rxn.get_equilibrium_constant(298)
         else:
-            reverse_A_factor = rxn.kinetics.A.value_si / rxn.getEquilibriumConstant(298)
+            reverse_A_factor = rxn.kinetics.A.value_si / rxn.get_equilibrium_constant(298)
 
         # get reverse flux using product symmetries
         product_conc = 1.
