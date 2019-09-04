@@ -109,7 +109,7 @@ def get_octet_deviation(mol, allow_expanded_octet=True):
     for atom in mol.vertices:
         if atom.is_hydrogen():
             continue
-        val_electrons = 2 * (int(atom.get_total_bond_order()) + atom.lonePairs) + atom.radicalElectrons
+        val_electrons = 2 * (int(atom.get_total_bond_order()) + atom.lone_pairs) + atom.radical_electrons
         if atom.is_carbon() or atom.is_nitrogen() or atom.is_oxygen():
             octet_deviation += abs(8 - val_electrons)  # expecting C/N/O to be near octet
         elif atom.is_sulfur():
@@ -129,10 +129,10 @@ def get_octet_deviation(mol, allow_expanded_octet=True):
                 # -  J. Chem. Educ., 1999, 76 (7), p 1013, DOI: 10.1021/ed076p1013
                 # This results in O=S=O as a representative structure for SO2 rather than O=[:S+][:::O-],
                 # and in CS(=O)C as a representative structure for DMSO rather than C[:S+]([:::O-])C.
-                if atom.lonePairs <= 1:
+                if atom.lone_pairs <= 1:
                     octet_deviation += min(abs(8 - val_electrons), abs(10 - val_electrons))  # octet/dectet on S p[0,1]
                     # eg [O-][S+]=O, O[S]=O, OS([O])=O, O=S(=O)(O)O
-                elif atom.lonePairs >= 2:
+                elif atom.lone_pairs >= 2:
                     octet_deviation += abs(8 - val_electrons)  # octet on S p[2,3]
                     # eg [S][S], OS[O], [NH+]#[N+][S-][O-], O[S-](O)[N+]#N, S=[O+][O-]
             for atom2, bond in atom.bonds.items():
@@ -146,10 +146,10 @@ def get_octet_deviation(mol, allow_expanded_octet=True):
                     # [O.]OSS[O.] <=> [O.]OS#S[O.] <=> [O.]OS#[S.]=O; N#[N+]SS[O-] <=> N#[N+]C#S[O-]
         # Penalize birad sites only if they theoretically substitute a lone pair.
         # E.g., O=[:S..] is penalized, but [C..]=C=O isn't.
-        if (atom.radicalElectrons >= 2 and
-                ((atom.is_nitrogen() and atom.lonePairs == 0)
-                 or (atom.is_oxygen() and atom.lonePairs in [0, 1, 2])
-                 or (atom.is_sulfur() and atom.lonePairs in [0, 1, 2]))):
+        if (atom.radical_electrons >= 2 and
+                ((atom.is_nitrogen() and atom.lone_pairs == 0)
+                 or (atom.is_oxygen() and atom.lone_pairs in [0, 1, 2])
+                 or (atom.is_sulfur() and atom.lone_pairs in [0, 1, 2]))):
             octet_deviation += 3
 
     return octet_deviation
@@ -215,12 +215,12 @@ def charge_filtration(filtered_list, charge_span_list):
         mul_bond_sorting_list = []  # sortingLabels for multiple bind sites in the form of (atom1,atom2) tuples
         for mol in filtered_list:
             for atom in mol.vertices:
-                if atom.radicalElectrons and int(atom.sortingLabel) not in rad_sorting_list:
-                    rad_sorting_list.append(int(atom.sortingLabel))
+                if atom.radical_electrons and int(atom.sorting_label) not in rad_sorting_list:
+                    rad_sorting_list.append(int(atom.sorting_label))
                 for atom2, bond in atom.bonds.items():
                     # check if bond is multiple, store only from one side (atom1 < atom2) for consistency
-                    if atom2.sortingLabel > atom.sortingLabel and bond.is_double() or bond.is_triple():
-                        mul_bond_sorting_list.append((int(atom.sortingLabel), int(atom2.sortingLabel)))
+                    if atom2.sorting_label > atom.sorting_label and bond.is_double() or bond.is_triple():
+                        mul_bond_sorting_list.append((int(atom.sorting_label), int(atom2.sorting_label)))
         # Find unique radical and multiple bond sites in charged_list and append to unique_charged_list:
         unique_charged_list = []
         for mol in charged_list:
@@ -250,11 +250,11 @@ def find_unique_sites_in_charged_list(mol, rad_sorting_list, mul_bond_sorting_li
     A helper function for reactive site discovery in charged species
     """
     for atom in mol.vertices:
-        if atom.radicalElectrons and int(atom.sortingLabel) not in rad_sorting_list:
+        if atom.radical_electrons and int(atom.sorting_label) not in rad_sorting_list:
             return [mol]
         for atom2, bond in atom.bonds.items():
-            if (atom2.sortingLabel > atom.sortingLabel and (bond.is_double() or bond.is_triple())
-                    and (int(atom.sortingLabel), int(atom2.sortingLabel)) not in mul_bond_sorting_list
+            if (atom2.sorting_label > atom.sorting_label and (bond.is_double() or bond.is_triple())
+                    and (int(atom.sorting_label), int(atom2.sorting_label)) not in mul_bond_sorting_list
                     and not (atom.is_sulfur() and atom2.is_sulfur())):
                 # We check that both atoms aren't S, otherwise we get [S.-]=[S.+] as a structure of S2 triplet
                 return [mol]
@@ -316,7 +316,7 @@ def stabilize_charges_by_proximity(mol_list):
         for atom1 in mol.vertices:
             if atom1.charge:
                 for atom2 in mol.vertices:
-                    if atom2.charge and atom2.sortingLabel > atom1.sortingLabel:
+                    if atom2.charge and atom2.sorting_label > atom1.sorting_label:
                         # found two charged atoms
                         if (atom1.charge > 0) ^ (atom2.charge > 0):  # xor
                             # they have opposing signs when ONLY one is positive

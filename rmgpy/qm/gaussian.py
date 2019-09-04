@@ -186,7 +186,7 @@ class Gaussian:
         parser = cclib.parser.Gaussian(self.outputFilePath)
         parser.logger.setLevel(logging.ERROR)  # cf. http://cclib.sourceforge.net/wiki/index.php/Using_cclib#Additional_information
         cclib_data = parser.parse()
-        radical_number = sum([i.radicalElectrons for i in self.molecule.atoms])
+        radical_number = sum([i.radical_electrons for i in self.molecule.atoms])
         qm_data = parseCCLibData(cclib_data, radical_number + 1)
         return qm_data
 

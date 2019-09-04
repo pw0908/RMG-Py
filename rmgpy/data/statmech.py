@@ -418,7 +418,7 @@ class StatmechGroups(Database):
                 frequencies = []
                 for entry, count in group_count.items():
                     if count != 0:
-                        frequencies.extend(entry.data.generateFrequencies(count))
+                        frequencies.extend(entry.data.generate_frequencies(count))
 
         # Subtract out contributions to heat capacity from the group frequencies
         Tlist = np.arange(300.0, 1501.0, 100.0, np.float64)
@@ -464,7 +464,7 @@ class StatmechDatabase(object):
         self.depository = {}
         self.libraries = {}
         self.groups = {}
-        self.libraryOrder = []
+        self.library_order = []
         self.local_context = {
             'HarmonicOscillator': HarmonicOscillator,
             'LinearRotor': LinearRotor,
@@ -483,7 +483,7 @@ class StatmechDatabase(object):
             'depository': self.depository,
             'libraries': self.libraries,
             'groups': self.groups,
-            'library_order': self.libraryOrder,
+            'library_order': self.library_order,
         }
         return StatmechDatabase, (), d
 
@@ -494,7 +494,7 @@ class StatmechDatabase(object):
         self.depository = d['depository']
         self.libraries = d['libraries']
         self.groups = d['groups']
-        self.libraryOrder = d['library_order']
+        self.library_order = d['library_order']
 
     def load(self, path, libraries=None, depository=True):
         """
@@ -522,7 +522,7 @@ class StatmechDatabase(object):
         points to the top-level folder of the thermo database.
         """
         self.libraries = {}
-        self.libraryOrder = []
+        self.library_order = []
         for (root, dirs, files) in os.walk(os.path.join(path)):
             for f in files:
                 name, ext = os.path.splitext(f)
@@ -532,9 +532,9 @@ class StatmechDatabase(object):
                     library.load(os.path.join(root, f), self.local_context, self.global_context)
                     library.label = os.path.splitext(f)[0]
                     self.libraries[library.label] = library
-                    self.libraryOrder.append(library.label)
+                    self.library_order.append(library.label)
         if libraries is not None:
-            self.libraryOrder = libraries
+            self.library_order = libraries
 
     def load_groups(self, path):
         """
@@ -659,7 +659,7 @@ class StatmechDatabase(object):
         logging.debug('Retrieving stat mech data for {}.'.format(molecule.to_smiles()))
         statmech_model = None
         # Check the libraries in order first; return the first successful match
-        for label in self.libraryOrder:
+        for label in self.library_order:
             statmech_model = self.get_statmech_data_from_library(molecule, self.libraries[label])
             if statmech_model:
                 break

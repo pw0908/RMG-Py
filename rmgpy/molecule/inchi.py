@@ -188,7 +188,7 @@ def compose_aug_inchi_key(inchi_key, ulayer=None, player=None):
 # Methods for parsing layers in InChI and auxiliary info #
 ##########################################################
 
-def _parse_H_layer(inchi):
+def _parse_h_layer(inchi):
     """
     Converts the Mobile H layer of an inchi string into a 
     list of atom indices couples that carry a mobile hydrogen.
@@ -233,7 +233,7 @@ def _parse_H_layer(inchi):
     return couples
 
 
-def _parse_E_layer(auxinfo):
+def _parse_e_layer(auxinfo):
     """
     Converts the layer with equivalence information (E-layer) 
     on atoms into a list of lists of equivalent atom indices.
@@ -282,7 +282,7 @@ def _parse_E_layer(auxinfo):
     return equivalent_atoms
 
 
-def _parse_N_layer(auxinfo):
+def _parse_n_layer(auxinfo):
     """
     Parses the layer with atom ordering information (N-layer)
     and returns a list of atom indices that reflect how the atoms of the original
@@ -346,7 +346,7 @@ def _has_unexpected_lone_pairs(mol):
         except KeyError:
             raise Exception("Unrecognized element: {}".format(at.symbol))
         else:
-            if at.lonePairs != exp: return True
+            if at.lone_pairs != exp: return True
 
     return False
 
@@ -364,7 +364,7 @@ def _get_unpaired_electrons(mol):
     )
     locations = []
     for index, at in enumerate(mol.atoms):
-        if at.radicalElectrons >= 1:
+        if at.radical_electrons >= 1:
             locations.append(index)
 
     return sorted(locations)
@@ -523,7 +523,7 @@ def _find_lowest_u_layer(mol, u_layer, equivalent_atoms):
     return sorted(new_u_layer)
 
 
-def _create_U_layer(mol, auxinfo):
+def _create_u_layer(mol, auxinfo):
     """
     Creates a string with the positions of the atoms that bear unpaired electrons. The string
     can be used to complement the InChI with an additional layer that allows for the differentiation
@@ -558,10 +558,10 @@ def _create_U_layer(mol, auxinfo):
     # create preliminary u-layer:
     u_layer = []
     for i, at in enumerate(mol.atoms):
-        u_layer.extend([i + 1] * at.radicalElectrons)
+        u_layer.extend([i + 1] * at.radical_electrons)
 
     # extract equivalent atom pairs from E-layer of auxiliary info:
-    equivalent_atoms = _parse_E_layer(auxinfo)
+    equivalent_atoms = _parse_e_layer(auxinfo)
     if equivalent_atoms:
         # select lowest u-layer:
         u_layer = _find_lowest_u_layer(mol, u_layer, equivalent_atoms)
@@ -579,7 +579,7 @@ def _find_lowest_p_layer(minmol, p_layer, equivalent_atoms):
     return p_layer
 
 
-def _create_P_layer(mol, auxinfo):
+def _create_p_layer(mol, auxinfo):
     """
     Creates a string with the positions of the atoms that bear an unexpected number of lone pairs. The string
     can be used to complement the InChI with an additional layer that allows for the differentiation
@@ -603,14 +603,14 @@ def _create_P_layer(mol, auxinfo):
         except KeyError:
             raise Exception("Unrecognized element: {}".format(at.symbol))
         else:
-            if at.lonePairs != exp:
-                if at.lonePairs == 0:
+            if at.lone_pairs != exp:
+                if at.lone_pairs == 0:
                     p_layer.append('{}{}'.format(i, '(0)'))
                 else:
-                    p_layer.extend([i + 1] * at.lonePairs)
+                    p_layer.extend([i + 1] * at.lone_pairs)
 
     # extract equivalent atom pairs from E-layer of auxiliary info:
-    equivalent_atoms = _parse_E_layer(auxinfo)
+    equivalent_atoms = _parse_e_layer(auxinfo)
     if equivalent_atoms:
         # select lowest u-layer:
         p_layer = _find_lowest_p_layer(mol, p_layer, equivalent_atoms)
@@ -651,15 +651,15 @@ def create_augmented_layers(mol):
         _, auxinfo = Chem.MolToInchiAndAuxInfo(rdkitmol, options='-SNon')  # suppress stereo warnings
 
         # extract the atom numbers from N-layer of auxiliary info:
-        atom_indices = _parse_N_layer(auxinfo)
+        atom_indices = _parse_n_layer(auxinfo)
         atom_indices = [atom_indices.index(i + 1) for i, atom in enumerate(molcopy.atoms)]
 
         # sort the atoms based on the order of the atom indices
         molcopy.atoms = [x for (y, x) in sorted(zip(atom_indices, molcopy.atoms), key=lambda pair: pair[0])]
 
-        ulayer = _create_U_layer(molcopy, auxinfo)
+        ulayer = _create_u_layer(molcopy, auxinfo)
 
-        player = _create_P_layer(molcopy, auxinfo)
+        player = _create_p_layer(molcopy, auxinfo)
 
         return ulayer, player
 
@@ -680,8 +680,8 @@ def _fix_triplet_to_singlet(mol, p_indices):
     for at in mol.atoms:
         index = mol.atoms.index(at) + 1
         if mol.get_radical_count() == 2 and index in p_indices:
-            at.lonePairs += 1
-            at.radicalElectrons -= 2
+            at.lone_pairs += 1
+            at.radical_electrons -= 2
             p_indices.remove(index)
 
 
@@ -696,7 +696,7 @@ def _convert_charge_to_unpaired_electron(mol, u_indices):
         at_index = mol.atoms.index(at) + 1
         if at.charge != 0 and at_index in u_indices:
             at.charge += 1 if at.charge < 0 else -1
-            at.radicalElectrons += 1
+            at.radical_electrons += 1
             u_indices.remove(at_index)
 
 
@@ -710,10 +710,10 @@ def _convert_4_atom_3_bond_path(start):
     path = pathfinder.find_butadiene_end_with_charge(start)
 
     if path is not None:
-        start.radicalElectrons += 1
+        start.radical_electrons += 1
         end = path[-1]
         end.charge += 1 if end.charge < 0 else -1
-        end.lonePairs += 1
+        end.lone_pairs += 1
 
         # filter bonds from path and convert bond orders:
         bonds = path[1::2]  # odd
@@ -869,11 +869,11 @@ def _reset_lone_pairs(mol, p_indices):
         index = mol.atoms.index(at) + 1  # 1-based index
         count = p_indices.count(index)
         if count != 0:
-            at.lonePairs = count
+            at.lone_pairs = count
         else:
             order = at.get_total_bond_order()
-            at.lonePairs = (elements.PeriodicSystem.valence_electrons[
-                                at.symbol] - order - at.radicalElectrons - at.charge) / 2
+            at.lone_pairs = (elements.PeriodicSystem.valence_electrons[
+                                at.symbol] - order - at.radical_electrons - at.charge) / 2
 
 
 def _fix_oxygen_unsaturated_bond(mol, u_indices):
@@ -890,17 +890,17 @@ def _fix_oxygen_unsaturated_bond(mol, u_indices):
     """
 
     for at in mol.atoms:
-        if at.is_oxygen() and at.radicalElectrons == 1 and at.lonePairs == 1:
+        if at.is_oxygen() and at.radical_electrons == 1 and at.lone_pairs == 1:
             bonds = mol.get_bonds(at)
             oxygen = at
             for atom2, bond in bonds.items():
                 if bond.is_triple():
                     bond.decrement_order()
-                    oxygen.radicalElectrons -= 1
-                    atom2.radicalElectrons += 1
-                    oxygen.lonePairs += 1
+                    oxygen.radical_electrons -= 1
+                    atom2.radical_electrons += 1
+                    oxygen.lone_pairs += 1
                     return
-        elif at.is_oxygen() and at.charge == 1 and at.lonePairs == 1:
+        elif at.is_oxygen() and at.charge == 1 and at.lone_pairs == 1:
             bonds = mol.get_bonds(at)
             oxygen = at
 
@@ -911,7 +911,7 @@ def _fix_oxygen_unsaturated_bond(mol, u_indices):
                 end = path[-1]
                 start.charge += 1 if start.charge < 0 else -1
                 end.charge += 1 if end.charge < 0 else -1
-                start.lonePairs += 1
+                start.lone_pairs += 1
                 # filter bonds from path and convert bond orders:
                 bonds = path[1::2]  # odd elements
                 for bond in bonds[::2]:  # even bonds
@@ -927,9 +927,9 @@ def _fix_oxygen_unsaturated_bond(mol, u_indices):
                         oxygen.charge -= 1
                         if (mol.atoms.index(atom2) + 1) in u_indices:
                             bond.decrement_order()
-                            atom2.radicalElectrons += 1
+                            atom2.radical_electrons += 1
                             u_indices.remove(mol.atoms.index(atom2) + 1)
-                        oxygen.lonePairs += 1
+                        oxygen.lone_pairs += 1
 
 
 def _is_unsaturated(mol):
@@ -956,7 +956,7 @@ def _convert_unsaturated_bond_to_triplet(bond):
     """
     if not bond.is_single():
         for at in (bond.atom1, bond.atom2):
-            at.radicalElectrons += 1
+            at.radical_electrons += 1
         bond.decrement_order()
         return True
     return False
@@ -981,7 +981,7 @@ def _fix_mobile_h(mol, inchi, u1, u2):
     and the bond between them will decrease in order.
     """
 
-    mobile_hydrogens = _parse_H_layer(inchi)
+    mobile_hydrogens = _parse_h_layer(inchi)
 
     if mobile_hydrogens:
         # WIP: only consider the first system of mobile hydrogens:
@@ -1006,8 +1006,8 @@ def _fix_mobile_h(mol, inchi, u1, u2):
 
         mol.get_bond(central, new_partner).decrement_order()
 
-        central.radicalElectrons += 1
-        original.radicalElectrons += 1
+        central.radical_electrons += 1
+        original.radical_electrons += 1
         return True
 
     return False
@@ -1021,8 +1021,8 @@ def _fix_butadiene_path(start, end):
     """
     path = pathfinder.find_butadiene(start, end)
     if path is not None:
-        start.radicalElectrons += 1
-        end.radicalElectrons += 1
+        start.radical_electrons += 1
+        end.radical_electrons += 1
         # filter bonds from path and convert bond orders:
         bonds = path[1::2]  # odd elements
         for bond in bonds[::2]:  # even bonds
@@ -1142,12 +1142,12 @@ def fix_molecule(mol, aug_inchi):
     # ignore atoms that bear already unpaired electrons:
     for i in set(u_indices[:]):
         atom = mol.atoms[i - 1]
-        for _ in range(atom.radicalElectrons): u_indices.remove(i)
+        for _ in range(atom.radical_electrons): u_indices.remove(i)
 
         # ignore atoms that bear already lone pairs:
     for i in set(p_indices[:]):
         atom = mol.atoms[i - 1]
-        for _ in range(atom.lonePairs): p_indices.remove(i)
+        for _ in range(atom.lone_pairs): p_indices.remove(i)
 
     _fix_triplet_to_singlet(mol, p_indices)
 

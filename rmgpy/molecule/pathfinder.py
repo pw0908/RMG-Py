@@ -260,7 +260,7 @@ def find_allyl_delocalization_paths(atom1):
     cython.declare(paths=list, atom2=Atom, atom3=Atom, bond12=Bond, bond23=Bond)
 
     # No paths if atom1 is not a radical
-    if atom1.radicalElectrons <= 0:
+    if atom1.radical_electrons <= 0:
         return []
 
     paths = []
@@ -290,7 +290,7 @@ def find_lone_pair_multiple_bond_paths(atom1):
     cython.declare(paths=list, atom2=Atom, atom3=Atom, bond12=Bond, bond23=Bond)
 
     # No paths if atom1 has no lone pairs, or cannot lose them, or is a carbon atom
-    if atom1.lonePairs <= 0 or not is_atom_able_to_lose_lone_pair(atom1) or atom1.is_carbon():
+    if atom1.lone_pairs <= 0 or not is_atom_able_to_lose_lone_pair(atom1) or atom1.is_carbon():
         return []
 
     paths = []
@@ -339,16 +339,16 @@ def find_adj_lone_pair_radical_delocalization_paths(atom1):
     cython.declare(paths=list, atom2=Atom, bond12=Bond)
 
     paths = []
-    if atom1.radicalElectrons >= 1 and \
-            ((atom1.is_carbon() and atom1.lonePairs == 0)
-             or (atom1.is_nitrogen() and atom1.lonePairs in [0, 1])
-             or (atom1.is_oxygen() and atom1.lonePairs in [1, 2])
-             or (atom1.is_sulfur() and atom1.lonePairs in [0, 1, 2])):
+    if atom1.radical_electrons >= 1 and \
+            ((atom1.is_carbon() and atom1.lone_pairs == 0)
+             or (atom1.is_nitrogen() and atom1.lone_pairs in [0, 1])
+             or (atom1.is_oxygen() and atom1.lone_pairs in [1, 2])
+             or (atom1.is_sulfur() and atom1.lone_pairs in [0, 1, 2])):
         for atom2 in atom1.edges.keys():
-            if ((atom2.is_carbon() and atom2.lonePairs == 1)
-                    or (atom2.is_nitrogen() and atom2.lonePairs in [1, 2])
-                    or (atom2.is_oxygen() and atom2.lonePairs in [2, 3] and not atom1.is_oxygen())  # avoid RO[::O.] <-> R[:O.+][:::O-], see RMG-Py #1223
-                    or (atom2.is_sulfur() and atom2.lonePairs in [1, 2, 3])):
+            if ((atom2.is_carbon() and atom2.lone_pairs == 1)
+                    or (atom2.is_nitrogen() and atom2.lone_pairs in [1, 2])
+                    or (atom2.is_oxygen() and atom2.lone_pairs in [2, 3] and not atom1.is_oxygen())  # avoid RO[::O.] <-> R[:O.+][:::O-], see RMG-Py #1223
+                    or (atom2.is_sulfur() and atom2.lone_pairs in [1, 2, 3])):
                 paths.append([atom1, atom2])
     return paths
 
@@ -425,12 +425,12 @@ def find_adj_lone_pair_radical_multiple_bond_delocalization_paths(atom1):
     for atom2, bond12 in atom1.edges.items():
         # Find paths in the direction <increasing> the bond order
         # atom1 must posses at least one lone pair to loose it, atom2 must be a radical
-        if (atom2.radicalElectrons and (bond12.is_single() or bond12.is_double())
+        if (atom2.radical_electrons and (bond12.is_single() or bond12.is_double())
                 and is_atom_able_to_lose_lone_pair(atom1)):
             paths.append([atom1, atom2, bond12, 1])  # direction = 1
         # Find paths in the direction <decreasing> the bond order
         # atom1 gains a lone pair, hence cannot already have more than two lone pairs, and is also a radical
-        if (atom1.radicalElectrons and (bond12.is_double() or bond12.is_triple())
+        if (atom1.radical_electrons and (bond12.is_double() or bond12.is_triple())
                 and is_atom_able_to_gain_lone_pair(atom1)):
             paths.append([atom1, atom2, bond12, 2])  # direction = 2
     return paths
@@ -454,7 +454,7 @@ def find_N5dc_radical_delocalization_paths(atom1):
     path = []
 
     for atom2, bond12 in atom1.edges.items():
-        if atom2.radicalElectrons and bond12.is_single() and not atom2.charge and is_atom_able_to_gain_lone_pair(atom2):
+        if atom2.radical_electrons and bond12.is_single() and not atom2.charge and is_atom_able_to_gain_lone_pair(atom2):
             for atom3, bond13 in atom1.edges.items():
                 if (atom2 is not atom3 and bond13.is_single() and atom3.charge < 0
                         and is_atom_able_to_lose_lone_pair(atom3)):
@@ -469,9 +469,9 @@ def is_atom_able_to_gain_lone_pair(atom):
     Returns True if atom is N/O/S and is able to <gain> an additional lone pair, False otherwise
     We don't allow O to remain with no lone pairs
     """
-    return (((atom.is_nitrogen() or atom.is_sulfur()) and atom.lonePairs in [0, 1, 2])
-            or (atom.is_oxygen() and atom.lonePairs in [1, 2])
-            or atom.is_carbon() and atom.lonePairs == 0)
+    return (((atom.is_nitrogen() or atom.is_sulfur()) and atom.lone_pairs in [0, 1, 2])
+            or (atom.is_oxygen() and atom.lone_pairs in [1, 2])
+            or atom.is_carbon() and atom.lone_pairs == 0)
 
 
 def is_atom_able_to_lose_lone_pair(atom):
@@ -480,6 +480,6 @@ def is_atom_able_to_lose_lone_pair(atom):
     Returns True if atom is N/O/S and is able to <loose> a lone pair, False otherwise
     We don't allow O to remain with no lone pairs
     """
-    return (((atom.is_nitrogen() or atom.is_sulfur()) and atom.lonePairs in [1, 2, 3])
-            or (atom.is_oxygen() and atom.lonePairs in [2, 3])
-            or atom.is_carbon() and atom.lonePairs == 1)
+    return (((atom.is_nitrogen() or atom.is_sulfur()) and atom.lone_pairs in [1, 2, 3])
+            or (atom.is_oxygen() and atom.lone_pairs in [2, 3])
+            or atom.is_carbon() and atom.lone_pairs == 1)

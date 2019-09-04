@@ -73,9 +73,9 @@ def to_rdkit_mol(mol, remove_h=True, return_mapping=False, sanitize=True):
             rd_atom = Chem.rdchem.Atom(atom.element.symbol)
         if atom.element.isotope != -1:
             rd_atom.SetIsotope(atom.element.isotope)
-        rd_atom.SetNumRadicalElectrons(atom.radicalElectrons)
+        rd_atom.SetNumRadicalElectrons(atom.radical_electrons)
         rd_atom.SetFormalCharge(atom.charge)
-        if atom.element.symbol == 'C' and atom.lonePairs == 1 and mol.multiplicity == 1: rd_atom.SetNumRadicalElectrons(
+        if atom.element.symbol == 'C' and atom.lone_pairs == 1 and mol.multiplicity == 1: rd_atom.SetNumRadicalElectrons(
             2)
         rdkitmol.AddAtom(rd_atom)
         if remove_h and atom.symbol == 'H':
@@ -116,9 +116,9 @@ def from_rdkit_mol(mol, rdkitmol):
     This Kekulizes everything, removing all aromatic atom types.
     """
     cython.declare(i=cython.int,
-                   radicalElectrons=cython.int,
+                   radical_electrons=cython.int,
                    charge=cython.int,
-                   lonePairs=cython.int,
+                   lone_pairs=cython.int,
                    number=cython.int,
                    order=cython.float,
                    atom=mm.Atom,
@@ -279,9 +279,9 @@ def from_ob_mol(mol, obmol):
         # Process charge
         charge = obatom.GetFormalCharge()
         obatom_multiplicity = obatom.GetSpinMultiplicity()
-        radicalElectrons = obatom_multiplicity - 1 if obatom_multiplicity != 0 else 0
+        radical_electrons = obatom_multiplicity - 1 if obatom_multiplicity != 0 else 0
 
-        atom = mm.Atom(element, radicalElectrons, charge, '', 0)
+        atom = mm.Atom(element, radical_electrons, charge, '', 0)
         mol.vertices.append(atom)
 
     # iterate through bonds in obmol

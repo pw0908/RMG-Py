@@ -257,7 +257,7 @@ class TestAtom(unittest.TestCase):
             atom = atom0.copy()
             atom.apply_action(action)
             self.assertEqual(atom0.element, atom.element)
-            self.assertEqual(atom0.radical_electrons, atom.radicalElectrons)
+            self.assertEqual(atom0.radical_electrons, atom.radical_electrons)
             self.assertEqual(atom0.charge, atom.charge)
             self.assertEqual(atom0.label, atom.label)
 
@@ -271,7 +271,7 @@ class TestAtom(unittest.TestCase):
             atom = atom0.copy()
             atom.apply_action(action)
             self.assertEqual(atom0.element, atom.element)
-            self.assertEqual(atom0.radical_electrons, atom.radicalElectrons)
+            self.assertEqual(atom0.radical_electrons, atom.radical_electrons)
             self.assertEqual(atom0.charge, atom.charge)
             self.assertEqual(atom0.label, atom.label)
 
@@ -285,7 +285,7 @@ class TestAtom(unittest.TestCase):
             atom = atom0.copy()
             atom.apply_action(action)
             self.assertEqual(atom0.element, atom.element)
-            self.assertEqual(atom0.radical_electrons, atom.radicalElectrons)
+            self.assertEqual(atom0.radical_electrons, atom.radical_electrons)
             self.assertEqual(atom0.charge, atom.charge)
             self.assertEqual(atom0.label, atom.label)
 
@@ -299,7 +299,7 @@ class TestAtom(unittest.TestCase):
             atom = atom0.copy()
             atom.apply_action(action)
             self.assertEqual(atom0.element, atom.element)
-            self.assertEqual(atom0.radical_electrons, atom.radicalElectrons)
+            self.assertEqual(atom0.radical_electrons, atom.radical_electrons)
             self.assertEqual(atom0.charge, atom.charge)
             self.assertEqual(atom0.label, atom.label)
 
@@ -313,7 +313,7 @@ class TestAtom(unittest.TestCase):
             atom = atom0.copy()
             atom.apply_action(action)
             self.assertEqual(atom0.element, atom.element)
-            self.assertEqual(atom0.radical_electrons, atom.radicalElectrons - 1)
+            self.assertEqual(atom0.radical_electrons, atom.radical_electrons - 1)
             self.assertEqual(atom0.charge, atom.charge)
             self.assertEqual(atom0.label, atom.label)
 
@@ -327,7 +327,7 @@ class TestAtom(unittest.TestCase):
             atom = atom0.copy()
             atom.apply_action(action)
             self.assertEqual(atom0.element, atom.element)
-            self.assertEqual(atom0.radical_electrons, atom.radicalElectrons + 1)
+            self.assertEqual(atom0.radical_electrons, atom.radical_electrons + 1)
             self.assertEqual(atom0.charge, atom.charge)
             self.assertEqual(atom0.label, atom.label)
 
@@ -365,8 +365,8 @@ class TestAtom(unittest.TestCase):
         """
         atom = self.atom.copy()
         self.assertEqual(self.atom.element.symbol, atom.element.symbol)
-        self.assertEqual(self.atom.atomtype, atom.atomType)
-        self.assertEqual(self.atom.radical_electrons, atom.radicalElectrons)
+        self.assertEqual(self.atom.atomtype, atom.atomtype)
+        self.assertEqual(self.atom.radical_electrons, atom.radical_electrons)
         self.assertEqual(self.atom.charge, atom.charge)
         self.assertEqual(self.atom.label, atom.label)
 
@@ -378,8 +378,8 @@ class TestAtom(unittest.TestCase):
         import pickle
         atom = pickle.loads(pickle.dumps(self.atom))
         self.assertEqual(self.atom.element.symbol, atom.element.symbol)
-        self.assertEqual(self.atom.atomtype, atom.atomType)
-        self.assertEqual(self.atom.radical_electrons, atom.radicalElectrons)
+        self.assertEqual(self.atom.atomtype, atom.atomtype)
+        self.assertEqual(self.atom.radical_electrons, atom.radical_electrons)
         self.assertEqual(self.atom.charge, atom.charge)
         self.assertEqual(self.atom.label, atom.label)
 
@@ -785,23 +785,23 @@ class TestBond(unittest.TestCase):
         mol_ch2_s.update_lone_pairs()
         mol_carbonyl.update_lone_pairs()
 
-        self.assertEqual(mol_n1sc_n5t.atoms[0].lonePairs, 0)
-        self.assertEqual(mol_n1sc_n5t.atoms[2].lonePairs, 3)
-        self.assertEqual(mol_n1s.atoms[0].lonePairs, 2)
-        self.assertEqual(mol_n3s.atoms[0].lonePairs, 1)
-        self.assertEqual(mol_n3b.atoms[0].lonePairs, 1)
-        self.assertEqual(mol_n5s.atoms[0].lonePairs, 0)
-        self.assertEqual(mol_n5s.atoms[3].lonePairs, 3)
-        self.assertEqual(mol_n5d.atoms[0].lonePairs, 0)
-        self.assertEqual(mol_n5d.atoms[1].lonePairs, 2)
-        self.assertEqual(mol_n5d.atoms[2].lonePairs, 2)
-        self.assertEqual(mol_n5d.atoms[3].lonePairs, 3)
-        self.assertEqual(mol_n5dd.atoms[0].lonePairs, 2)
-        self.assertEqual(mol_n5dd.atoms[1].lonePairs, 0)
-        self.assertEqual(mol_n5dd.atoms[2].lonePairs, 2)
-        self.assertEqual(mol_ch2_s.atoms[0].lonePairs, 1)
-        self.assertEqual(mol_carbonyl.atoms[0].lonePairs, 2)
-        self.assertEqual(mol_carbonyl.atoms[1].lonePairs, 0)
+        self.assertEqual(mol_n1sc_n5t.atoms[0].lone_pairs, 0)
+        self.assertEqual(mol_n1sc_n5t.atoms[2].lone_pairs, 3)
+        self.assertEqual(mol_n1s.atoms[0].lone_pairs, 2)
+        self.assertEqual(mol_n3s.atoms[0].lone_pairs, 1)
+        self.assertEqual(mol_n3b.atoms[0].lone_pairs, 1)
+        self.assertEqual(mol_n5s.atoms[0].lone_pairs, 0)
+        self.assertEqual(mol_n5s.atoms[3].lone_pairs, 3)
+        self.assertEqual(mol_n5d.atoms[0].lone_pairs, 0)
+        self.assertEqual(mol_n5d.atoms[1].lone_pairs, 2)
+        self.assertEqual(mol_n5d.atoms[2].lone_pairs, 2)
+        self.assertEqual(mol_n5d.atoms[3].lone_pairs, 3)
+        self.assertEqual(mol_n5dd.atoms[0].lone_pairs, 2)
+        self.assertEqual(mol_n5dd.atoms[1].lone_pairs, 0)
+        self.assertEqual(mol_n5dd.atoms[2].lone_pairs, 2)
+        self.assertEqual(mol_ch2_s.atoms[0].lone_pairs, 1)
+        self.assertEqual(mol_carbonyl.atoms[0].lone_pairs, 2)
+        self.assertEqual(mol_carbonyl.atoms[1].lone_pairs, 0)
 
     def test_get_bond_string(self):
         """Test that bond objects can return a bond string"""
@@ -945,9 +945,9 @@ class TestMolecule(unittest.TestCase):
         Test the Molecule.get_radical_count() method.
         """
         self.assertEqual(self.molecule[0].get_radical_count(),
-                         sum([atom.radicalElectrons for atom in self.molecule[0].atoms]))
+                         sum([atom.radical_electrons for atom in self.molecule[0].atoms]))
         self.assertEqual(self.molecule[1].get_radical_count(),
-                         sum([atom.radicalElectrons for atom in self.molecule[1].atoms]))
+                         sum([atom.radical_electrons for atom in self.molecule[1].atoms]))
 
     def testGetMolecularWeight(self):
         """
@@ -980,22 +980,22 @@ class TestMolecule(unittest.TestCase):
 
         self.assertTrue(atom1.label == '*1')
         self.assertTrue(atom1.element.symbol == 'C')
-        self.assertTrue(atom1.radicalElectrons == 1)
+        self.assertTrue(atom1.radical_electrons == 1)
         self.assertTrue(atom1.charge == 0)
 
         self.assertTrue(atom2.label == '*2')
         self.assertTrue(atom2.element.symbol == 'N')
-        self.assertTrue(atom2.radicalElectrons == 0)
+        self.assertTrue(atom2.radical_electrons == 0)
         self.assertTrue(atom2.charge == 1)
 
         self.assertTrue(atom3.label == '')
         self.assertTrue(atom3.element.symbol == 'O')
-        self.assertTrue(atom3.radicalElectrons == 0)
+        self.assertTrue(atom3.radical_electrons == 0)
         self.assertTrue(atom3.charge == -1)
 
         self.assertTrue(atom4.label == '')
         self.assertTrue(atom4.element.symbol == 'O')
-        self.assertTrue(atom4.radicalElectrons == 0)
+        self.assertTrue(atom4.radical_electrons == 0)
         self.assertTrue(atom4.charge == 0)
 
         self.assertTrue(bond21.is_single())
@@ -1021,22 +1021,22 @@ class TestMolecule(unittest.TestCase):
 
         self.assertTrue(atom1.label == '*1')
         self.assertTrue(atom1.element.symbol == 'C')
-        self.assertTrue(atom1.radicalElectrons == 1)
+        self.assertTrue(atom1.radical_electrons == 1)
         self.assertTrue(atom1.charge == 0)
 
         self.assertTrue(atom2.label == '*2')
         self.assertTrue(atom2.element.symbol == 'N')
-        self.assertTrue(atom2.radicalElectrons == 0)
+        self.assertTrue(atom2.radical_electrons == 0)
         self.assertTrue(atom2.charge == 1)
 
         self.assertTrue(atom3.label == '')
         self.assertTrue(atom3.element.symbol == 'O')
-        self.assertTrue(atom3.radicalElectrons == 0)
+        self.assertTrue(atom3.radical_electrons == 0)
         self.assertTrue(atom3.charge == -1)
 
         self.assertTrue(atom4.label == '')
         self.assertTrue(atom4.element.symbol == 'O')
-        self.assertTrue(atom4.radicalElectrons == 0)
+        self.assertTrue(atom4.radical_electrons == 0)
         self.assertTrue(atom4.charge == 0)
 
         self.assertTrue(bond21.is_single())
@@ -1354,7 +1354,7 @@ multiplicity 2
         molecule = Molecule()
         molecule.from_smiles('C(CC1C(C(CCCCCCCC)C1c1ccccc1)c1ccccc1)CCCCCC')
         # http://cactus.nci.nih.gov/chemical/structure/C(CC1C(C(CCCCCCCC)C1c1ccccc1)c1ccccc1)CCCCCC/image
-        sssr = molecule.getSmallestSetOfSmallestRings()
+        sssr = molecule.get_smallest_set_of_smallest_rings()
         self.assertEqual(len(sssr), 3)
 
     def testIsInCycleEthane(self):
@@ -1394,7 +1394,7 @@ multiplicity 2
         self.assertEqual(len(molecule.atoms), 1)
         h = molecule.atoms[0]
         self.assertTrue(h.is_hydrogen())
-        self.assertEqual(h.radicalElectrons, 1)
+        self.assertEqual(h.radical_electrons, 1)
 
     def testFromInChIH(self):
         """
@@ -1405,7 +1405,7 @@ multiplicity 2
         self.assertEqual(len(molecule.atoms), 1)
         h = molecule.atoms[0]
         self.assertTrue(h.is_hydrogen())
-        self.assertEqual(h.radicalElectrons, 1)
+        self.assertEqual(h.radical_electrons, 1)
 
     def testPickle(self):
         """
@@ -1427,7 +1427,7 @@ multiplicity 2
         Test that the species [CH] has one radical electrons and a spin multiplicity of 2.
         """
         molecule = Molecule().from_smiles('[CH]')
-        self.assertEqual(molecule.atoms[0].radicalElectrons, 1)
+        self.assertEqual(molecule.atoms[0].radical_electrons, 1)
         self.assertEqual(molecule.multiplicity, 2)
         self.assertEqual(molecule.get_radical_count(), 1)
 
@@ -1436,7 +1436,7 @@ multiplicity 2
         Test that the species [CH2] has two radical electrons and a spin multiplicity of 3.
         """
         molecule = Molecule().from_smiles('[CH2]')
-        self.assertEqual(molecule.atoms[0].radicalElectrons, 2)
+        self.assertEqual(molecule.atoms[0].radical_electrons, 2)
         self.assertEqual(molecule.multiplicity, 3)
         self.assertEqual(molecule.get_radical_count(), 2)
 
@@ -1902,7 +1902,7 @@ multiplicity 2
         mol.update_lone_pairs()
         lp = 0
         for atom in mol.atoms:
-            lp += atom.lonePairs
+            lp += atom.lone_pairs
         self.assertEqual(lp, 1)
 
     def testLargeMolUpdate(self):
@@ -2022,26 +2022,26 @@ multiplicity 2
         """
         # norbornane
         m1 = Molecule(smiles='C1CC2CCC1C2')
-        polyrings1 = m1.getPolycyclicRings()
+        polyrings1 = m1.get_polycycles()
         self.assertEqual(len(polyrings1), 1)
         ring = polyrings1[0]
         self.assertEqual(len(ring), 7)  # 7 carbons in cycle
 
         # dibenzyl
         m2 = Molecule(smiles='C1=CC=C(C=C1)CCC1C=CC=CC=1')
-        polyrings2 = m2.getPolycyclicRings()
+        polyrings2 = m2.get_polycycles()
         self.assertEqual(len(polyrings2), 0)
 
         # spiro[2.5]octane
         m3 = Molecule(smiles='C1CCC2(CC1)CC2')
-        polyrings3 = m3.getPolycyclicRings()
+        polyrings3 = m3.get_polycycles()
         self.assertEqual(len(polyrings3), 1)
         ring = polyrings3[0]
         self.assertEqual(len(ring), 8)
 
         # 1-phenyl norbornane
         m4 = Molecule(smiles='C1=CC=C(C=C1)C12CCC(CC1)C2')
-        polyrings4 = m4.getPolycyclicRings()
+        polyrings4 = m4.get_polycycles()
         self.assertEqual(len(polyrings4), 1)
         ring = polyrings4[0]
         self.assertEqual(len(ring), 7)
@@ -2052,16 +2052,16 @@ multiplicity 2
         `Graph().get_monocycles()`
         """
         m1 = Molecule(smiles='C(CCCC1CCCCC1)CCCC1CCCC1')
-        monorings = m1.getMonocyclicRings()
+        monorings = m1.get_monocycles()
         self.assertEqual(len(monorings), 2)
 
         m2 = Molecule(smiles='C(CCC1C2CCC1CC2)CC1CCC1')
-        monorings = m2.getMonocyclicRings()
+        monorings = m2.get_monocycles()
         self.assertEqual(len(monorings), 1)
         self.assertEqual(len(monorings[0]), 4)
 
         m3 = Molecule(smiles='CCCCC')
-        monorings = m3.getMonocyclicRings()
+        monorings = m3.get_monocycles()
         self.assertEqual(len(monorings), 0)
 
     def testGetDisparateRings(self):
@@ -2072,14 +2072,14 @@ multiplicity 2
 
         # norbornane
         m1 = Molecule(smiles='C1CC2CCC1C2')
-        monorings, polyrings = m1.getDisparateRings()
+        monorings, polyrings = m1.get_disparate_cycles()
         self.assertEqual(len(monorings), 0)
         self.assertEqual(len(polyrings), 1)
         self.assertEqual(len(polyrings[0]), 7)  # 7 carbons in cycle
 
         # norbornane + cyclobutane on chain
         m2 = Molecule(smiles='C(CCC1C2CCC1CC2)CC1CCC1')
-        monorings, polyrings = m2.getDisparateRings()
+        monorings, polyrings = m2.get_disparate_cycles()
         self.assertEqual(len(monorings), 1)
         self.assertEqual(len(polyrings), 1)
         self.assertEqual(len(monorings[0]), 4)
@@ -2087,7 +2087,7 @@ multiplicity 2
 
         # spiro-octane + cyclobutane on chain
         m3 = Molecule(smiles='C1CCC2(CC1)CC2CCCCC1CCC1')
-        monorings, polyrings = m3.getDisparateRings()
+        monorings, polyrings = m3.get_disparate_cycles()
         self.assertEqual(len(polyrings), 1)
         self.assertEqual(len(monorings), 1)
         self.assertEqual(len(monorings[0]), 4)
@@ -2095,26 +2095,26 @@ multiplicity 2
 
         # butane
         m4 = Molecule(smiles='CCCC')
-        monorings, polyrings = m4.getDisparateRings()
+        monorings, polyrings = m4.get_disparate_cycles()
         self.assertEqual(len(monorings), 0)
         self.assertEqual(len(polyrings), 0)
 
         # benzene + cyclopropane on chain + cyclopropane on chain
         m5 = Molecule(smiles='C1=CC=C(CCCC2CC2)C(=C1)CCCCCC1CC1')
-        monorings, polyrings = m5.getDisparateRings()
+        monorings, polyrings = m5.get_disparate_cycles()
         self.assertEqual(len(monorings), 3)
         self.assertEqual(len(polyrings), 0)
 
         # octacene
         m6 = Molecule(smiles='c1ccc2cc3cc4cc5cc6cc7cc8ccccc8cc7cc6cc5cc4cc3cc2c1')
-        monorings, polyrings = m6.getDisparateRings()
+        monorings, polyrings = m6.get_disparate_cycles()
         self.assertEqual(len(monorings), 0)
         self.assertEqual(len(polyrings), 1)
         self.assertEqual(len(polyrings[0]), 34)
 
         # JP-10
         m7 = Molecule(smiles='C1CC2C3CCC(C3)C2C1')
-        monorings, polyrings = m7.getDisparateRings()
+        monorings, polyrings = m7.get_disparate_cycles()
         self.assertEqual(len(monorings), 0)
         self.assertEqual(len(polyrings), 1)
         self.assertEqual(len(polyrings[0]), 10)
@@ -2126,31 +2126,31 @@ multiplicity 2
         """
 
         m1 = Molecule(smiles='C12CCC1C3CC2CC3')
-        sssr1 = m1.getSmallestSetOfSmallestRings()
+        sssr1 = m1.get_smallest_set_of_smallest_rings()
         sssr1_sizes = sorted([len(ring) for ring in sssr1])
         sssr1_sizes_expected = [4, 5, 5]
         self.assertEqual(sssr1_sizes, sssr1_sizes_expected)
 
         m2 = Molecule(smiles='C1(CC2)C(CC3)CC3C2C1')
-        sssr2 = m2.getSmallestSetOfSmallestRings()
+        sssr2 = m2.get_smallest_set_of_smallest_rings()
         sssr2_sizes = sorted([len(ring) for ring in sssr2])
         sssr2_sizes_expected = [5, 5, 6]
         self.assertEqual(sssr2_sizes, sssr2_sizes_expected)
 
         m3 = Molecule(smiles='C1(CC2)C2C(CCCC3)C3C1')
-        sssr3 = m3.getSmallestSetOfSmallestRings()
+        sssr3 = m3.get_smallest_set_of_smallest_rings()
         sssr3_sizes = sorted([len(ring) for ring in sssr3])
         sssr3_sizes_expected = [4, 5, 6]
         self.assertEqual(sssr3_sizes, sssr3_sizes_expected)
 
         m4 = Molecule(smiles='C12=CC=CC=C1C3=C2C=CC=C3')
-        sssr4 = m4.getSmallestSetOfSmallestRings()
+        sssr4 = m4.get_smallest_set_of_smallest_rings()
         sssr4_sizes = sorted([len(ring) for ring in sssr4])
         sssr4_sizes_expected = [4, 6, 6]
         self.assertEqual(sssr4_sizes, sssr4_sizes_expected)
 
         m5 = Molecule(smiles='C12=CC=CC=C1CC3=C(C=CC=C3)C2')
-        sssr5 = m5.getSmallestSetOfSmallestRings()
+        sssr5 = m5.get_smallest_set_of_smallest_rings()
         sssr5_sizes = sorted([len(ring) for ring in sssr5])
         sssr5_sizes_expected = [6, 6, 6]
         self.assertEqual(sssr5_sizes, sssr5_sizes_expected)
@@ -2262,7 +2262,7 @@ multiplicity 2
 
         for i, molAt in enumerate(mol.atoms):
             group_atom = group.atoms[i]
-            atom_types = [groupAtomType.equivalent(molAt.atomType) for groupAtomType in group_atom.atomType]
+            atom_types = [groupAtomType.equivalent(molAt.atomtype) for groupAtomType in group_atom.atomtype]
             self.assertTrue(any(atom_types))
 
     def testToAdjacencyListWithIsotopes(self):

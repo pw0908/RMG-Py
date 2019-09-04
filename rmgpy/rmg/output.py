@@ -496,7 +496,7 @@ $(document).ready(function() {
 </tr>
 <tr class="chemkin {{ rxn.get_source()|csssafe }} hide_chemkin">
     <td></td>
-    <td colspan="4">{{ rxn.toChemkin(species) }}</td>
+    <td colspan="4">{{ rxn.to_chemkin(species) }}</td>
 </tr>
 </tbody>
 {% endfor %}
@@ -1175,7 +1175,7 @@ $(document).ready(function() {
      <td class="family" width=40%>{{ rxn2.get_source() }}</td>
  </tr>
 
-<tr "width=100%" class="kinetics">{% if not rxn1.is_isomorphic(rxn2, eitherDirection=False) %} 
+<tr "width=100%" class="kinetics">{% if not rxn1.is_isomorphic(rxn2, either_direction=False) %} 
 <td colspan="2" width=50%></td>
 <td colspan="2" width=50%>* Reaction was found in reverse 
 
@@ -1217,8 +1217,8 @@ $(document).ready(function() {
 </tr>
 
 <tr width=100% class="chemkin">
-    <td colspan="2" valign="top" width=50%><font size="1pt" face="courier">{{ rxn1.toChemkin(speciesList) }}</font></td>
-    <td colspan="2" valign="top" width=50%><font size="1pt" face="courier">{{ rxn2.toChemkin(speciesList) }}</font></td>
+    <td colspan="2" valign="top" width=50%><font size="1pt" face="courier">{{ rxn1.to_chemkin(speciesList) }}</font></td>
+    <td colspan="2" valign="top" width=50%><font size="1pt" face="courier">{{ rxn2.to_chemkin(speciesList) }}</font></td>
 </tr>
 
 
@@ -1257,7 +1257,7 @@ $(document).ready(function() {
 
     <tr class="chemkin {{ rxn.get_source()|csssafe }}">
         <td></td>
-        <td colspan="4">{{ rxn.toChemkin(species) }}</td>
+        <td colspan="4">{{ rxn.to_chemkin(species) }}</td>
     </tr>
     {% endfor %}
     </table>
@@ -1290,7 +1290,7 @@ $(document).ready(function() {
 </tr>
     <tr class="chemkin {{ rxn.get_source()|csssafe }}">
         <td></td>
-        <td colspan="4">{{ rxn.toChemkin(species) }}</td>
+        <td colspan="4">{{ rxn.to_chemkin(species) }}</td>
     </tr>
     {% endfor %}
     </table>

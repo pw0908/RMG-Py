@@ -192,7 +192,7 @@ class Arkane(object):
             # write each species in species block
             for job in self.jobList:
                 if isinstance(job, ThermoJob):
-                    f.write(job.species.toChemkin())
+                    f.write(job.species.to_chemkin())
                     f.write('\n')
 
             f.write('\nEND\n\n\n\n')

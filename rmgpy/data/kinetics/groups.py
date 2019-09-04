@@ -146,7 +146,7 @@ class KineticsGroups(Database):
                 else:
                     r = deepcopy(react)
 
-            atoms = r.getLabeledAtoms()
+            atoms = r.get_all_labeled_atoms()
 
             matched_node = self.descend_tree(r, atoms, root=entry, strict=True)
 
@@ -161,7 +161,7 @@ class KineticsGroups(Database):
                 # Identify the atom labels in a group if it is not a logical node
                 atom_list = []
                 if not isinstance(entry.item, LogicNode):
-                    atom_list = group.getLabeledAtoms()
+                    atom_list = group.get_all_labeled_atoms()
 
                 for reactant in reaction.reactants:
                     if isinstance(reactant, Species):
@@ -401,9 +401,9 @@ class KineticsGroups(Database):
             for template, kinetics in training_set:
 
                 if isinstance(kinetics, (Arrhenius, KineticsData)):
-                    kd = [kinetics.getRateCoefficient(T) for T in Tdata]
+                    kd = [kinetics.get_rate_coefficient(T) for T in Tdata]
                 elif isinstance(kinetics, ArrheniusEP):
-                    kd = [kinetics.getRateCoefficient(T, 0) for T in Tdata]
+                    kd = [kinetics.get_rate_coefficient(T, 0) for T in Tdata]
                 else:
                     raise TypeError('Unexpected kinetics model of type {0} for template '
                                     '{1}.'.format(kinetics.__class__, template))
@@ -505,9 +505,9 @@ class KineticsGroups(Database):
             for template, kinetics in training_set:
 
                 if isinstance(kinetics, (Arrhenius, KineticsData)):
-                    kd = [kinetics.getRateCoefficient(T) for T in Tdata]
+                    kd = [kinetics.get_rate_coefficient(T) for T in Tdata]
                 elif isinstance(kinetics, ArrheniusEP):
-                    kd = [kinetics.getRateCoefficient(T, 0) for T in Tdata]
+                    kd = [kinetics.get_rate_coefficient(T, 0) for T in Tdata]
                 else:
                     raise TypeError('Unexpected kinetics model of type {0} for template '
                                     '{1}.'.format(kinetics.__class__, template))

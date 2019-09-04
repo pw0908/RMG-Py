@@ -43,7 +43,7 @@ import yaml
 import rmgpy.constants as constants
 from rmgpy import __version__
 from rmgpy.molecule.element import element_list, get_element
-from rmgpy.molecule.translator import toInChI, toInChIKey
+from rmgpy.molecule.translator import to_inchi, to_inchi_key
 from rmgpy.pdep.collision import SingleExponentialDown
 from rmgpy.quantity import ScalarQuantity, ArrayQuantity
 from rmgpy.rmgobject import RMGObject
@@ -158,11 +158,11 @@ class ArkaneSpecies(RMGObject):
             self.smiles = species.molecule[0].to_smiles()
             self.adjacency_list = species.molecule[0].to_adjacency_list()
             try:
-                inchi = toInChI(species.molecule[0], backend='try-all', aug_level=0)
+                inchi = to_inchi(species.molecule[0], backend='try-all', aug_level=0)
             except ValueError:
                 inchi = ''
             try:
-                inchi_key = toInChIKey(species.molecule[0], backend='try-all', aug_level=0)
+                inchi_key = to_inchi_key(species.molecule[0], backend='try-all', aug_level=0)
             except ValueError:
                 inchi_key = ''
             self.inchi = inchi
@@ -171,15 +171,15 @@ class ArkaneSpecies(RMGObject):
                 self.conformer = species.conformer
                 self.xyz = self.update_xyz_string()
             self.molecular_weight = species.molecularWeight
-            if species.symmetryNumber != -1:
-                self.symmetry_number = species.symmetryNumber
+            if species.symmetry_number != -1:
+                self.symmetry_number = species.symmetry_number
             if species.transportData is not None:
                 self.transport_data = species.transportData  # called `collisionModel` in Arkane
             if species.energyTransferModel is not None:
                 self.energy_transfer_model = species.energyTransferModel
             if species.thermo is not None:
                 self.thermo = species.thermo.as_dict()
-                data = species.getThermoData()
+                data = species.get_thermo_data()
                 h298 = data.getEnthalpy(298) / 4184.
                 s298 = data.getEntropy(298) / 4.184
                 temperatures = np.array([300, 400, 500, 600, 800, 1000, 1500, 2000, 2400])
@@ -284,7 +284,7 @@ class ArkaneSpecies(RMGObject):
             if 'smiles' in data:
                 data['species'] = Species(SMILES=data['smiles'])
             elif 'adjacency_list' in data:
-                data['species'] = Species().fromAdjacencyList(data['adjacency_list'])
+                data['species'] = Species().from_adjacency_list(data['adjacency_list'])
             elif 'inchi' in data:
                 data['species'] = Species(InChI=data['inchi'])
             else:

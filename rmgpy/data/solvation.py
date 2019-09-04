@@ -62,7 +62,7 @@ def save_entry(f, entry):
         else:
             f.write('    molecule = \n')
             f.write('"""\n')
-            f.write(entry.item.toAdjacencyList(removeH=False))
+            f.write(entry.item.to_adjacency_list(remove_h=False))
             f.write('""",\n')
     elif isinstance(entry.item, Group):
         f.write('    group = \n')
@@ -345,11 +345,11 @@ class SoluteLibrary(Database):
                    longDesc='',
                    ):
         try:
-            spc = Species().fromSMILES(molecule)
+            spc = Species().from_smiles(molecule)
         except:
             logging.debug("Solute '{0}' does not have a valid SMILES '{1}'".format(label, molecule))
             try:
-                spc = Species().fromAdjacencyList(molecule)
+                spc = Species().from_adjacency_list(molecule)
             except:
                 logging.error("Can't understand '{0}' in solute library '{1}'".format(molecule, self.name))
                 raise
@@ -732,32 +732,32 @@ class SolvationDatabase(object):
 
         for atom in saturated_struct.atoms:
             added_to_pairs[atom] = 0
-            if atom.lonePairs > 0:
+            if atom.lone_pairs > 0:
                 charge = atom.charge  # Record this so we can conserve it when checking
                 bonds = saturated_struct.get_bonds(atom)
                 sum_bond_orders = 0
                 for key, bond in bonds.items():
                     sum_bond_orders += bond.order  # We should always have 2 'B' bonds (but what about Cbf?)
-                if ATOMTYPES['Val4'] in atom.atomType.generic:  # Carbon, Silicon
-                    while atom.radicalElectrons + charge + sum_bond_orders < 4:
+                if ATOMTYPES['Val4'] in atom.atomtype.generic:  # Carbon, Silicon
+                    while atom.radical_electrons + charge + sum_bond_orders < 4:
                         atom.decrement_lone_pairs()
                         atom.increment_radical()
                         atom.increment_radical()
                         added_to_pairs[atom] += 1
-                if ATOMTYPES['Val5'] in atom.atomType.generic:  # Nitrogen
-                    while atom.radicalElectrons + charge + sum_bond_orders < 3:
+                if ATOMTYPES['Val5'] in atom.atomtype.generic:  # Nitrogen
+                    while atom.radical_electrons + charge + sum_bond_orders < 3:
                         atom.decrement_lone_pairs()
                         atom.increment_radical()
                         atom.increment_radical()
                         added_to_pairs[atom] += 1
-                if ATOMTYPES['Val6'] in atom.atomType.generic:  # Oxygen, sulfur
-                    while atom.radicalElectrons + charge + sum_bond_orders < 2:
+                if ATOMTYPES['Val6'] in atom.atomtype.generic:  # Oxygen, sulfur
+                    while atom.radical_electrons + charge + sum_bond_orders < 2:
                         atom.decrement_lone_pairs()
                         atom.increment_radical()
                         atom.increment_radical()
                         added_to_pairs[atom] += 1
-                if ATOMTYPES['Val7'] in atom.atomType.generic:  # Chlorine
-                    while atom.radicalElectrons + charge + sum_bond_orders < 1:
+                if ATOMTYPES['Val7'] in atom.atomtype.generic:  # Chlorine
+                    while atom.radical_electrons + charge + sum_bond_orders < 1:
                         atom.decrement_lone_pairs()
                         atom.increment_radical()
                         atom.increment_radical()
@@ -788,8 +788,8 @@ class SolvationDatabase(object):
         # Update Abraham 'A' H-bonding parameter for unsaturated struct
         for atom in saturated_struct.atoms:
             # Iterate over heavy (non-hydrogen) atoms
-            if atom.is_non_hydrogen() and atom.radicalElectrons > 0:
-                for electron in range(1, atom.radicalElectrons):
+            if atom.is_non_hydrogen() and atom.radical_electrons > 0:
+                for electron in range(1, atom.radical_electrons):
                     # Get solute data for radical group    
                     try:
                         self._add_group_solute_data(solute_data, self.groups['radical'], saturated_struct, {'*': atom})
@@ -826,12 +826,12 @@ class SolvationDatabase(object):
         # Convert lone pairs to radicals, then saturate with H.
 
         # Change lone pairs to radicals based on valency
-        if (sum([atom.lonePairs for atom in saturated_struct.atoms]) > 0 and  # molecule contains lone pairs
-                not any([atom.atomType.label == 'C2tc' for atom in saturated_struct.atoms])):  # and is not [C-]#[O+]
+        if (sum([atom.lone_pairs for atom in saturated_struct.atoms]) > 0 and  # molecule contains lone pairs
+                not any([atom.atomtype.label == 'C2tc' for atom in saturated_struct.atoms])):  # and is not [C-]#[O+]
             saturated_struct, added_to_pairs = self.transform_lone_pairs(saturated_struct)
 
         # Now saturate radicals with H
-        if sum([atom.radicalElectrons for atom in saturated_struct.atoms]) > 0:  # radical species
+        if sum([atom.radical_electrons for atom in saturated_struct.atoms]) > 0:  # radical species
             added_to_radicals = saturated_struct.saturate_radicals()
 
         # Saturated structure should now have no unpaired electrons, and only "expected" lone pairs

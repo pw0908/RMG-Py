@@ -1760,7 +1760,7 @@ class KineticsFamily(Database):
                     self.forbidden = temp_object
                 if (len(reactions) == 1 or
                         (len(reactions) > 1 and
-                         all([reactions[0].is_isomorphic(other, checkTemplateRxnProducts=True)
+                         all([reactions[0].is_isomorphic(other, check_template_rxn_products=True)
                               for other in reactions]))):
                     logging.error("Error was fixed, the product is a forbidden structure when used as a reactant "
                                   "in the reverse direction.")
@@ -1773,7 +1773,7 @@ class KineticsFamily(Database):
                     raise KineticsError("Did not find reverse reaction in reaction family {0} for reaction "
                                         "{1}.".format(self.label, str(rxn)))
             elif (len(reactions) > 1 and
-                    not all([reactions[0].is_isomorphic(other, strict=False, checkTemplateRxnProducts=True)
+                    not all([reactions[0].is_isomorphic(other, strict=False, check_template_rxn_products=True)
                              for other in reactions])):
                 logging.error("Expecting one matching reverse reaction. Recieved {0} reactions with "
                               "multiple non-isomorphic ones in reaction family {1} for "
@@ -2460,7 +2460,7 @@ class KineticsFamily(Database):
         for entry in entries:
             if entry.item.is_isomorphic(reaction):
                 kinetics_list.append(
-                    [deepcopy(entry.data), entry, entry.item.is_isomorphic(reaction, eitherDirection=False)])
+                    [deepcopy(entry.data), entry, entry.item.is_isomorphic(reaction, either_direction=False)])
         for kinetics, entry, is_forward in kinetics_list:
             if kinetics is not None:
                 kinetics.comment += "Matched reaction {0} {1} in {2}\nThis reaction matched rate rule {3}".format(
@@ -2774,13 +2774,13 @@ class KineticsFamily(Database):
         for act in recipe:
 
             if act[0] == 'BREAK_BOND':
-                bd = mol.getBond(a_dict[act[1]], a_dict[act[3]])
+                bd = mol.get_bond(a_dict[act[1]], a_dict[act[3]])
                 wb += bd.get_bde()
             elif act[0] == 'FORM_BOND':
                 bd = Bond(a_dict[act[1]], a_dict[act[3]], act[2])
                 wf += bd.get_bde()
             elif act[0] == 'CHANGE_BOND':
-                bd1 = mol.getBond(a_dict[act[1]], a_dict[act[3]])
+                bd1 = mol.get_bond(a_dict[act[1]], a_dict[act[3]])
 
                 if act[2] + bd1.order == 0.5:
                     mol2 = None
@@ -2790,7 +2790,7 @@ class KineticsFamily(Database):
                             mol2 = mol2.merge(m)
                         else:
                             mol2 = m.copy(deep=True)
-                    bd2 = mol2.getBond(a_dict[act[1]], a_dict[act[3]])
+                    bd2 = mol2.get_bond(a_dict[act[1]], a_dict[act[3]])
                 else:
                     bd2 = Bond(a_dict[act[1]], a_dict[act[3]], bd1.order + act[2])
 
@@ -2920,9 +2920,9 @@ class KineticsFamily(Database):
                 if val != np.inf:
                     out_exts[-1].append(exts[i])  # this extension splits reactions (optimization dim)
                     if typ == 'atomExt':
-                        reg_dict[(typ, indc)][0].extend(grp2.atoms[indc[0]].atomType)
+                        reg_dict[(typ, indc)][0].extend(grp2.atoms[indc[0]].atomtype)
                     elif typ == 'elExt':
-                        reg_dict[(typ, indc)][0].extend(grp2.atoms[indc[0]].radicalElectrons)
+                        reg_dict[(typ, indc)][0].extend(grp2.atoms[indc[0]].radical_electrons)
                     elif typ == 'bondExt':
                         reg_dict[(typ, indc)][0].extend(grp2.get_bond(grp2.atoms[indc[0]], grp2.atoms[indc[1]]).order)
 
@@ -2931,11 +2931,11 @@ class KineticsFamily(Database):
                         # these are bond formation extensions, we want to expand these until we get splits
                         ext_inds.append(i)
                     elif typ == 'atomExt':
-                        reg_dict[(typ, indc)][0].extend(grp2.atoms[indc[0]].atomType)
-                        reg_dict[(typ, indc)][1].extend(grp2.atoms[indc[0]].atomType)
+                        reg_dict[(typ, indc)][0].extend(grp2.atoms[indc[0]].atomtype)
+                        reg_dict[(typ, indc)][1].extend(grp2.atoms[indc[0]].atomtype)
                     elif typ == 'elExt':
-                        reg_dict[(typ, indc)][0].extend(grp2.atoms[indc[0]].radicalElectrons)
-                        reg_dict[(typ, indc)][1].extend(grp2.atoms[indc[0]].radicalElectrons)
+                        reg_dict[(typ, indc)][0].extend(grp2.atoms[indc[0]].radical_electrons)
+                        reg_dict[(typ, indc)][1].extend(grp2.atoms[indc[0]].radical_electrons)
                     elif typ == 'bondExt':
                         reg_dict[(typ, indc)][0].extend(grp2.get_bond(grp2.atoms[indc[0]], grp2.atoms[indc[1]]).order)
                         reg_dict[(typ, indc)][1].extend(grp2.get_bond(grp2.atoms[indc[0]], grp2.atoms[indc[1]]).order)
@@ -3106,10 +3106,10 @@ class KineticsFamily(Database):
         extname = ext[2]
 
         if ext[3] == 'atomExt':
-            ext[0].atoms[ext[4][0]].reg_dim_atm = [ext[0].atoms[ext[4][0]].atomType, ext[0].atoms[ext[4][0]].atomType]
+            ext[0].atoms[ext[4][0]].reg_dim_atm = [ext[0].atoms[ext[4][0]].atomtype, ext[0].atoms[ext[4][0]].atomtype]
         elif ext[3] == 'elExt':
-            ext[0].atoms[ext[4][0]].reg_dim_u = [ext[0].atoms[ext[4][0]].radicalElectrons,
-                                                 ext[0].atoms[ext[4][0]].radicalElectrons]
+            ext[0].atoms[ext[4][0]].reg_dim_u = [ext[0].atoms[ext[4][0]].radical_electrons,
+                                                 ext[0].atoms[ext[4][0]].radical_electrons]
 
         self.add_entry(parent, ext[0], extname)
 
@@ -3555,7 +3555,7 @@ class KineticsFamily(Database):
                 else:
                     raise ValueError('{0} is not a valid value for input `estimator`'.format(estimator))
 
-                k = kinetics.getRateCoefficient(T)
+                k = kinetics.get_rate_coefficient(T)
 
                 errors[rxn] = np.log(k / krxn)
 
@@ -3604,14 +3604,14 @@ class KineticsFamily(Database):
                 if node.children == []:  # if the atoms or bonds are graphically indistinguishable don't regularize
                     bdpairs = {(atm, tuple(bd.order)) for atm, bd in atm1.bonds.items()}
                     for atm2 in grp.atoms:
-                        if atm1 is not atm2 and atm1.atomType == atm2.atomType and len(atm1.bonds) == len(atm2.bonds):
+                        if atm1 is not atm2 and atm1.atomtype == atm2.atomtype and len(atm1.bonds) == len(atm2.bonds):
                             bdpairs2 = {(atm, tuple(bd.order)) for atm, bd in atm2.bonds.items()}
                             if bdpairs == bdpairs2:
                                 skip = True
                                 indistinguishable.append(i)
 
-                if not skip and atm1.reg_dim_atm[1] != [] and set(atm1.reg_dim_atm[1]) != set(atm1.atomType):
-                    atyp = atm1.atomType
+                if not skip and atm1.reg_dim_atm[1] != [] and set(atm1.reg_dim_atm[1]) != set(atm1.atomtype):
+                    atyp = atm1.atomtype
                     if len(atyp) == 1 and atyp[0] in R:
                         pass
                     else:
@@ -3620,34 +3620,34 @@ class KineticsFamily(Database):
 
                         vals = list(set(atyp) & set(atm1.reg_dim_atm[1]))
                         assert vals != [], 'cannot regularize to empty'
-                        if all([set(child.item.atoms[i].atomType) <= set(vals) for child in node.children]):
+                        if all([set(child.item.atoms[i].atomtype) <= set(vals) for child in node.children]):
                             if not test:
-                                atm1.atomType = vals
+                                atm1.atomtype = vals
                             else:
-                                oldvals = atm1.atomType
-                                atm1.atomType = vals
+                                oldvals = atm1.atomtype
+                                atm1.atomtype = vals
                                 if not self.rxns_match_node(node, rxns):
-                                    atm1.atomType = oldvals
+                                    atm1.atomtype = oldvals
 
-                if not skip and atm1.reg_dim_u[1] != [] and set(atm1.reg_dim_u[1]) != set(atm1.radicalElectrons):
-                    if len(atm1.radicalElectrons) == 1:
+                if not skip and atm1.reg_dim_u[1] != [] and set(atm1.reg_dim_u[1]) != set(atm1.radical_electrons):
+                    if len(atm1.radical_electrons) == 1:
                         pass
                     else:
-                        relist = atm1.radicalElectrons
+                        relist = atm1.radical_electrons
                         if relist == []:
                             relist = Run
                         vals = list(set(relist) & set(atm1.reg_dim_u[1]))
                         assert vals != [], 'cannot regularize to empty'
 
-                        if all([set(child.item.atoms[i].radicalElectrons) <= set(vals)
-                                if child.item.atoms[i].radicalElectrons != [] else False for child in node.children]):
+                        if all([set(child.item.atoms[i].radical_electrons) <= set(vals)
+                                if child.item.atoms[i].radical_electrons != [] else False for child in node.children]):
                             if not test:
-                                atm1.radicalElectrons = vals
+                                atm1.radical_electrons = vals
                             else:
-                                oldvals = atm1.radicalElectrons
-                                atm1.radicalElectrons = vals
+                                oldvals = atm1.radical_electrons
+                                atm1.radical_electrons = vals
                                 if not self.rxns_match_node(node, rxns):
-                                    atm1.radicalElectrons = oldvals
+                                    atm1.radical_electrons = oldvals
 
                 if (not skip and atm1.reg_dim_r[1] != [] and
                         ('inRing' not in atm1.props.keys() or atm1.reg_dim_r[1][0] != atm1.props['inRing'])):
@@ -3762,9 +3762,9 @@ class KineticsFamily(Database):
                 grp = ent.item
             else:
                 if any([isinstance(x, list) for x in ent.item.get_all_labeled_atoms().values()]):
-                    grp = grp.mergeGroups(ent.item, keepIdenticalLabels=True)
+                    grp = grp.merge_groups(ent.item, keep_identical_labels=True)
                 else:
-                    grp = grp.mergeGroups(ent.item)
+                    grp = grp.merge_groups(ent.item)
 
         # clear everything
         self.groups.entries = {x.label: x for x in self.groups.entries.values() if x.index == -1}
@@ -3839,7 +3839,7 @@ class KineticsFamily(Database):
         root = None
         for r in roots:
             if root:
-                root = root.mergeGroups(r)
+                root = root.merge_groups(r)
             else:
                 root = deepcopy(r)
 
@@ -3877,7 +3877,7 @@ class KineticsFamily(Database):
                     if atm.label not in root_labels:
                         atm.label = ''
 
-            if (mol.isSubgraphIsomorphic(root, generateInitialMap=True) or
+            if (mol.is_subgraph_isomorphic(root, generate_initial_map=True) or
                     (not fix_labels and
                      get_label_fixed_mol(mol, root_labels).is_subgraph_isomorphic(root, generate_initial_map=True))):
                 rxns[i].is_forward = True
@@ -3889,7 +3889,7 @@ class KineticsFamily(Database):
                         else:
                             mol = deepcopy(react.molecule[0])
 
-                    if (mol.isSubgraphIsomorphic(root, generateInitialMap=True) or
+                    if (mol.is_subgraph_isomorphic(root, generate_initial_map=True) or
                             (not fix_labels and
                              get_label_fixed_mol(mol, root_labels).is_subgraph_isomorphic(root, generate_initial_map=True))):
                         # try product structures
@@ -3906,14 +3906,14 @@ class KineticsFamily(Database):
                         else:
                             prodmol = deepcopy(react.molecule[0])
 
-                    if not prodmol.isSubgraphIsomorphic(root, generateInitialMap=True):
+                    if not prodmol.is_subgraph_isomorphic(root, generate_initial_map=True):
                         mol = None
                         for react in products:
                             if mol:
                                 mol = mol.merge(react.molecule[0])
                             else:
                                 mol = deepcopy(react.molecule[0])
-                        if not mol.isSubgraphIsomorphic(root, generateInitialMap=True):
+                        if not mol.is_subgraph_isomorphic(root, generate_initial_map=True):
                             for p in products:
                                 for atm in p.molecule[0].atoms:
                                     if atm.label in rkeys:
@@ -3938,9 +3938,9 @@ class KineticsFamily(Database):
                     logging.error("rxn")
                     logging.error(str(rxns[i]))
                     logging.error("root")
-                    logging.error(root.toAdjacencyList())
+                    logging.error(root.to_adjacency_list())
                     logging.error("mol")
-                    logging.error(mol.toAdjacencyList())
+                    logging.error(mol.to_adjacency_list())
                     raise ValueError("couldn't match reaction")
 
                 mol = None
@@ -3950,7 +3950,7 @@ class KineticsFamily(Database):
                     else:
                         mol = deepcopy(react.molecule[0])
 
-                if (mol.isSubgraphIsomorphic(root, generateInitialMap=True) or
+                if (mol.is_subgraph_isomorphic(root, generate_initial_map=True) or
                         (not fix_labels and
                          get_label_fixed_mol(mol, root_labels).is_subgraph_isomorphic(root, generate_initial_map=True))):  # try product structures
                     products = [Species(molecule=[get_label_fixed_mol(x.molecule[0], root_labels)], thermo=x.thermo)
@@ -4008,7 +4008,7 @@ class KineticsFamily(Database):
 
             if flag:
                 logging.error(root.item.to_adjacency_list())
-                logging.error(mol.toAdjacencyList())
+                logging.error(mol.to_adjacency_list())
                 for r in rxn.reactants:
                     logging.error(r.molecule[0].to_adjacency_list())
                 for r in rxn.products:
@@ -4230,7 +4230,7 @@ class KineticsFamily(Database):
                                          '{2} family.'.format(reaction, training_reaction_index, self.label))
 
                 # Sometimes the matched kinetics could be in the reverse direction..... 
-                if reaction.is_isomorphic(training_entry.item, eitherDirection=False):
+                if reaction.is_isomorphic(training_entry.item, either_direction=False):
                     reverse = False
                 else:
                     reverse = True
@@ -4322,8 +4322,8 @@ def get_objective_function(kinetics1, kinetics2, obj=information_gain, T=1000.0)
     Error using mean: Err_1 + Err_2
     Split: abs(N1-N2)
     """
-    ks1 = np.array([np.log(k.getRateCoefficient(T)) for k in kinetics1])
-    ks2 = np.array([np.log(k.getRateCoefficient(T)) for k in kinetics2])
+    ks1 = np.array([np.log(k.get_rate_coefficient(T)) for k in kinetics1])
+    ks2 = np.array([np.log(k.get_rate_coefficient(T)) for k in kinetics2])
     N1 = len(ks1)
 
     return obj(ks1, ks2), N1 == 0
@@ -4349,7 +4349,7 @@ def _make_rule(rr):
                 np.log(
                     ArrheniusBM().fit_to_reactions(rxns[list(set(range(len(rxns))) - {i})], recipe=recipe)
                     .to_arrhenius(rxn.getEnthalpyOfReaction(Tref))
-                    .get_rate_coefficient(T=Tref) / rxn.getRateCoefficient(T=Tref)
+                    .get_rate_coefficient(T=Tref) / rxn.get_rate_coefficient(T=Tref)
                 ) for i, rxn in enumerate(rxns)
             ])  # 1) fit to set of reactions without the current reaction (k)  2) compute log(kfit/kactual) at Tref
             varis = (np.array([rank_accuracy_map[rxn.rank].value_si for rxn in rxns]) / (2.0 * 8.314 * Tref)) ** 2

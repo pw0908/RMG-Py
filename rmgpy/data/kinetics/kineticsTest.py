@@ -747,8 +747,8 @@ class TestKinetics(unittest.TestCase):
         """
         Ensure ensure_independent_atom_ids modifies atom labels
         """
-        s1 = Species().fromSMILES('CCC')
-        s2 = Species().fromSMILES('C=C[CH]C')
+        s1 = Species().from_smiles('CCC')
+        s2 = Species().from_smiles('C=C[CH]C')
         self.assertEqual(s2.molecule[0].atoms[0].id, -1)
 
         ensure_independent_atom_ids([s1, s2])
@@ -761,8 +761,8 @@ class TestKinetics(unittest.TestCase):
         """
         Ensure ensure_independent_atom_ids does not generate resonance
         """
-        s1 = Species().fromSMILES('CCC')
-        s2 = Species().fromSMILES('C=C[CH]C')
+        s1 = Species().from_smiles('CCC')
+        s2 = Species().from_smiles('C=C[CH]C')
         self.assertEqual(s2.molecule[0].atoms[0].id, -1)
 
         ensure_independent_atom_ids([s1, s2], resonance=False)
@@ -1046,9 +1046,9 @@ class TestKinetics(unittest.TestCase):
         """Test that add_atom_labels_for_reaction can identify reactions with identical references
         The molecule [CH]=C=C has resonance in this reaction"""
         from rmgpy.data.rmg import get_db
-        s1 = Species().fromSMILES('C=C=C')
-        s2 = Species().fromSMILES('C=C=[CH]')
-        s3 = Species().fromSMILES('C#CC')
+        s1 = Species().from_smiles('C=C=C')
+        s2 = Species().from_smiles('C=C=[CH]')
+        s3 = Species().from_smiles('C#CC')
         s2.generate_resonance_structures()
         reactants = [s1, s2]
         products = [s2, s3]
@@ -1161,8 +1161,8 @@ class TestKinetics(unittest.TestCase):
         self.assertIs(reactant1.molecule[0], reactant2_out.molecule[0])
 
         # They should be isomorphic
-        self.assertTrue(reactant1.isIsomorphic(reactant1_out))
-        self.assertTrue(reactant1.isIsomorphic(reactant2_out))
+        self.assertTrue(reactant1.is_isomorphic(reactant1_out))
+        self.assertTrue(reactant1.is_isomorphic(reactant2_out))
         self.assertTrue(reactant1_copy.is_isomorphic(reactant1_out))
         self.assertTrue(reactant1_copy.is_isomorphic(reactant2_out))
 
@@ -1208,8 +1208,8 @@ class TestKinetics(unittest.TestCase):
         self.assertIs(reactant2.molecule[0], reactant2_out.molecule[0])
 
         # They should be isomorphic
-        self.assertTrue(reactant1.isIsomorphic(reactant1_out))
-        self.assertTrue(reactant2.isIsomorphic(reactant2_out))
+        self.assertTrue(reactant1.is_isomorphic(reactant1_out))
+        self.assertTrue(reactant2.is_isomorphic(reactant2_out))
         self.assertTrue(reactant1_copy.is_isomorphic(reactant1_out))
         self.assertTrue(reactant2_copy.is_isomorphic(reactant2_out))
 

@@ -66,7 +66,7 @@ class Saturator(object):
 
             order = atom.get_total_bond_order()
 
-            number_of_h_to_be_added = max_number_of_valence_electrons - atom.radicalElectrons - 2 * atom.lonePairs - int(
+            number_of_h_to_be_added = max_number_of_valence_electrons - atom.radical_electrons - 2 * atom.lone_pairs - int(
                 order) - atom.charge
 
             if number_of_h_to_be_added < 0:
@@ -96,17 +96,17 @@ class ConsistencyChecker(object):
         valence = PeriodicSystem.valence_electrons[atom.symbol]
         order = atom.get_total_bond_order()
 
-        theoretical = valence - order - atom.radicalElectrons - 2 * atom.lonePairs
+        theoretical = valence - order - atom.radical_electrons - 2 * atom.lone_pairs
 
         if not (-0.301 < atom.charge - theoretical < 0.301):
             # It should be 0, but -0.1 is caused by a Hydrogen bond
             raise InvalidAdjacencyListError(
                 'Invalid valency for atom {symbol} ({type}) with {radicals} unpaired electrons, '
-                '{lonePairs} pairs of electrons, {charge} charge, and bonds [{bonds}].'.format(
+                '{lone_pairs} pairs of electrons, {charge} charge, and bonds [{bonds}].'.format(
                     symbol=atom.symbol,
                     type=get_atomtype(atom, atom.edges).label,
-                    radicals=atom.radicalElectrons,
-                    lonePairs=atom.lonePairs,
+                    radicals=atom.radical_electrons,
+                    lone_pairs=atom.lone_pairs,
                     charge=atom.charge,
                     bonds=','.join([str(bond.order) for bond in atom.bonds.values()])
                 )
@@ -153,10 +153,10 @@ class ConsistencyChecker(object):
         Unpaired electrons in 2 different orbitals belonging to the same atom
         should have the same spin, and hence, should result in a multiplicity of 3.
         """
-        if atom.radicalElectrons == 2 and multiplicity == 1:
+        if atom.radical_electrons == 2 and multiplicity == 1:
             raise InvalidAdjacencyListError(
                 "Violation of hund's rule. Invalid multiplicity of {0} because there is an "
-                "atom with {1} unpaired electrons".format(multiplicity, atom.radicalElectrons))
+                "atom with {1} unpaired electrons".format(multiplicity, atom.radical_electrons))
 
 
 ################################################################################
@@ -816,7 +816,7 @@ def to_adjacency_list(atoms, multiplicity, label=None, group=False, remove_h=Fal
             adjlist += 'multiplicity [{0!s}]\n'.format(','.join(str(i) for i in multiplicity))
     else:
         assert isinstance(multiplicity, int), "Molecule should have an integer multiplicity"
-        if multiplicity != 1 or any(atom.radicalElectrons for atom in atoms):
+        if multiplicity != 1 or any(atom.radical_electrons for atom in atoms):
             adjlist += 'multiplicity {0!r}\n'.format(multiplicity)
 
     # Determine the numbers to use for each atom
@@ -839,25 +839,25 @@ def to_adjacency_list(atoms, multiplicity, label=None, group=False, remove_h=Fal
     if group:
         for atom in atom_numbers:
             # Atom type(s)
-            if len(atom.atomType) == 1:
-                atom_types[atom] = atom.atomType[0].label
+            if len(atom.atomtype) == 1:
+                atom_types[atom] = atom.atomtype[0].label
             else:
-                atom_types[atom] = '[{0}]'.format(','.join([a.label for a in atom.atomType]))
+                atom_types[atom] = '[{0}]'.format(','.join([a.label for a in atom.atomtype]))
             # Unpaired Electron(s)
-            if len(atom.radicalElectrons) == 1:
-                atom_unpaired_electrons[atom] = str(atom.radicalElectrons[0])
-            elif len(atom.radicalElectrons) == 0:
+            if len(atom.radical_electrons) == 1:
+                atom_unpaired_electrons[atom] = str(atom.radical_electrons[0])
+            elif len(atom.radical_electrons) == 0:
                 atom_unpaired_electrons[atom] = 'x'  # Empty list indicates wildcard
             else:
-                atom_unpaired_electrons[atom] = '[{0}]'.format(','.join([str(radical) for radical in atom.radicalElectrons]))
+                atom_unpaired_electrons[atom] = '[{0}]'.format(','.join([str(radical) for radical in atom.radical_electrons]))
 
             # Lone Electron Pair(s)
-            if len(atom.lonePairs) == 1:
-                atom_lone_pairs[atom] = str(atom.lonePairs[0])
-            elif len(atom.lonePairs) == 0:
+            if len(atom.lone_pairs) == 1:
+                atom_lone_pairs[atom] = str(atom.lone_pairs[0])
+            elif len(atom.lone_pairs) == 0:
                 atom_lone_pairs[atom] = None  # Empty list indicates wildcard
             else:
-                atom_lone_pairs[atom] = '[{0}]'.format(','.join([str(pair) for pair in atom.lonePairs]))
+                atom_lone_pairs[atom] = '[{0}]'.format(','.join([str(pair) for pair in atom.lone_pairs]))
 
             # Charges
             if len(atom.charge) == 1:
@@ -880,9 +880,9 @@ def to_adjacency_list(atoms, multiplicity, label=None, group=False, remove_h=Fal
             # Atom type
             atom_types[atom] = '{0}'.format(atom.element.symbol)
             # Unpaired Electron(s)
-            atom_unpaired_electrons[atom] = '{0}'.format(atom.radicalElectrons)
+            atom_unpaired_electrons[atom] = '{0}'.format(atom.radical_electrons)
             # Lone Electron Pair(s)
-            atom_lone_pairs[atom] = str(atom.lonePairs)
+            atom_lone_pairs[atom] = str(atom.lone_pairs)
             # Partial Charge(s)
             atom_charge[atom] = '+' + str(atom.charge) if atom.charge > 0 else '' + str(atom.charge)
             # Isotopes
@@ -964,8 +964,8 @@ def get_old_electron_state(atom):
     """
     Get the old adjacency list format electronic state
     """
-    additional_lone_pairs = atom.lonePairs - PeriodicSystem.lone_pairs[atom.element.symbol]
-    electrons = atom.radicalElectrons + additional_lone_pairs * 2
+    additional_lone_pairs = atom.lone_pairs - PeriodicSystem.lone_pairs[atom.element.symbol]
+    electrons = atom.radical_electrons + additional_lone_pairs * 2
     if electrons == 0:
         electron_state = '0'
     elif electrons == 1:

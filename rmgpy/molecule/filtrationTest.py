@@ -83,7 +83,7 @@ class FiltrationTest(unittest.TestCase):
         mol = Molecule().from_adjacency_list(adj)
         octet_deviation = get_octet_deviation(mol)
         self.assertEqual(octet_deviation, 0)
-        self.assertEqual(mol.vertices[2].atomType.label, 'O4tc')
+        self.assertEqual(mol.vertices[2].atomtype.label, 'O4tc')
         mol_list = generate_resonance_structures(mol)
         self.assertEqual(len(mol_list), 2)
         for mol in mol_list:
@@ -106,7 +106,7 @@ class FiltrationTest(unittest.TestCase):
             if mol.reactive:
                 for atom in mol.vertices:
                     if atom.is_sulfur():
-                        self.assertNotEquals(atom.radicalElectrons, 2)
+                        self.assertNotEquals(atom.radical_electrons, 2)
         self.assertEqual(len(mol_list), 3)
         self.assertEqual(sum([1 for mol in mol_list if mol.reactive]), 2)
 
@@ -155,7 +155,7 @@ class FiltrationTest(unittest.TestCase):
                     Molecule().from_adjacency_list(adj3)]
 
         for mol in mol_list:
-            mol.update()  # the charge_filtration uses the atom.sortingLabel attribute
+            mol.update()  # the charge_filtration uses the atom.sorting_label attribute
 
         filtered_list = charge_filtration(mol_list, get_charge_span_list(mol_list))
         self.assertEqual(len(filtered_list), 2)
@@ -242,7 +242,7 @@ class FiltrationTest(unittest.TestCase):
                     Molecule().from_adjacency_list(adj7)]
 
         for mol in mol_list:
-            mol.update()  # the charge_filtration uses the atom.sortingLabel attribute
+            mol.update()  # the charge_filtration uses the atom.sorting_label attribute
 
         filtered_list = charge_filtration(mol_list, get_charge_span_list(mol_list))
         self.assertEqual(len(filtered_list), 4)

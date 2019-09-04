@@ -50,7 +50,7 @@ class TestAtomType(unittest.TestCase):
         """
         A function run before each unit test in this class.
         """
-        self.atomType = rmgpy.molecule.atomtype.ATOMTYPES['Cd']
+        self.atomtype = rmgpy.molecule.atomtype.ATOMTYPES['Cd']
 
     def testPickle(self):
         """
@@ -58,31 +58,31 @@ class TestAtomType(unittest.TestCase):
         unpickled with no loss of information.
         """
         import pickle
-        atom_type = pickle.loads(pickle.dumps(self.atomType))
-        self.assertEqual(self.atomType.label, atom_type.label)
-        self.assertEqual(len(self.atomType.generic), len(atom_type.generic))
-        for item1, item2 in zip(self.atomType.generic, atom_type.generic):
+        atom_type = pickle.loads(pickle.dumps(self.atomtype))
+        self.assertEqual(self.atomtype.label, atom_type.label)
+        self.assertEqual(len(self.atomtype.generic), len(atom_type.generic))
+        for item1, item2 in zip(self.atomtype.generic, atom_type.generic):
             self.assertEqual(item1.label, item2.label)
-        self.assertEqual(len(self.atomType.specific), len(atom_type.specific))
-        for item1, item2 in zip(self.atomType.specific, atom_type.specific):
+        self.assertEqual(len(self.atomtype.specific), len(atom_type.specific))
+        for item1, item2 in zip(self.atomtype.specific, atom_type.specific):
             self.assertEqual(item1.label, item2.label)
-        self.assertEqual(len(self.atomType.increment_bond), len(atom_type.increment_bond))
-        for item1, item2 in zip(self.atomType.increment_bond, atom_type.increment_bond):
+        self.assertEqual(len(self.atomtype.increment_bond), len(atom_type.increment_bond))
+        for item1, item2 in zip(self.atomtype.increment_bond, atom_type.increment_bond):
             self.assertEqual(item1.label, item2.label)
-        self.assertEqual(len(self.atomType.decrement_bond), len(atom_type.decrement_bond))
-        for item1, item2 in zip(self.atomType.decrement_bond, atom_type.decrement_bond):
+        self.assertEqual(len(self.atomtype.decrement_bond), len(atom_type.decrement_bond))
+        for item1, item2 in zip(self.atomtype.decrement_bond, atom_type.decrement_bond):
             self.assertEqual(item1.label, item2.label)
-        self.assertEqual(len(self.atomType.form_bond), len(atom_type.form_bond))
-        for item1, item2 in zip(self.atomType.form_bond, atom_type.form_bond):
+        self.assertEqual(len(self.atomtype.form_bond), len(atom_type.form_bond))
+        for item1, item2 in zip(self.atomtype.form_bond, atom_type.form_bond):
             self.assertEqual(item1.label, item2.label)
-        self.assertEqual(len(self.atomType.break_bond), len(atom_type.break_bond))
-        for item1, item2 in zip(self.atomType.break_bond, atom_type.break_bond):
+        self.assertEqual(len(self.atomtype.break_bond), len(atom_type.break_bond))
+        for item1, item2 in zip(self.atomtype.break_bond, atom_type.break_bond):
             self.assertEqual(item1.label, item2.label)
-        self.assertEqual(len(self.atomType.increment_radical), len(atom_type.increment_radical))
-        for item1, item2 in zip(self.atomType.increment_radical, atom_type.increment_radical):
+        self.assertEqual(len(self.atomtype.increment_radical), len(atom_type.increment_radical))
+        for item1, item2 in zip(self.atomtype.increment_radical, atom_type.increment_radical):
             self.assertEqual(item1.label, item2.label)
-        self.assertEqual(len(self.atomType.decrement_radical), len(atom_type.decrement_radical))
-        for item1, item2 in zip(self.atomType.decrement_radical, atom_type.decrement_radical):
+        self.assertEqual(len(self.atomtype.decrement_radical), len(atom_type.decrement_radical))
+        for item1, item2 in zip(self.atomtype.decrement_radical, atom_type.decrement_radical):
             self.assertEqual(item1.label, item2.label)
 
     def testOutput(self):
@@ -92,42 +92,42 @@ class TestAtomType(unittest.TestCase):
         """
         namespace = {}
         exec('atomtype = rmgpy.molecule.atomtype.ATOMTYPES[{0!r}]'.format(
-            self.atomType.__repr__().split('"')[1]), globals(), namespace)
+            self.atomtype.__repr__().split('"')[1]), globals(), namespace)
         self.assertIn('atomtype', namespace)
         atomtype = namespace['atomtype']
-        self.assertTrue(self.atomType.equivalent(atomtype))
+        self.assertTrue(self.atomtype.equivalent(atomtype))
 
     def testEquivalent(self):
         """
         Test the AtomType.equivalent() method.
         """
-        self.assertTrue(self.atomType.equivalent(rmgpy.molecule.atomtype.ATOMTYPES['Cd']))
+        self.assertTrue(self.atomtype.equivalent(rmgpy.molecule.atomtype.ATOMTYPES['Cd']))
 
     def testIsSpecficCaseOf(self):
         """
         Test the AtomType.is_specific_case_of() method.
         """
-        self.assertTrue(self.atomType.is_specific_case_of(rmgpy.molecule.atomtype.ATOMTYPES['C']))
+        self.assertTrue(self.atomtype.is_specific_case_of(rmgpy.molecule.atomtype.ATOMTYPES['C']))
 
     def testSetActions(self):
         """
         Test the AtomType.set_actions() method.
         """
         other = rmgpy.molecule.atomtype.AtomType('Test', generic=['R'], specific=[])
-        other.set_actions(self.atomType.increment_bond,
-                          self.atomType.decrement_bond,
-                          self.atomType.form_bond,
-                          self.atomType.break_bond,
-                          self.atomType.increment_radical,
-                          self.atomType.decrement_radical,
-                          self.atomType.increment_lone_pair,
-                          self.atomType.decrement_lone_pair)
-        self.assertEqual(self.atomType.increment_bond, other.increment_bond)
-        self.assertEqual(self.atomType.decrement_bond, other.decrement_bond)
-        self.assertEqual(self.atomType.form_bond, other.form_bond)
-        self.assertEqual(self.atomType.break_bond, other.break_bond)
-        self.assertEqual(self.atomType.increment_radical, other.increment_radical)
-        self.assertEqual(self.atomType.decrement_radical, other.decrement_radical)
+        other.set_actions(self.atomtype.increment_bond,
+                          self.atomtype.decrement_bond,
+                          self.atomtype.form_bond,
+                          self.atomtype.break_bond,
+                          self.atomtype.increment_radical,
+                          self.atomtype.decrement_radical,
+                          self.atomtype.increment_lone_pair,
+                          self.atomtype.decrement_lone_pair)
+        self.assertEqual(self.atomtype.increment_bond, other.increment_bond)
+        self.assertEqual(self.atomtype.decrement_bond, other.decrement_bond)
+        self.assertEqual(self.atomtype.form_bond, other.form_bond)
+        self.assertEqual(self.atomtype.break_bond, other.break_bond)
+        self.assertEqual(self.atomtype.increment_radical, other.increment_radical)
+        self.assertEqual(self.atomtype.decrement_radical, other.decrement_radical)
 
 
 ################################################################################
@@ -504,8 +504,8 @@ class TestGetAtomType(unittest.TestCase):
 
         self.mol78 = Molecule().from_adjacency_list('''1 X u0 p0 c0''')
 
-    def atomType(self, mol, atomID):
-        atom = mol.atoms[atomID]
+    def atom_type(self, mol, atom_id):
+        atom = mol.atoms[atom_id]
         atom_type = get_atomtype(atom, mol.get_bonds(atom))
         if atom_type is None:
             return atom_type
@@ -516,153 +516,153 @@ class TestGetAtomType(unittest.TestCase):
         """
         Test that get_atomtype() returns the hydrogen atom type.
         """
-        self.assertEqual(self.atomType(self.mol3, 0), 'H')
+        self.assertEqual(self.atom_type(self.mol3, 0), 'H')
 
     def testCarbonTypes(self):
         """
         Test that get_atomtype() returns appropriate carbon atom types.
         """
-        self.assertEqual(self.atomType(self.mol1, 0), 'Cs')
-        self.assertEqual(self.atomType(self.mol52, 5), 'Csc')
-        self.assertEqual(self.atomType(self.mol1, 5), 'Cd')
-        self.assertEqual(self.atomType(self.mol60, 1), 'Cdc')
-        self.assertEqual(self.atomType(self.mol1, 2), 'CO')
-        self.assertEqual(self.atomType(self.mol19, 0), 'CS')
-        self.assertEqual(self.atomType(self.mol1, 6), 'Cdd')
-        self.assertEqual(self.atomType(self.mol1, 9), 'Ct')
-        self.assertEqual(self.atomType(self.mol2, 0), 'Cb')
-        self.assertEqual(self.atomType(self.mol55, 3), 'Cbf')
-        self.assertEqual(self.atomType(self.mol56, 0), 'C2s')
-        self.assertEqual(self.atomType(self.mol57, 0), 'C2sc')
-        self.assertEqual(self.atomType(self.mol58, 0), 'C2d')
-        self.assertEqual(self.atomType(self.mol59, 0), 'C2dc')
-        self.assertEqual(self.atomType(self.mol60, 2), 'C2dc')
-        self.assertEqual(self.atomType(self.mol20, 0), 'C2tc')
-        self.assertEqual(self.atomType(self.mol29, 0), 'C2tc')  # todo: add in a ciq unit test?
+        self.assertEqual(self.atom_type(self.mol1, 0), 'Cs')
+        self.assertEqual(self.atom_type(self.mol52, 5), 'Csc')
+        self.assertEqual(self.atom_type(self.mol1, 5), 'Cd')
+        self.assertEqual(self.atom_type(self.mol60, 1), 'Cdc')
+        self.assertEqual(self.atom_type(self.mol1, 2), 'CO')
+        self.assertEqual(self.atom_type(self.mol19, 0), 'CS')
+        self.assertEqual(self.atom_type(self.mol1, 6), 'Cdd')
+        self.assertEqual(self.atom_type(self.mol1, 9), 'Ct')
+        self.assertEqual(self.atom_type(self.mol2, 0), 'Cb')
+        self.assertEqual(self.atom_type(self.mol55, 3), 'Cbf')
+        self.assertEqual(self.atom_type(self.mol56, 0), 'C2s')
+        self.assertEqual(self.atom_type(self.mol57, 0), 'C2sc')
+        self.assertEqual(self.atom_type(self.mol58, 0), 'C2d')
+        self.assertEqual(self.atom_type(self.mol59, 0), 'C2dc')
+        self.assertEqual(self.atom_type(self.mol60, 2), 'C2dc')
+        self.assertEqual(self.atom_type(self.mol20, 0), 'C2tc')
+        self.assertEqual(self.atom_type(self.mol29, 0), 'C2tc')  # todo: add in a ciq unit test?
 
     def testNitrogenTypes(self):
         """
         Test that get_atomtype() returns appropriate nitrogen atom types.
         """
-        self.assertEqual(self.atomType(self.mol40, 3), 'N0sc')
-        self.assertEqual(self.atomType(self.mol41, 0), 'N1s')
-        self.assertEqual(self.atomType(self.mol39, 0), 'N1sc')
-        self.assertEqual(self.atomType(self.mol5, 3), 'N1dc')
-        self.assertEqual(self.atomType(self.mol9, 0), 'N3s')
-        self.assertEqual(self.atomType(self.mol10, 0), 'N3s')
-        self.assertEqual(self.atomType(self.mol11, 0), 'N3s')
-        self.assertEqual(self.atomType(self.mol16, 0), 'N3d')
-        self.assertEqual(self.atomType(self.mol17, 0), 'N3d')
-        self.assertEqual(self.atomType(self.mol12, 0), 'N3t')
-        self.assertEqual(self.atomType(self.mol18, 5), 'N3b')
-        self.assertEqual(self.atomType(self.mol5, 2), 'N5dc')
-        self.assertEqual(self.atomType(self.mol64, 1), 'N5ddc')
-        self.assertEqual(self.atomType(self.mol53, 0), 'N5dddc')
-        self.assertEqual(self.atomType(self.mol15, 1), 'N5tc')
-        self.assertEqual(self.atomType(self.mol39, 2), 'N5tc')
-        self.assertEqual(self.atomType(self.mol18, 0), 'N5b')
+        self.assertEqual(self.atom_type(self.mol40, 3), 'N0sc')
+        self.assertEqual(self.atom_type(self.mol41, 0), 'N1s')
+        self.assertEqual(self.atom_type(self.mol39, 0), 'N1sc')
+        self.assertEqual(self.atom_type(self.mol5, 3), 'N1dc')
+        self.assertEqual(self.atom_type(self.mol9, 0), 'N3s')
+        self.assertEqual(self.atom_type(self.mol10, 0), 'N3s')
+        self.assertEqual(self.atom_type(self.mol11, 0), 'N3s')
+        self.assertEqual(self.atom_type(self.mol16, 0), 'N3d')
+        self.assertEqual(self.atom_type(self.mol17, 0), 'N3d')
+        self.assertEqual(self.atom_type(self.mol12, 0), 'N3t')
+        self.assertEqual(self.atom_type(self.mol18, 5), 'N3b')
+        self.assertEqual(self.atom_type(self.mol5, 2), 'N5dc')
+        self.assertEqual(self.atom_type(self.mol64, 1), 'N5ddc')
+        self.assertEqual(self.atom_type(self.mol53, 0), 'N5dddc')
+        self.assertEqual(self.atom_type(self.mol15, 1), 'N5tc')
+        self.assertEqual(self.atom_type(self.mol39, 2), 'N5tc')
+        self.assertEqual(self.atom_type(self.mol18, 0), 'N5b')
         # self.assertEqual(self.atomtype(self.mol72, 0), 'N5bd')  # aromatic nitrogen currently doesn't work well in RMG. See RMG-Py #982
 
     def testOxygenTypes(self):
         """
         Test that get_atomtype() returns appropriate oxygen atom types.
         """
-        self.assertEqual(self.atomType(self.mol44, 0), 'Oa')
-        self.assertEqual(self.atomType(self.mol45, 2), 'O0sc')
-        self.assertEqual(self.atomType(self.mol49, 0), 'O0sc')
-        self.assertEqual(self.atomType(self.mol1, 1), 'O2s')
-        self.assertEqual(self.atomType(self.mol24, 2), 'O2sc')
-        self.assertEqual(self.atomType(self.mol1, 3), 'O2d')
-        self.assertEqual(self.atomType(self.mol49, 1), 'O4sc')
-        self.assertEqual(self.atomType(self.mol50, 1), 'O4dc')
-        self.assertEqual(self.atomType(self.mol20, 1), 'O4tc')
+        self.assertEqual(self.atom_type(self.mol44, 0), 'Oa')
+        self.assertEqual(self.atom_type(self.mol45, 2), 'O0sc')
+        self.assertEqual(self.atom_type(self.mol49, 0), 'O0sc')
+        self.assertEqual(self.atom_type(self.mol1, 1), 'O2s')
+        self.assertEqual(self.atom_type(self.mol24, 2), 'O2sc')
+        self.assertEqual(self.atom_type(self.mol1, 3), 'O2d')
+        self.assertEqual(self.atom_type(self.mol49, 1), 'O4sc')
+        self.assertEqual(self.atom_type(self.mol50, 1), 'O4dc')
+        self.assertEqual(self.atom_type(self.mol20, 1), 'O4tc')
         # self.assertEqual(self.atomtype(self.mol71, 0), 'O4b')  # aromatic oxygen currently doesn't work well in RMG. See RMG-Py #982
 
     def testSiliconTypes(self):
         """
         Test that get_atomtype() returns appropriate silicon atom types.
         """
-        self.assertEqual(self.atomType(self.mol4, 2), 'Sis')
-        self.assertEqual(self.atomType(self.mol4, 1), 'SiO')
-        self.assertEqual(self.atomType(self.mol4, 5), 'Sid')
-        self.assertEqual(self.atomType(self.mol4, 4), 'Sidd')
-        self.assertEqual(self.atomType(self.mol4, 7), 'Sit')  # todo: add in Siq unit test?
+        self.assertEqual(self.atom_type(self.mol4, 2), 'Sis')
+        self.assertEqual(self.atom_type(self.mol4, 1), 'SiO')
+        self.assertEqual(self.atom_type(self.mol4, 5), 'Sid')
+        self.assertEqual(self.atom_type(self.mol4, 4), 'Sidd')
+        self.assertEqual(self.atom_type(self.mol4, 7), 'Sit')  # todo: add in Siq unit test?
 
     def testSulfurTypes(self):
         """
         Test that get_atomtype() returns appropriate sulfur atom types.
         """
-        self.assertEqual(self.atomType(self.mol22, 0), 'Sa')
-        self.assertEqual(self.atomType(self.mol21, 0), 'S0sc')
-        self.assertEqual(self.atomType(self.mol23, 0), 'S2s')
-        self.assertEqual(self.atomType(self.mol21, 1), 'S2sc')
-        self.assertEqual(self.atomType(self.mol42, 2), 'S2sc')
-        self.assertEqual(self.atomType(self.mol19, 1), 'S2d')
-        self.assertEqual(self.atomType(self.mol24, 1), 'S2dc')
-        self.assertEqual(self.atomType(self.mol69, 1), 'S2tc')
-        self.assertEqual(self.atomType(self.mol25, 0), 'S4s')
-        self.assertEqual(self.atomType(self.mol23, 1), 'S4sc')
-        self.assertEqual(self.atomType(self.mol25, 2), 'S4d')
-        self.assertEqual(self.atomType(self.mol28, 1), 'S4dd')
-        self.assertEqual(self.atomType(self.mol38, 1), 'S4dd')
-        self.assertEqual(self.atomType(self.mol26, 1), 'S4dc')
+        self.assertEqual(self.atom_type(self.mol22, 0), 'Sa')
+        self.assertEqual(self.atom_type(self.mol21, 0), 'S0sc')
+        self.assertEqual(self.atom_type(self.mol23, 0), 'S2s')
+        self.assertEqual(self.atom_type(self.mol21, 1), 'S2sc')
+        self.assertEqual(self.atom_type(self.mol42, 2), 'S2sc')
+        self.assertEqual(self.atom_type(self.mol19, 1), 'S2d')
+        self.assertEqual(self.atom_type(self.mol24, 1), 'S2dc')
+        self.assertEqual(self.atom_type(self.mol69, 1), 'S2tc')
+        self.assertEqual(self.atom_type(self.mol25, 0), 'S4s')
+        self.assertEqual(self.atom_type(self.mol23, 1), 'S4sc')
+        self.assertEqual(self.atom_type(self.mol25, 2), 'S4d')
+        self.assertEqual(self.atom_type(self.mol28, 1), 'S4dd')
+        self.assertEqual(self.atom_type(self.mol38, 1), 'S4dd')
+        self.assertEqual(self.atom_type(self.mol26, 1), 'S4dc')
         # self.assertEqual(self.atomtype(self.mol27, 0), 'S4b')  # aromatic sulfur currently doesn't work well in RMG. See RMG-Py #982
-        self.assertEqual(self.atomType(self.mol28, 4), 'S4t')
-        self.assertEqual(self.atomType(self.mol29, 1), 'S4tdc')
-        self.assertEqual(self.atomType(self.mol28, 5), 'S6s')
-        self.assertEqual(self.atomType(self.mol51, 1), 'S6sc')
-        self.assertEqual(self.atomType(self.mol30, 0), 'S6d')
-        self.assertEqual(self.atomType(self.mol32, 1), 'S6dd')
-        self.assertEqual(self.atomType(self.mol34, 1), 'S6ddd')
-        self.assertEqual(self.atomType(self.mol43, 1), 'S6dc')
-        self.assertEqual(self.atomType(self.mol31, 0), 'S6dc')
-        self.assertEqual(self.atomType(self.mol33, 1), 'S6dc')
-        self.assertEqual(self.atomType(self.mol35, 0), 'S6t')
-        self.assertEqual(self.atomType(self.mol36, 0), 'S6td')
-        self.assertEqual(self.atomType(self.mol37, 1), 'S6tt')
-        self.assertEqual(self.atomType(self.mol70, 0), 'S6tdc')
+        self.assertEqual(self.atom_type(self.mol28, 4), 'S4t')
+        self.assertEqual(self.atom_type(self.mol29, 1), 'S4tdc')
+        self.assertEqual(self.atom_type(self.mol28, 5), 'S6s')
+        self.assertEqual(self.atom_type(self.mol51, 1), 'S6sc')
+        self.assertEqual(self.atom_type(self.mol30, 0), 'S6d')
+        self.assertEqual(self.atom_type(self.mol32, 1), 'S6dd')
+        self.assertEqual(self.atom_type(self.mol34, 1), 'S6ddd')
+        self.assertEqual(self.atom_type(self.mol43, 1), 'S6dc')
+        self.assertEqual(self.atom_type(self.mol31, 0), 'S6dc')
+        self.assertEqual(self.atom_type(self.mol33, 1), 'S6dc')
+        self.assertEqual(self.atom_type(self.mol35, 0), 'S6t')
+        self.assertEqual(self.atom_type(self.mol36, 0), 'S6td')
+        self.assertEqual(self.atom_type(self.mol37, 1), 'S6tt')
+        self.assertEqual(self.atom_type(self.mol70, 0), 'S6tdc')
 
     def testChlorineTypes(self):
         """
         Test that get_atomtype() returns appropriate chlorine atom types.
         """
-        self.assertEqual(self.atomType(self.mol73, 1), 'Cl1s')
+        self.assertEqual(self.atom_type(self.mol73, 1), 'Cl1s')
 
     def testIodineTypes(self):
         """
         Test that get_atomtype() returns appropriate iodine atom types.
         """
-        self.assertEqual(self.atomType(self.mol74, 1), 'I1s')
+        self.assertEqual(self.atom_type(self.mol74, 1), 'I1s')
 
     def testFluorineTypes(self):
         """
         Test that get_atomtype() returns appropriate fluorine atom types.
         """
-        self.assertEqual(self.atomType(self.mol75, 1), 'F1s')
+        self.assertEqual(self.atom_type(self.mol75, 1), 'F1s')
 
     def testOtherTypes(self):
         """
         Test that get_atomtype() returns appropriate types for other misc inerts.
         """
-        self.assertEqual(self.atomType(self.mol6, 0), 'Ar')
-        self.assertEqual(self.atomType(self.mol7, 0), 'He')
-        self.assertEqual(self.atomType(self.mol8, 0), 'Ne')
+        self.assertEqual(self.atom_type(self.mol6, 0), 'Ar')
+        self.assertEqual(self.atom_type(self.mol7, 0), 'He')
+        self.assertEqual(self.atom_type(self.mol8, 0), 'Ne')
 
     def testOccupiedSurfaceAtomType(self):
         """
         Test that get_atomtype() works for occupied surface sites and for regular atoms in the complex.
         """
-        self.assertEqual(self.atomType(self.mol76, 0), 'H')
-        self.assertEqual(self.atomType(self.mol76, 1), 'Xo')
+        self.assertEqual(self.atom_type(self.mol76, 0), 'H')
+        self.assertEqual(self.atom_type(self.mol76, 1), 'Xo')
 
     def testVacantSurfaceSiteAtomType(self):
         """
         Test that get_atomtype() works for vacant surface sites and for regular atoms in the complex.
         """
-        self.assertEqual(self.atomType(self.mol77, 0), 'Cs')
-        self.assertEqual(self.atomType(self.mol77, 1), 'H')
-        self.assertEqual(self.atomType(self.mol77, 3), 'Xv')
-        self.assertEqual(self.atomType(self.mol78, 0), 'Xv')
+        self.assertEqual(self.atom_type(self.mol77, 0), 'Cs')
+        self.assertEqual(self.atom_type(self.mol77, 1), 'H')
+        self.assertEqual(self.atom_type(self.mol77, 3), 'Xv')
+        self.assertEqual(self.atom_type(self.mol78, 0), 'Xv')
 
 
 ################################################################################

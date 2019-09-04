@@ -48,7 +48,7 @@ from rmgpy.data.kinetics.family import TemplateReaction
 from rmgpy.data.kinetics.library import LibraryReaction
 from rmgpy.exceptions import ChemkinError
 from rmgpy.molecule.element import get_element
-from rmgpy.molecule.util import retrieveElementCount
+from rmgpy.molecule.util import get_element_count
 from rmgpy.quantity import Quantity
 from rmgpy.reaction import Reaction
 from rmgpy.rmg.pdep import PDepNetwork, PDepReaction
@@ -788,13 +788,13 @@ def loadSpeciesDictionary(path):
     """
     species_dict = {}
 
-    inerts = [Species().fromSMILES(inert) for inert in ('[He]', '[Ne]', 'N#N', '[Ar]')]
+    inerts = [Species().from_smiles(inert) for inert in ('[He]', '[Ne]', 'N#N', '[Ar]')]
     with open(path, 'r') as f:
         adjlist = ''
         for line in f:
             if line.strip() == '' and adjlist.strip() != '':
                 # Finish this adjacency list
-                species = Species().fromAdjacencyList(adjlist)
+                species = Species().from_adjacency_list(adjlist)
                 species.generate_resonance_structures()
                 label = species.label
                 for inert in inerts:
@@ -812,7 +812,7 @@ def loadSpeciesDictionary(path):
                 adjlist += line
         else:  #reach end of file
             if adjlist.strip() != '':
-                species = Species().fromAdjacencyList(adjlist)
+                species = Species().from_adjacency_list(adjlist)
                 species.generate_resonance_structures()
                 label = species.label
                 for inert in inerts:
@@ -1172,7 +1172,7 @@ def readThermoBlock(f, speciesDict):
                 thermo_block = ''
                 line = f.readline()
                 continue
-            elif speciesDict[label].hasThermo():
+            elif speciesDict[label].has_thermo():
                 logging.warning('Skipping duplicate thermo for the species {0}'.format(label))
                 thermo_block = ''
                 line = f.readline()
@@ -1482,7 +1482,7 @@ def writeThermoEntry(species, elementCounts=None, verbose=True):
     model, and you must use the seven-coefficient forms for each.
     """
 
-    thermo = species.getThermoData()
+    thermo = species.get_thermo_data()
 
     if not isinstance(thermo, NASA):
         raise ChemkinError('Cannot generate Chemkin string for species "{0}": '
@@ -1496,7 +1496,7 @@ def writeThermoEntry(species, elementCounts=None, verbose=True):
 
     # Determine the number of each type of element in the molecule
     if elementCounts is None:
-        elementCounts = retrieveElementCount(species.molecule[0])
+        elementCounts = get_element_count(species.molecule[0])
 
     string = ''
     # Write thermo comments
@@ -1989,7 +1989,7 @@ def saveTransportFile(path, species):
         f.write("! {0:15} {1:8} {2:9} {3:9} {4:9} {5:9} {6:9} {7:9}\n".format(
             'Name', 'Index', 'epsilon/k_B', 'sigma', 'mu', 'alpha', 'Zrot', 'Source'))
         for spec in species:
-            transport_data = spec.getTransportData()
+            transport_data = spec.get_transport_data()
             if not transport_data:
                 missing_data = True
             else:

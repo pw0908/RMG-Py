@@ -669,11 +669,11 @@ allElements=['H', 'C', 'O', 'N', 'S', 'Si', 'Cl', 'F', 'I', 'Ne', 'Ar', 'He', 'X
 #list of elements that do not have more specific atomTypes
 nonSpecifics=['H', 'He', 'Ne', 'Ar',]
 
-for atomType in ATOMTYPES.values():
-    for items in [atomType.generic, atomType.specific,
-                  atomType.increment_bond, atomType.decrement_bond, atomType.form_bond,
-                  atomType.break_bond, atomType.increment_radical, atomType.decrement_radical, atomType.increment_lone_pair,
-                  atomType.decrement_lone_pair]:
+for atomtype in ATOMTYPES.values():
+    for items in [atomtype.generic, atomtype.specific,
+                  atomtype.increment_bond, atomtype.decrement_bond, atomtype.form_bond,
+                  atomtype.break_bond, atomtype.increment_radical, atomtype.decrement_radical, atomtype.increment_lone_pair,
+                  atomtype.decrement_lone_pair]:
         for index in range(len(items)):
             items[index] = ATOMTYPES[items[index]]
 
@@ -713,7 +713,7 @@ def get_features(atom, bonds):
     all_double = r_double + o_double + s_double
     # Warning: some parts of code assume this list matches the list returned by count_bonds()
     # possibly the two methods could be merged or one could call the other.
-    features = [single, all_double, r_double, o_double, s_double, triple, quadruple, benzene, atom.lonePairs, atom.charge]
+    features = [single, all_double, r_double, o_double, s_double, triple, quadruple, benzene, atom.lone_pairs, atom.charge]
 
     return features
 

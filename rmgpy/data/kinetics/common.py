@@ -276,11 +276,11 @@ def find_degenerate_reactions(rxn_list, same_reactants=None, template=None, kine
                 identical = False
                 same_template = True
                 for rxn in sub_list:
-                    isomorphic = rxn0.is_isomorphic(rxn, checkIdentical=False, strict=False,
-                                                    checkTemplateRxnProducts=True)
+                    isomorphic = rxn0.is_isomorphic(rxn, check_identical=False, strict=False,
+                                                    check_template_rxn_products=True)
                     if isomorphic:
-                        identical = rxn0.is_isomorphic(rxn, checkIdentical=True, strict=False,
-                                                       checkTemplateRxnProducts=True)
+                        identical = rxn0.is_isomorphic(rxn, check_identical=True, strict=False,
+                                                       check_template_rxn_products=True)
                         if identical:
                             # An exact copy of rxn0 is already in our list, so we can move on
                             break

@@ -334,7 +334,7 @@ class KineticsLibrary(Database):
                 reaction = entry.item
                 if reaction0 is reaction:
                     continue
-                if reaction0.is_isomorphic(reaction, eitherDirection=False):
+                if reaction0.is_isomorphic(reaction, either_direction=False):
                     if reaction0.reversible != reaction.reversible:
                         logging.debug("Reactions isomorphic but with different reversibilities.")
                         continue
@@ -698,7 +698,7 @@ class KineticsLibrary(Database):
                 entry.item.duplicate = True
                 rate_list = kinetics.arrhenius[:]
             else:
-                if not kinetics.isPressureDependent():
+                if not kinetics.is_pressure_dependent():
                     rate_list.append(kinetics)
             for rate in rate_list:
                 # Write reaction equation
@@ -723,7 +723,7 @@ class KineticsLibrary(Database):
         f.write('Reactions:\n')
         for entry in entries:
             kinetics = entry.data
-            if not kinetics.isPressureDependent():
+            if not kinetics.is_pressure_dependent():
                 continue
             rate_list = []
             if isinstance(kinetics, MultiPDepArrhenius):

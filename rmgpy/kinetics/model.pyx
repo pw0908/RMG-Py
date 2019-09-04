@@ -504,7 +504,7 @@ cdef class PDepKineticsModel(KineticsModel):
         for collider, efficiency in sorted(self.efficiencies.items(), key=lambda item: id(item[0])):
             for species in species_list:
                 if any([collider.is_isomorphic(molecule) for molecule in species.molecule]):
-                    efficiencies[species.toChemkin()] = efficiency
+                    efficiencies[species.to_chemkin()] = efficiency
                     break
         return efficiencies
 

@@ -140,9 +140,9 @@ def analyze_molecule(mol):
         if features['is_radical'] and features['is_aromatic']:
             features['is_aryl_radical'] = mol.is_aryl_radical(aromatic_rings)
     for atom in mol.vertices:
-        if atom.is_nitrogen() and atom.lonePairs == 0:
+        if atom.is_nitrogen() and atom.lone_pairs == 0:
             features['hasNitrogenVal5'] = True
-        if atom.lonePairs > 0:
+        if atom.lone_pairs > 0:
             features['hasLonePairs'] = True
 
     return features
@@ -357,7 +357,7 @@ def generate_lone_pair_multiple_bond_resonance_structures(mol):
 
     structures = []
     for atom in mol.vertices:
-        if atom.lonePairs >= 1:
+        if atom.lone_pairs >= 1:
             paths = pathfinder.find_lone_pair_multiple_bond_paths(atom)
             for atom1, atom2, atom3, bond12, bond23 in paths:
                 # Adjust to (potentially) new resonance structure
@@ -537,7 +537,7 @@ def generate_N5dc_radical_resonance_structures(mol):
 
     structures = []
     for atom in mol.vertices:
-        if atom.atomType.label == 'N5dc' and atom.radicalElectrons == 0 and len(atom.edges) == 3:
+        if atom.atomtype.label == 'N5dc' and atom.radical_electrons == 0 and len(atom.edges) == 3:
             paths = pathfinder.find_N5dc_radical_delocalization_paths(atom)
             for atom2, atom3 in paths:
                 atom2.decrement_radical()
@@ -789,7 +789,7 @@ def generate_kekule_structure(mol):
     cython.declare(atom=Atom, molecule=Molecule)
 
     for atom in mol.atoms:
-        if atom.atomType.label == 'Cb' or atom.atomType.label == 'Cbf':
+        if atom.atomtype.label == 'Cb' or atom.atomtype.label == 'Cbf':
             break
     else:
         return []
@@ -864,7 +864,7 @@ def generate_clar_structures(mol):
 
     Returns a list of :class:`Molecule` objects corresponding to the Clar structures.
     """
-    cython.declare(output=list, mol_list=list, new_mol=Molecule, aromaticRings=list, bonds=list, solution=list,
+    cython.declare(output=list, mol_list=list, new_mol=Molecule, aromatic_rings=list, bonds=list, solution=list,
                    y=list, x=list, index=cython.int, bond=Bond, ring=list)
 
     if not mol.is_cyclic():
@@ -932,7 +932,7 @@ def _clar_optimization(mol, constraints=None, max_num=None):
         Hansen, P.; Zheng, M. The Clar Number of a Benzenoid Hydrocarbon and Linear Programming.
             J. Math. Chem. 1994, 15 (1), 93–107.
     """
-    cython.declare(molecule=Molecule, aromaticRings=list, exo=list, l=cython.int, m=cython.int, n=cython.int,
+    cython.declare(molecule=Molecule, aromatic_rings=list, exo=list, l=cython.int, m=cython.int, n=cython.int,
                    a=list, objective=list, status=cython.int, solution=list, innerSolutions=list)
 
     from lpsolve55 import lpsolve

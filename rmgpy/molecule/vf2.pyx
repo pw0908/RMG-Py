@@ -111,7 +111,7 @@ cdef class VF2:
         If `find_all` is ``True``, all isomorphisms are found; otherwise only
         the first is found.
         """
-        cdef int callDepth, index1, index2
+        cdef int call_depth, index1, index2
 
         if self.graph1 is not graph1:
             self.graph1 = graph1
@@ -145,11 +145,11 @@ cdef class VF2:
             # a subgraph of the first
             return
 
-        # Initialize callDepth with the size of the smallest graph
+        # Initialize call_depth with the size of the smallest graph
         # Each recursive call to match() will decrease it by one;
         # when the whole graph has been explored, it should reach 0
         # It should never go below zero!
-        callDepth = len(graph2.vertices)
+        call_depth = len(graph2.vertices)
 
         # Initialize mapping by clearing any previous mapping information
         for vertex1 in graph1.vertices:
@@ -162,9 +162,9 @@ cdef class VF2:
         if self.initial_mapping is not None:
             for vertex1, vertex2 in self.initial_mapping.items():
                 self.add_to_mapping(vertex1, vertex2)
-            callDepth -= len(self.initial_mapping)
+            call_depth -= len(self.initial_mapping)
 
-        self.match(callDepth)
+        self.match(call_depth)
 
         if save_order:
             graph1.restore_vertex_order()
@@ -287,7 +287,7 @@ cdef class VF2:
 
         # Semantic check #1: vertex1 and vertex2 must be equivalent
         if self.subgraph:
-            if not vertex1.isSpecificCaseOf(vertex2): return False
+            if not vertex1.is_specific_case_of(vertex2): return False
         else:
             if not vertex1.equivalent(vertex2, strict=self.strict): return False
 
@@ -305,7 +305,7 @@ cdef class VF2:
                     edge1 = vertex1.edges[vert1]
                     edge2 = vertex2.edges[vert2]
                     if self.subgraph:
-                        if not edge1.isSpecificCaseOf(edge2): return False
+                        if not edge1.is_specific_case_of(edge2): return False
                     else:
                         if not edge1.equivalent(edge2): return False
 

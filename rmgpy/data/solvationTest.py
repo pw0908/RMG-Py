@@ -233,14 +233,14 @@ class TestSoluteDatabase(TestCase):
         solute = Species(label='n-octane', molecule=[Molecule().from_smiles('C(CCCCC)CC')])
         rmg.initialSpecies.append(solute)
         rmg.solvent = 'water'
-        solvent_structure = Species().fromSMILES('O')
+        solvent_structure = Species().from_smiles('O')
         self.assertRaises(Exception, self.database.check_solvent_in_initial_species, rmg, solvent_structure)
 
         # Case 1-2: the solvent is now octane and it is listed as the initialSpecies. Although the string
         # names of the solute and the solvent are different, because the solvent SMILES is provided,
         # it can identify the 'n-octane' as the solvent
         rmg.solvent = 'octane'
-        solvent_structure = Species().fromSMILES('CCCCCCCC')
+        solvent_structure = Species().from_smiles('CCCCCCCC')
         self.database.check_solvent_in_initial_species(rmg, solvent_structure)
         self.assertTrue(rmg.initialSpecies[0].isSolvent)
 
@@ -270,7 +270,7 @@ class TestSoluteDatabase(TestCase):
         # Case 2: When the solventDatabase contains the correct solvent SMILES, the item attribute is the instance of
         # Species with the correct solvent molecular structure
         solventlibrary.load_entry(index=2, label='octane', solvent=None, molecule='CCCCCCCC')
-        solvent_species = Species().fromSMILES('C(CCCCC)CC')
+        solvent_species = Species().from_smiles('C(CCCCC)CC')
         self.assertTrue(solvent_species.is_isomorphic(solventlibrary.entries['octane'].item[0]))
 
         # Case 3: When the solventDatabase contains the correct solvent adjacency list, the item attribute
@@ -287,7 +287,7 @@ class TestSoluteDatabase(TestCase):
         8 H u0 p0 c0 {2,S}
         9 H u0 p0 c0 {3,S}
         """)
-        solvent_species = Species().fromSMILES('CCO')
+        solvent_species = Species().from_smiles('CCO')
         self.assertTrue(solvent_species.is_isomorphic(solventlibrary.entries['ethanol'].item[0]))
 
         # Case 4: when the solventDatabase contains incorrect values for the molecule attribute, it raises Exception
@@ -296,7 +296,7 @@ class TestSoluteDatabase(TestCase):
 
         # Case 5: when the solventDatabase contains data for co-solvents.
         solventlibrary.load_entry(index=5, label='methanol_50_water_50', solvent=None, molecule=['CO', 'O'])
-        solvent_species_list = [Species().fromSMILES('CO'), Species().fromSMILES('O')]
+        solvent_species_list = [Species().from_smiles('CO'), Species().from_smiles('O')]
         self.assertEqual(len(solventlibrary.entries['methanol_50_water_50'].item), 2)
         for spc1 in solventlibrary.entries['methanol_50_water_50'].item:
             self.assertTrue(any([spc1.is_isomorphic(spc2) for spc2 in solvent_species_list]))

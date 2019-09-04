@@ -101,7 +101,7 @@ def compareModelKinetics(model1, model2):
     kinetics2 = []
     for rxn1, rxn2 in common_reactions.items():
         kinetics1.append(rxn1.get_rate_coefficient(T, P))
-        if rxn1.is_isomorphic(rxn2, eitherDirection=False):
+        if rxn1.is_isomorphic(rxn2, either_direction=False):
             kinetics2.append(rxn2.get_rate_coefficient(T, P))
         else:
             kinetics2.append(rxn2.get_rate_coefficient(T, P) / rxn2.getEquilibriumConstant(T))

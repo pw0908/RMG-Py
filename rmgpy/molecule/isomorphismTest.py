@@ -198,7 +198,7 @@ def run_parameter_tests():
         err = "\nGraph 1: {0},\nGraph 2: {1}. \nExpected: {2}".format(adjlist1, adjlist2, exp)
 
         if mol1 is not None and mol2 is not None:
-            calc = mol1.isIsomorphic(mol2)
+            calc = mol1.is_isomorphic(mol2)
             assert_equal(calc, exp, err)
 
     def findIsomorphisms_mol_atom_types(e1, e2, u1, u2, c1, c2):
@@ -214,7 +214,7 @@ def run_parameter_tests():
         err = "\nGraph 1: {0},\nGraph 2: {1}. \nExpected: {2}".format(adjlist1, adjlist2, exp)
 
         if mol1 is not None and mol2 is not None:
-            calc = len(mol1.findIsomorphism(mol2)) > 0
+            calc = len(mol1.find_isomorphism(mol2)) > 0
             assert_equal(calc, exp, err)
 
     def isSubgraphIsomorphic_mol_atom_types(e1, e2, u1, u2, c1, c2):
@@ -226,7 +226,7 @@ def run_parameter_tests():
         err = "\nGraph 1: {0},\nGraph 2: {1}. \nExpected: {2}".format(adjlist1, adjlist2, exp)
 
         if mol1 is not None and group1 is not None:
-            calc = mol1.isSubgraphIsomorphic(group1)
+            calc = mol1.is_subgraph_isomorphic(group1)
             assert_equal(calc, exp, err)
 
     def findSubgraphIsomorphisms_mol_atom_types(e1, e2, u1, u2, c1, c2):
@@ -239,7 +239,7 @@ def run_parameter_tests():
         err = "\nGraph 1: {0},\nGraph 2: {1}. \nExpected: {2}".format(adjlist1, adjlist2, exp)
 
         if mol1 is not None and group1 is not None:
-            calc = len(mol1.findSubgraphIsomorphisms(group1)) > 0
+            calc = len(mol1.find_subgraph_isomorphisms(group1)) > 0
             assert_equal(calc, exp, err)
 
     output = load_cases_molecule_atom_types()
@@ -263,25 +263,25 @@ def run_parameter_tests():
         mol1, adjlist1 = createMolecule(e1, u1, c1)
         group1, adjlist2 = createGroup(e2, u2, c2)
         if mol1 is not None and group1 is not None:
-            a1 = mol1.atoms[0].atomType
-            a2 = group1.atoms[0].atomType[0]
+            a1 = mol1.atoms[0].atomtype
+            a2 = group1.atoms[0].atomtype[0]
             exp = group_atom_type_comparison(a1, a2, u1, u2, c1,
                                              c2)  # string comparison will give us expected value!
             err = "\nGraph 1: {0},\nGraph 2: {1}. \nExpected: {2}".format(adjlist1, adjlist2, exp)
 
-            calc = mol1.isSubgraphIsomorphic(group1)
+            calc = mol1.is_subgraph_isomorphic(group1)
             assert_equal(calc, exp, err)
 
     def findSubgraphIsomorphisms_mol_group_atom_types(e1, e2, u1, u2, c1, c2):
         mol1, adjlist1 = createMolecule(e1, u1, c1)
         group1, adjlist2 = createGroup(e2, u2, c2)
         if mol1 is not None and group1 is not None:
-            a1 = mol1.atoms[0].atomType
-            a2 = group1.atoms[0].atomType[0]
+            a1 = mol1.atoms[0].atomtype
+            a2 = group1.atoms[0].atomtype[0]
             exp = group_atom_type_comparison(a1, a2, u1, u2, c1, c2)
             err = "\nGraph 1: {0},\nGraph 2: {1}. \nExpected: {2}".format(adjlist1, adjlist2, exp)
 
-            calc = len(mol1.findSubgraphIsomorphisms(group1)) > 0
+            calc = len(mol1.find_subgraph_isomorphisms(group1)) > 0
             assert_equal(calc, exp, err)
 
     output = load_cases_group_atom_types()

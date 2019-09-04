@@ -74,7 +74,7 @@ class PseudoSpecies(object):
     def __str__(self):
         return self.label
 
-    def isIsomorphic(self, other, generateInitialMap=False, strict=True):
+    def is_isomorphic(self, other, generate_initial_map=False, strict=True):
         return self.label.lower() == other.label.lower()
 
 
@@ -94,45 +94,45 @@ class TestReactionIsomorphism(unittest.TestCase):
 
     def test1to1(self):
         r1 = self.makeReaction('A=B')
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('a=B')))
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('b=A')))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('B=a'), eitherDirection=False))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('A=C')))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('A=BB')))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('a=B')))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('b=A')))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('B=a'), either_direction=False))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('A=C')))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('A=BB')))
 
     def test1to2(self):
         r1 = self.makeReaction('A=BC')
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('a=Bc')))
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('cb=a')))
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('a=cb'), eitherDirection=False))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('bc=a'), eitherDirection=False))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('a=c')))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('ab=c')))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('a=Bc')))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('cb=a')))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('a=cb'), either_direction=False))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('bc=a'), either_direction=False))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('a=c')))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('ab=c')))
 
     def test2to2(self):
         r1 = self.makeReaction('AB=CD')
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('ab=cd')))
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('ab=dc'), eitherDirection=False))
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('dc=ba')))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('cd=ab'), eitherDirection=False))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('ab=ab')))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('ab=cde')))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('ab=cd')))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('ab=dc'), either_direction=False))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('dc=ba')))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('cd=ab'), either_direction=False))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('ab=ab')))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('ab=cde')))
 
     def test2to3(self):
         r1 = self.makeReaction('AB=CDE')
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('ab=cde')))
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('ba=edc'), eitherDirection=False))
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('dec=ba')))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('cde=ab'), eitherDirection=False))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('ab=abc')))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('abe=cde')))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('ab=cde')))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('ba=edc'), either_direction=False))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('dec=ba')))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('cde=ab'), either_direction=False))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('ab=abc')))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('abe=cde')))
 
     def test2to3_usingCheckOnlyLabel(self):
         r1 = self.makeReaction('AB=CDE')
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('AB=CDE'), checkOnlyLabel=True))
-        self.assertTrue(r1.isIsomorphic(self.makeReaction('BA=EDC'), eitherDirection=False, checkOnlyLabel=True))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('Ab=CDE'), checkOnlyLabel=True))
-        self.assertFalse(r1.isIsomorphic(self.makeReaction('BA=EDd'), eitherDirection=False, checkOnlyLabel=True))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('AB=CDE'), check_only_label=True))
+        self.assertTrue(r1.is_isomorphic(self.makeReaction('BA=EDC'), either_direction=False, check_only_label=True))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('Ab=CDE'), check_only_label=True))
+        self.assertFalse(r1.is_isomorphic(self.makeReaction('BA=EDd'), either_direction=False, check_only_label=True))
 
 
 class TestSurfaceReaction(unittest.TestCase):
@@ -427,9 +427,9 @@ class TestReaction(unittest.TestCase):
             ),
         )
 
-        oxygen_atom = Species().fromSMILES('[O]')
-        so2 = Species().fromSMILES('O=S=O')
-        so3 = Species().fromSMILES('O=S(=O)=O')
+        oxygen_atom = Species().from_smiles('[O]')
+        so2 = Species().from_smiles('O=S=O')
+        so3 = Species().from_smiles('O=S(=O)=O')
 
         self.reaction3 = Reaction(
             reactants=[oxygen_atom, so2],
@@ -600,7 +600,7 @@ class TestReaction(unittest.TestCase):
         P = 1e5
         for T in Tlist:
             self.assertAlmostEqual(
-                self.reaction.getRateCoefficient(T, P) / self.reaction.kinetics.get_rate_coefficient(T), 1.0, 6)
+                self.reaction.get_rate_coefficient(T, P) / self.reaction.kinetics.get_rate_coefficient(T), 1.0, 6)
 
     def testGenerateReverseRateCoefficient(self):
         """
@@ -610,7 +610,7 @@ class TestReaction(unittest.TestCase):
         P = 1e5
         reverse_kinetics = self.reaction2.generateReverseRateCoefficient()
         for T in Tlist:
-            kr0 = self.reaction2.getRateCoefficient(T, P) / self.reaction2.getEquilibriumConstant(T)
+            kr0 = self.reaction2.get_rate_coefficient(T, P) / self.reaction2.getEquilibriumConstant(T)
             kr = reverse_kinetics.get_rate_coefficient(T)
             self.assertAlmostEqual(kr0 / kr, 1.0, 0)
 
@@ -635,8 +635,8 @@ class TestReaction(unittest.TestCase):
 
         rev_rxn.fixBarrierHeight()
         Ea = rev_rxn.kinetics.Ea.value_si
-        H0 = sum([spec.getThermoData().E0.value_si for spec in rxn.products]) \
-             - sum([spec.getThermoData().E0.value_si for spec in rxn.reactants])
+        H0 = sum([spec.get_thermo_data().E0.value_si for spec in rxn.products]) \
+             - sum([spec.get_thermo_data().E0.value_si for spec in rxn.reactants])
         self.assertAlmostEqual(Ea, -H0, 3)
 
         # test that Ea is forced to be positive if forcePositive is set to True
@@ -1570,7 +1570,7 @@ Thermo group additivity estimation: group(O2s-OsH) + gauche(O2s(RR)) + other(R) 
         rmg_objects = [self.arrheniusBi, self.arrheniusBi_irreversible, self.arrheniusMono, self.arrheniusTri]
 
         ct_objects = [self.ct_arrheniusBi, self.ct_arrheniusBi_irreversible, self.ct_arrheniusMono, self.ct_arrheniusTri]
-        converted_ct_objects = [obj.toCantera(self.speciesList, useChemkinIdentifier=True) for obj in rmg_objects]
+        converted_ct_objects = [obj.to_cantera(self.speciesList, use_chemkin_identifier=True) for obj in rmg_objects]
 
         for converted_obj, ct_obj in zip(converted_ct_objects, ct_objects):
             # Check that the reaction class is the same
@@ -1586,7 +1586,7 @@ Thermo group additivity estimation: group(O2s-OsH) + gauche(O2s(RR)) + other(R) 
         """
         rmg_objects = [self.multiArrhenius]
         ct_objects = [self.ct_multiArrhenius]
-        converted_ct_objects = [obj.toCantera(self.speciesList, useChemkinIdentifier=True) for obj in rmg_objects]
+        converted_ct_objects = [obj.to_cantera(self.speciesList, use_chemkin_identifier=True) for obj in rmg_objects]
 
         for converted_obj, ct_obj in zip(converted_ct_objects, ct_objects):
             # Check that the same number of reactions are produced
@@ -1606,7 +1606,7 @@ Thermo group additivity estimation: group(O2s-OsH) + gauche(O2s(RR)) + other(R) 
         """
         rmg_objects = [self.pdepArrhenius]
         ct_objects = [self.ct_pdepArrhenius]
-        converted_ct_objects = [obj.toCantera(self.speciesList, useChemkinIdentifier=True) for obj in rmg_objects]
+        converted_ct_objects = [obj.to_cantera(self.speciesList, use_chemkin_identifier=True) for obj in rmg_objects]
 
         for converted_obj, ct_obj in zip(converted_ct_objects, ct_objects):
             # Check that the reaction class is the same
@@ -1623,7 +1623,7 @@ Thermo group additivity estimation: group(O2s-OsH) + gauche(O2s(RR)) + other(R) 
 
         rmg_objects = [self.multiPdepArrhenius]
         ct_objects = [self.ct_multiPdepArrhenius]
-        converted_ct_objects = [obj.toCantera(self.speciesList, useChemkinIdentifier=True) for obj in rmg_objects]
+        converted_ct_objects = [obj.to_cantera(self.speciesList, use_chemkin_identifier=True) for obj in rmg_objects]
 
         for converted_obj, ct_obj in zip(converted_ct_objects, ct_objects):
             # Check that the same number of reactions are produced
@@ -1641,7 +1641,7 @@ Thermo group additivity estimation: group(O2s-OsH) + gauche(O2s(RR)) + other(R) 
         """
         Tests formation of cantera reactions with Chebyshev kinetics.
         """
-        ct_chebyshev = self.chebyshev.toCantera(self.speciesList, useChemkinIdentifier=True)
+        ct_chebyshev = self.chebyshev.to_cantera(self.speciesList, use_chemkin_identifier=True)
         self.assertEqual(type(ct_chebyshev), type(self.ct_chebyshev))
         self.assertEqual(repr(ct_chebyshev), repr(self.ct_chebyshev))
 
@@ -1655,13 +1655,13 @@ Thermo group additivity estimation: group(O2s-OsH) + gauche(O2s(RR)) + other(R) 
         """
         Tests formation of cantera reactions with Falloff kinetics.
         """
-        ct_third_body = self.thirdBody.toCantera(self.speciesList, useChemkinIdentifier=True)
+        ct_third_body = self.thirdBody.to_cantera(self.speciesList, use_chemkin_identifier=True)
         self.assertEqual(type(ct_third_body), type(self.ct_thirdBody))
         self.assertEqual(repr(ct_third_body), repr(self.ct_thirdBody))
         self.assertEqual(str(ct_third_body.rate), str(self.ct_thirdBody.rate))
         self.assertEqual(ct_third_body.efficiencies, self.ct_thirdBody.efficiencies)
 
-        ct_lindemann = self.lindemann.toCantera(self.speciesList, useChemkinIdentifier=True)
+        ct_lindemann = self.lindemann.to_cantera(self.speciesList, use_chemkin_identifier=True)
         self.assertEqual(type(ct_lindemann), type(self.ct_lindemann))
         self.assertEqual(repr(ct_lindemann), repr(self.ct_lindemann))
         self.assertEqual(ct_lindemann.efficiencies, self.ct_lindemann.efficiencies)
@@ -1669,7 +1669,7 @@ Thermo group additivity estimation: group(O2s-OsH) + gauche(O2s(RR)) + other(R) 
         self.assertEqual(str(ct_lindemann.high_rate), str(self.ct_lindemann.high_rate))
         self.assertEqual(str(ct_lindemann.falloff), str(self.ct_lindemann.falloff))
 
-        ct_troe = self.troe.toCantera(self.speciesList, useChemkinIdentifier=True)
+        ct_troe = self.troe.to_cantera(self.speciesList, use_chemkin_identifier=True)
         self.assertEqual(type(ct_troe), type(self.ct_troe))
         self.assertEqual(repr(ct_troe), repr(self.ct_troe))
         self.assertEqual(ct_troe.efficiencies, self.ct_troe.efficiencies)

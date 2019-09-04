@@ -245,9 +245,9 @@ class SimpleReactorCheck(unittest.TestCase):
         dfdk = np.zeros((num_core_species, len(rxn_list)))  # d(dy/dt)/dk
 
         for i in range(len(rxn_list)):
-            k0 = rxn_list[i].getRateCoefficient(T, P)
+            k0 = rxn_list[i].get_rate_coefficient(T, P)
             rxn_list[i].kinetics.A.value_si = rxn_list[i].kinetics.A.value_si * (1 + 1e-3)
-            dk = rxn_list[i].getRateCoefficient(T, P) - k0
+            dk = rxn_list[i].get_rate_coefficient(T, P) - k0
 
             rxn_system = SimpleReactor(T, P, initialMoleFractions={ch4: 0.2, ch3: 0.1, c2h6: 0.35, c2h5: 0.15, h2: 0.2},
                                        nSims=1, termination=[])

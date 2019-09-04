@@ -224,7 +224,7 @@ class MoleculeDrawer(object):
             except KeyError:
                 logging.error('KeyError occured when drawing molecule, likely because'
                               ' the molecule contained non-standard bond orders in the'
-                              ' getResonanceHybrid method. These cannot be drawn since'
+                              ' get_resonance_hybrid method. These cannot be drawn since'
                               ' they cannot be sent to RDKit for coordinate placing.')
                 raise
 
@@ -240,7 +240,7 @@ class MoleculeDrawer(object):
         elif molecule.is_isomorphic(Molecule(smiles='[O][O]')):
             # Render as O2 instead of O-O
             self.molecule.remove_atom(self.molecule.atoms[-1])
-            self.molecule.atoms[0].radicalElectrons = 0
+            self.molecule.atoms[0].radical_electrons = 0
             self.symbols = ['O2']
             self.coordinates = np.array([[0, 0]], np.float64)
         elif self.symbols == ['OH', 'O'] or self.symbols == ['O', 'OH']:
@@ -929,7 +929,7 @@ class MoleculeDrawer(object):
             # Don't label carbon atoms, unless there are only one or two heavy atoms
             # or they are isotopically labeled
             if symbols[i] == 'C' and len(symbols) > 2:
-                if (len(atoms[i].bonds) > 1 or (atoms[i].radicalElectrons == 0 and atoms[i].charge == 0)) \
+                if (len(atoms[i].bonds) > 1 or (atoms[i].radical_electrons == 0 and atoms[i].charge == 0)) \
                         and atoms[i].element.isotope == -1:
                     symbols[i] = ''
         # Do label atoms that have only double bonds to one or more labeled atoms
@@ -1027,7 +1027,7 @@ class MoleculeDrawer(object):
                 vector += coordinates[atoms.index(atom2), :] - coordinates[index, :]
             heavy_first = vector[0] <= 0
             if (len(atoms) == 1 and atoms[0].symbol not in ['C', 'N'] and
-                    atoms[0].charge == 0 and atoms[0].radicalElectrons == 0):
+                    atoms[0].charge == 0 and atoms[0].radical_electrons == 0):
                 # This is so e.g. water is rendered as H2O rather than OH2
                 heavy_first = False
                 cr.set_font_size(self.options['fontSizeNormal'])
@@ -1417,11 +1417,11 @@ class MoleculeDrawer(object):
         width = 0.0
         height = 0.0
         if orientation[0] == 'b' or orientation[0] == 't':
-            if atom.radicalElectrons > 0:
-                width += atom.radicalElectrons * 2 + (atom.radicalElectrons - 1)
-                height = atom.radicalElectrons * 2
+            if atom.radical_electrons > 0:
+                width += atom.radical_electrons * 2 + (atom.radical_electrons - 1)
+                height = atom.radical_electrons * 2
             text = ''
-            if atom.radicalElectrons > 0 and atom.charge != 0:
+            if atom.radical_electrons > 0 and atom.charge != 0:
                 width += 1
             if atom.charge == 1:
                 text = '+'
@@ -1436,11 +1436,11 @@ class MoleculeDrawer(object):
                 width += extents[2] + 1
                 height = extents[3]
         elif orientation[0] == 'l' or orientation[0] == 'r':
-            if atom.radicalElectrons > 0:
-                height += atom.radicalElectrons * 2 + (atom.radicalElectrons - 1)
-                width = atom.radicalElectrons * 2
+            if atom.radical_electrons > 0:
+                height += atom.radical_electrons * 2 + (atom.radical_electrons - 1)
+                width = atom.radical_electrons * 2
             text = ''
-            if atom.radicalElectrons > 0 and atom.charge != 0:
+            if atom.radical_electrons > 0 and atom.charge != 0:
                 height += 1
             if atom.charge == 1:
                 text = '+'
@@ -1471,13 +1471,13 @@ class MoleculeDrawer(object):
 
         if orientation[0] == 'b' or orientation[0] == 't':
             # Draw radical electrons first
-            for i in range(atom.radicalElectrons):
+            for i in range(atom.radical_electrons):
                 cr.new_sub_path()
                 cr.arc(xi + 3 * i + 1, yi + height / 2, 1, 0, 2 * math.pi)
                 cr.set_source_rgba(0.0, 0.0, 0.0, 1.0)
                 cr.fill()
-            if atom.radicalElectrons > 0:
-                xi += atom.radicalElectrons * 2 + (atom.radicalElectrons - 1) + 1
+            if atom.radical_electrons > 0:
+                xi += atom.radical_electrons * 2 + (atom.radical_electrons - 1) + 1
             # Draw charges second
             text = ''
             if atom.charge == 1:
@@ -1497,7 +1497,7 @@ class MoleculeDrawer(object):
             # Draw lone electron pairs            
             # Draw them for nitrogen containing molecules only
             if draw_lone_pairs:
-                for i in range(atom.lonePairs):
+                for i in range(atom.lone_pairs):
                     cr.new_sub_path()
                     if i == 0:
                         x1lp = x - 2
@@ -1535,7 +1535,7 @@ class MoleculeDrawer(object):
             if atom.charge != 0:
                 yi += extents[3] + 1
             # Draw radical electrons second
-            for i in range(atom.radicalElectrons):
+            for i in range(atom.radical_electrons):
                 cr.new_sub_path()
                 cr.arc(xi + width / 2, yi + 3 * i + 1, 1, 0, 2 * math.pi)
                 cr.set_source_rgba(0.0, 0.0, 0.0, 1.0)
@@ -1543,7 +1543,7 @@ class MoleculeDrawer(object):
             # Draw lone electron pairs
             # Draw them for nitrogen species only
             if draw_lone_pairs:
-                for i in range(atom.lonePairs):
+                for i in range(atom.lone_pairs):
                     cr.new_sub_path()
                     if i == 0:
                         x1lp = x - 2

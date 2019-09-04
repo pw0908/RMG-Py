@@ -588,7 +588,7 @@ class RMG(util.Subject):
 
             O2Singlet = Molecule().from_smiles('O=O')
             for spec in all_inputted_species:
-                if spec.isIsomorphic(O2Singlet):
+                if spec.is_isomorphic(O2Singlet):
                     raise ForbiddenStructureException("Species constraints forbids input species {0} RMG expects the "
                                                       "triplet form of oxygen for correct usage in reaction families. "
                                                       "Please change your input to SMILES='[O][O]' If you actually "
@@ -1529,7 +1529,7 @@ class RMG(util.Subject):
                     restart_species_list = yaml.safe_load(stream=f)
 
                 num_restart_spcs = len(restart_species_list)
-                restart_species_list = [Species().fromAdjacencyList(adj_list) for adj_list in restart_species_list]
+                restart_species_list = [Species().from_adjacency_list(adj_list) for adj_list in restart_species_list]
 
                 # Load in the restart filter tensors
                 with h5py.File(self.filtersPath, 'r') as f:

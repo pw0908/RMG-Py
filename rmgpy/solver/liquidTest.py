@@ -289,14 +289,14 @@ class LiquidReactorCheck(unittest.TestCase):
             # The forward finite difference is very unstable for reactions
             # 6 and 7. Use Jacobians calculated by hand instead.
             elif rxn_num == 6:
-                kforward = rxn.getRateCoefficient(self.T)
+                kforward = rxn.get_rate_coefficient(self.T)
                 kreverse = kforward / rxn.getEquilibriumConstant(self.T)
                 jacobian = jacobian_rxn6(c0, kforward, kreverse, core_species)
                 for i in range(num_core_species):
                     for j in range(num_core_species):
                         self.assertAlmostEqual(jacobian[i, j], solver_jacobian[i, j], delta=abs(1e-4 * jacobian[i, j]))
             elif rxn_num == 7:
-                kforward = rxn.getRateCoefficient(self.T)
+                kforward = rxn.get_rate_coefficient(self.T)
                 kreverse = kforward / rxn.getEquilibriumConstant(self.T)
                 jacobian = jacobian_rxn7(c0, kforward, kreverse, core_species)
                 for i in range(num_core_species):
@@ -357,9 +357,9 @@ class LiquidReactorCheck(unittest.TestCase):
         c0 = {self.CH4: 0.2, self.CH3: 0.1, self.C2H6: 0.35, self.C2H5: 0.15, self.H2: 0.2}
 
         for i in range(len(rxn_list)):
-            k0 = rxn_list[i].getRateCoefficient(self.T)
+            k0 = rxn_list[i].get_rate_coefficient(self.T)
             rxn_list[i].kinetics.A.value_si = rxn_list[i].kinetics.A.value_si * (1 + 1e-3)
-            dk = rxn_list[i].getRateCoefficient(self.T) - k0
+            dk = rxn_list[i].get_rate_coefficient(self.T) - k0
 
             rxn_system = LiquidReactor(self.T, c0, 1, termination=[])
             rxn_system.initializeModel(core_species, core_reactions, edge_species, edge_reactions)

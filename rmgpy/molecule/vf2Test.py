@@ -87,7 +87,7 @@ class TestVF2(unittest.TestCase):
 
     def test_clear_mapping(self):
         """Test that vertex mapping is cleared after isomorphism."""
-        self.vf2.isIsomorphic(self.mol, self.mol2, None)
+        self.vf2.is_isomorphic(self.mol, self.mol2, None)
 
         for atom in self.mol.atoms:
             self.assertIsNone(atom.mapping)

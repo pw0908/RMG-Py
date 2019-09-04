@@ -521,7 +521,7 @@ class Network(object):
 
         # Densities of states for reactant channels
         for n in range(n_reac):
-            if self.reactants[n].hasStatMech():
+            if self.reactants[n].has_statmech():
                 logging.debug('Calculating density of states for reactant channel "{0}"'.format(self.reactants[n]))
                 self.reactants[n].calculateDensityOfStates(e_list, activeKRotor=self.activeKRotor,
                                                            activeJRotor=self.activeJRotor, rmgmode=self.rmgmode)
@@ -533,7 +533,7 @@ class Network(object):
         # Densities of states for product channels
         if not self.rmgmode:
             for n in range(n_prod):
-                if self.products[n].hasStatMech():
+                if self.products[n].has_statmech():
                     logging.debug('Calculating density of states for product channel "{0}"'.format(self.products[n]))
                     self.products[n].calculateDensityOfStates(e_list, activeKRotor=self.activeKRotor,
                                                               activeJRotor=self.activeJRotor, rmgmode=self.rmgmode)
@@ -830,7 +830,7 @@ class Network(object):
             G = self.reactants[i].getFreeEnergy(temperature)
             eq_ratios[n_isom + i] = math.exp(-G / constants.R / temperature) * conc ** (len(self.reactants[i].species) - 1)
         for i in range(n_prod):
-            if self.products[i].hasStatMech() or self.products[i].hasThermo():
+            if self.products[i].has_statmech() or self.products[i].has_thermo():
                 G = self.products[i].getFreeEnergy(temperature)
                 eq_ratios[n_isom + n_reac + i] = math.exp(-G / constants.R / temperature) * conc ** (len(self.products[i].species) - 1)
         self.eqRatios = eq_ratios

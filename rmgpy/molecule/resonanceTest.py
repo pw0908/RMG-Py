@@ -182,8 +182,8 @@ class ResonanceTest(unittest.TestCase):
         self.assertEqual(len(mol_list), 2)
         self.assertTrue(mol_list[0].reactive)
         self.assertFalse(mol_list[1].reactive)
-        self.assertEqual(mol_list[0].vertices[0].lonePairs + mol_list[0].vertices[1].lonePairs, 3)
-        self.assertEqual(mol_list[1].vertices[0].lonePairs + mol_list[1].vertices[1].lonePairs, 4)
+        self.assertEqual(mol_list[0].vertices[0].lone_pairs + mol_list[0].vertices[1].lone_pairs, 3)
+        self.assertEqual(mol_list[1].vertices[0].lone_pairs + mol_list[1].vertices[1].lone_pairs, 4)
 
     def testN5dcRadical(self):
         """Test the N5dc radical resonance transformation

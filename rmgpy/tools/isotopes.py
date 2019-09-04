@@ -279,7 +279,7 @@ def generate_isotopomers(spc, N=1):
         candidate = spcs.pop()
         unique = True
         for isotopomer in filtered:
-            if isotopomer.isIsomorphic(candidate):
+            if isotopomer.is_isomorphic(candidate):
                 unique = False
                 break
         if unique: filtered.append(candidate)
@@ -488,7 +488,7 @@ def compare_isotopomers(obj1, obj2, eitherDirection=True):
     atomlist = remove_isotope(obj1, inplace=True) + remove_isotope(obj2, inplace=True)
     if isinstance(obj1, Reaction):
         # make sure isotomorphic
-        comparison_bool = obj1.isIsomorphic(obj2, eitherDirection)
+        comparison_bool = obj1.is_isomorphic(obj2, eitherDirection)
         if comparison_bool and isinstance(obj1, TemplateReaction):
             # ensure families are the same
             comparison_bool = obj1.family == obj2.family
@@ -496,7 +496,7 @@ def compare_isotopomers(obj1, obj2, eitherDirection=True):
                 # make sure templates are identical if in the same direction
                 comparison_bool = frozenset(obj1.template) == frozenset(obj2.template)
     elif isinstance(obj1, Species):
-        comparison_bool = obj1.isIsomorphic(obj2)
+        comparison_bool = obj1.is_isomorphic(obj2)
     else:
         raise TypeError('Only Reaction and Speicies Objects are supported in compareIsotopomers')
     redo_isotope(atomlist)

@@ -96,7 +96,7 @@ class TestFailsSpeciesConstraints(unittest.TestCase):
         """
         Test that failsSpeciesConstraints can handle a Species object.
         """
-        spc = Species().fromSMILES('C')
+        spc = Species().from_smiles('C')
 
         self.assertFalse(failsSpeciesConstraints(spc))
 

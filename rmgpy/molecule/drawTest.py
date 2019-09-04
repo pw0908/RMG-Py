@@ -118,8 +118,8 @@ class TestMoleculeDrawer(unittest.TestCase):
 
     def testDrawNonStandardBonds(self):
 
-        spec = Species().fromSMILES('[CH2]C=C[CH2]')
-        hybrid = spec.getResonanceHybrid()
+        spec = Species().from_smiles('[CH2]C=C[CH2]')
+        hybrid = spec.get_resonance_hybrid()
         try:
             from cairocffi import PDFSurface
         except ImportError:

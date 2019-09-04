@@ -42,7 +42,7 @@ cdef class Vertex(object):
 
     cpdef bint equivalent(self, Vertex other, bint strict=?) except -2
 
-    cpdef bint isSpecificCaseOf(self, Vertex other) except -2
+    cpdef bint is_specific_case_of(self, Vertex other) except -2
 
     cpdef reset_connectivity_values(self)
 
@@ -60,7 +60,7 @@ cdef class Edge(object):
 
     cpdef bint equivalent(Edge self, Edge other) except -2
 
-    cpdef bint isSpecificCaseOf(self, Edge other) except -2
+    cpdef bint is_specific_case_of(self, Edge other) except -2
 
     cpdef Vertex get_other_vertex(self, Vertex vertex)
 

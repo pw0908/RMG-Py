@@ -173,7 +173,7 @@ class Geometry(object):
     def saveCoordinatesFromRDMol(self, rdmol, min_e_id, rdatom_idx):
         # Save xyz coordinates on each atom in molecule ****
         for atom in self.molecule.atoms:
-            point = rdmol.GetConformer(min_e_id).GetAtomPosition(atom.sortingLabel)
+            point = rdmol.GetConformer(min_e_id).GetAtomPosition(atom.sorting_label)
             atom.coords = np.array([point.x, point.y, point.z])
 
     def saveCoordinatesFromQMData(self, qmdata):

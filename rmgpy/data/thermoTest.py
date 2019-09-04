@@ -139,7 +139,7 @@ class TestThermoDatabase(unittest.TestCase):
         thermo_with_sym = self.databaseWithoutLibraries.get_thermo_data(spc)
         thermo_without_sym = self.databaseWithoutLibraries.estimate_thermo_via_group_additivity(spc.molecule[0])
 
-        symmetry_number = spc.getSymmetryNumber()
+        symmetry_number = spc.get_symmetry_number()
         self.assertNotEqual(symmetry_number, spc.molecule[0].get_symmetry_number(),
                             'For this test to be robust, species symmetry ({}) and molecule symmetry ({}) '
                             'must be different'.format(symmetry_number, spc.molecule[0].get_symmetry_number()))
@@ -331,7 +331,7 @@ longDistanceInteraction_cyclic(o_OH_OH) + ring(Benzene)
         """Test thermo generation for species objects for HBI correction on library value.
 
         Ensure that molecule list is only reordered, and not changed after matching library value"""
-        spec = Species().fromSMILES('C[CH]c1ccccc1')
+        spec = Species().from_smiles('C[CH]c1ccccc1')
         spec.generate_resonance_structures()
         initial = list(spec.molecule)  # Make a copy of the list
         thermo = self.database.get_thermo_data(spec)
@@ -344,7 +344,7 @@ longDistanceInteraction_cyclic(o_OH_OH) + ring(Benzene)
         """Test thermo generation for species objects for HBI correction on group additivity value.
 
         Ensure that molecule list is only reordered, and not changed after group additivity"""
-        spec = Species().fromSMILES('C[CH]c1ccccc1')
+        spec = Species().from_smiles('C[CH]c1ccccc1')
         spec.generate_resonance_structures()
         initial = list(spec.molecule)  # Make a copy of the list
         thermo = self.databaseWithoutLibraries.get_thermo_data(spec)
@@ -357,7 +357,7 @@ longDistanceInteraction_cyclic(o_OH_OH) + ring(Benzene)
         """Test thermo generation for species objects for library value.
 
         Ensure that the matched molecule is placed at the beginning of the list."""
-        spec = Species().fromSMILES('c12ccccc1c(C=[CH])ccc2')
+        spec = Species().from_smiles('c12ccccc1c(C=[CH])ccc2')
         arom = Molecule().from_adjacency_list("""
 multiplicity 2
 1  C u0 p0 c0 {2,B} {3,B} {5,B}
@@ -422,9 +422,9 @@ multiplicity 2
         )
         ml_settings['uncertainty_cutoffs'] = ml_uncertainty_cutoffs
 
-        spec1 = Species().fromSMILES('C[CH]c1ccccc1')
+        spec1 = Species().from_smiles('C[CH]c1ccccc1')
         spec1.generate_resonance_structures()
-        spec2 = Species().fromSMILES('NC=O')
+        spec2 = Species().from_smiles('NC=O')
 
         thermo1 = self.database.get_thermo_data_from_ml(spec1, self.ml_estimator, ml_settings)
         thermo2 = self.database.get_thermo_data_from_ml(spec2, self.ml_estimator, ml_settings)
@@ -469,10 +469,10 @@ multiplicity 2
             )
         )
 
-        spec1 = Species().fromSMILES('CCCC')
-        spec2 = Species().fromSMILES('CCCCC')
-        spec3 = Species().fromSMILES('C1CC12CC2')
-        spec4 = Species().fromSMILES('C1CC2CC1O2')
+        spec1 = Species().from_smiles('CCCC')
+        spec2 = Species().from_smiles('CCCCC')
+        spec3 = Species().from_smiles('C1CC12CC2')
+        spec4 = Species().from_smiles('C1CC2CC1O2')
 
         # Test atom limits
         thermo = self.database.get_thermo_data_from_ml(spec1, self.ml_estimator, ml_settings)
@@ -526,7 +526,7 @@ multiplicity 2
         poly_root = self.database.groups['polycyclic'].entries['PolycyclicRing']
         previous_enthalpy = poly_root.data.getEnthalpy(298) / 4184.0
         smiles = 'C1C2CC1C=CC=C2'
-        spec = Species().fromSMILES(smiles)
+        spec = Species().from_smiles(smiles)
         spec.generate_resonance_structures()
 
         thermo_gav = self.database.get_thermo_data_from_groups(spec)
@@ -542,7 +542,7 @@ multiplicity 2
 
     def test_getAllThermoData_fails_quietly(self):
         """Test that get_all_thermo_data doesn't break when GAV fails."""
-        spec = Species().fromSMILES('[Ne]')
+        spec = Species().from_smiles('[Ne]')
 
         # Check that GAV fails
         with self.assertRaises(DatabaseError):
@@ -557,7 +557,7 @@ multiplicity 2
 
         smiles = '[C]#C[O]'
         # has H298 ~= 640 kJ/mol; has resonance structure `[C]=C=O` with H298 ~= 380 kJ/mol
-        spec = Species().fromSMILES(smiles)
+        spec = Species().from_smiles(smiles)
         thermo_gav1 = self.database.get_thermo_data_from_groups(spec)
         spec.generate_resonance_structures()
         thermo_gav2 = self.database.get_thermo_data_from_groups(spec)
@@ -567,7 +567,7 @@ multiplicity 2
 
         smiles = 'C=C[CH][O]'
         # has H298 ~= 209 kJ/mol; has (a reactive) resonance structure `C=CC=O` with H298 ~= -67 kJ/mol
-        spec = Species().fromSMILES(smiles)
+        spec = Species().from_smiles(smiles)
         thermo_gav1 = self.database.get_thermo_data_from_groups(spec)
         spec.generate_resonance_structures()
         thermo_gav2 = self.database.get_thermo_data_from_groups(spec)
@@ -579,7 +579,7 @@ multiplicity 2
         """Test that the thermo entry of nonreactive molecules isn't selected for a species, even if it's more stable"""
 
         smiles = '[C]=C=O'  # has H298 ~= 640 kJ/mol; has resonance structure `[C]=C=O` with H298 ~= 380 kJ/mol
-        spec = Species().fromSMILES(smiles)
+        spec = Species().from_smiles(smiles)
         thermo_gav1 = self.database.get_thermo_data_from_groups(spec)  # thermo of the stable molecule
         spec.generate_resonance_structures()
         spec.molecule[0].reactive = False  # set the more stable molecule to nonreactive for this check
@@ -636,7 +636,7 @@ class TestThermoAccuracy(unittest.TestCase):
         """
         for smiles, symm, H298, S298, Cp300, Cp400, Cp500, Cp600, Cp800, Cp1000, Cp1500 in self.testCases:
             cp_list = [Cp300, Cp400, Cp500, Cp600, Cp800, Cp1000, Cp1500]
-            species = Species().fromSMILES(smiles)
+            species = Species().from_smiles(smiles)
             species.generate_resonance_structures()
             thermo_data = self.database.get_thermo_data_from_groups(species)
             molecule = species.molecule[0]
@@ -667,7 +667,7 @@ class TestThermoAccuracy(unittest.TestCase):
         to select the stablest resonance isomer.
         """
         for smiles, symm, H298, S298, Cp300, Cp400, Cp500, Cp600, Cp800, Cp1000, Cp1500 in self.testCases:
-            species = Species().fromSMILES(smiles)
+            species = Species().from_smiles(smiles)
             calc_symm = species.get_symmetry_number()
             self.assertEqual(symm, calc_symm,
                              msg="Symmetry number error for {0}. Expected {1} but calculated {2}.".format(
@@ -697,7 +697,7 @@ class TestThermoAccuracyAromatics(TestThermoAccuracy):
         """
         Test long distance interaction is properly calculated for aromatic molecule.
         """
-        spec = Species().fromSMILES('c(O)1c(O)c(C=O)c(C=O)c(O)c(C=O)1')
+        spec = Species().from_smiles('c(O)1c(O)c(C=O)c(C=O)c(O)c(C=O)1')
         spec.generate_resonance_structures()
         thermo = self.database.get_thermo_data_from_groups(spec)
 
@@ -713,7 +713,7 @@ class TestThermoAccuracyAromatics(TestThermoAccuracy):
         """
         Test long distance interaction is properly calculated for aromatic radical.
         """
-        spec = Species().fromSMILES('c([O])1c(C=O)c(C=O)c(OC)cc1')
+        spec = Species().from_smiles('c([O])1c(C=O)c(C=O)c(OC)cc1')
         spec.generate_resonance_structures()
         thermo = self.database.get_thermo_data_from_groups(spec)
 
@@ -729,7 +729,7 @@ class TestThermoAccuracyAromatics(TestThermoAccuracy):
         """
         Test long distance interaction is properly calculated for aromatic biradical.
         """
-        spec = Species().fromSMILES('c([O])1c([C]=O)cc(C=O)cc1')
+        spec = Species().from_smiles('c([O])1c([C]=O)cc(C=O)cc1')
         spec.generate_resonance_structures()
         thermo = self.database.get_thermo_data_from_groups(spec)
 
@@ -757,7 +757,7 @@ class TestCyclicThermo(unittest.TestCase):
         the other is benzene ring. This method is to test thermo estimation will
         give two different corrections accordingly. 
         """
-        spec = Species().fromSMILES('CCCCCCCCCCCC(CC=C1C=CC=CC1)c1ccccc1')
+        spec = Species().from_smiles('CCCCCCCCCCCC(CC=C1C=CC=CC1)c1ccccc1')
         spec.generate_resonance_structures()
         thermo = self.database.get_thermo_data_from_groups(spec)
 
@@ -775,7 +775,7 @@ class TestCyclicThermo(unittest.TestCase):
         """
         Test a molecule that has both a polycyclic and a monocyclic ring in the same molecule
         """
-        spec = Species().fromSMILES('C(CCC1C2CCC1CC2)CC1CCC1')
+        spec = Species().from_smiles('C(CCC1C2CCC1CC2)CC1CCC1')
         spec.generate_resonance_structures()
         thermo = self.database.get_thermo_data_from_groups(spec)
         ring_groups, polycyclic_groups = self.database.get_ring_groups_from_comments(thermo)
@@ -800,7 +800,7 @@ class TestCyclicThermo(unittest.TestCase):
         from rmgpy.thermo.thermoengine import generateThermoData
 
         smi = 'C12C(C3CCC2C3)C4CCC1C4'  # two norbornane rings fused together
-        spc = Species().fromSMILES(smi)
+        spc = Species().from_smiles(smi)
 
         spc.thermo = generateThermoData(spc)
 
@@ -896,7 +896,7 @@ class TestCyclicThermo(unittest.TestCase):
         # so here we start with pyrene radical and get the two aromatic ring isomer
         # then saturate it.
         smiles = 'C1C=C2C=CC=C3C=CC4=CC=CC=1C4=C23'
-        spe = Species().fromSMILES(smiles)
+        spe = Species().from_smiles(smiles)
         spe.generate_resonance_structures()
         mols = []
         for mol in spe.molecule:
@@ -943,7 +943,7 @@ class TestCyclicThermo(unittest.TestCase):
         # so here we start with kekulized version and generate_resonance_structures
         # and pick the one with two aromatic rings
         smiles = 'C1=CC2C=CC=C3C=CC(=C1)C=23'
-        spe = Species().fromSMILES(smiles)
+        spe = Species().from_smiles(smiles)
         spe.generate_resonance_structures()
         for mol in spe.molecule:
             sssr0 = mol.get_smallest_set_of_smallest_rings()
@@ -1299,7 +1299,7 @@ class TestMolecularManipulationInvolvedInThermoEstimation(unittest.TestCase):
     def testFindAromaticBondsFromSubMolecule(self):
 
         smiles = "C1=CC=C2C=CC=CC2=C1"
-        spe = Species().fromSMILES(smiles)
+        spe = Species().from_smiles(smiles)
         spe.generate_resonance_structures()
         mol = spe.molecule[0]
 
@@ -1326,7 +1326,7 @@ class TestMolecularManipulationInvolvedInThermoEstimation(unittest.TestCase):
         # so here we start with pyrene radical and get the two aromatic ring isomer
         # then saturate it.
         smiles = 'C1C=C2C=CC=C3C=CC4=CC=CC=1C4=C23'
-        spe = Species().fromSMILES(smiles)
+        spe = Species().from_smiles(smiles)
         spe.generate_resonance_structures()
         for mol in spe.molecule:
             sssr0 = mol.get_smallest_set_of_smallest_rings()
@@ -1376,7 +1376,7 @@ class TestMolecularManipulationInvolvedInThermoEstimation(unittest.TestCase):
         # so here we start with kekulized version and generate_resonance_structures
         # and pick the one with two aromatic rings
         smiles = 'C1=CC2C=CC=C3C=CC(=C1)C=23'
-        spe = Species().fromSMILES(smiles)
+        spe = Species().from_smiles(smiles)
         spe.generate_resonance_structures()
         for mol in spe.molecule:
             sssr0 = mol.get_smallest_set_of_smallest_rings()
@@ -1544,14 +1544,14 @@ class TestMolecularManipulationInvolvedInThermoEstimation(unittest.TestCase):
         Test unsaturated bonds of "C1=CC=C2CCCCC2=C1" to be saturated properly
         """
         smiles = 'C1=CC=C2CCCCC2=C1'
-        spe = Species().fromSMILES(smiles)
+        spe = Species().from_smiles(smiles)
         spe.generate_resonance_structures()
         mol = spe.molecule[0]
         ring_submol = convert_ring_to_sub_molecule(mol.get_disparate_cycles()[1][0])[0]
 
         saturated_ring_submol, already_saturated = saturate_ring_bonds(ring_submol)
 
-        expected_spe = Species().fromSMILES('C1=CC=C2CCCCC2=C1')
+        expected_spe = Species().from_smiles('C1=CC=C2CCCCC2=C1')
         expected_spe.generate_resonance_structures()
         expected_saturated_ring_submol = expected_spe.molecule[0]
 
@@ -1567,14 +1567,14 @@ class TestMolecularManipulationInvolvedInThermoEstimation(unittest.TestCase):
         Test unsaturated bonds of "C1=CC=C2CC=CCC2=C1" to be saturated properly
         """
         smiles = 'C1=CC=C2CC=CCC2=C1'
-        spe = Species().fromSMILES(smiles)
+        spe = Species().from_smiles(smiles)
         spe.generate_resonance_structures()
         mol = spe.molecule[0]
         ring_submol = convert_ring_to_sub_molecule(mol.get_disparate_cycles()[1][0])[0]
 
         saturated_ring_submol, already_saturated = saturate_ring_bonds(ring_submol)
 
-        expected_spe = Species().fromSMILES('C1=CC=C2CCCCC2=C1')
+        expected_spe = Species().from_smiles('C1=CC=C2CCCCC2=C1')
         expected_spe.generate_resonance_structures()
         expected_saturated_ring_submol = expected_spe.molecule[0]
 
@@ -1656,7 +1656,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         """
         tcdi = self.connectToTestCentralDatabase()
 
-        species = Species().fromSMILES('C[CH2]')
+        species = Species().from_smiles('C[CH2]')
 
         thermo_data = self.database.get_thermo_data_from_groups(species)
 
@@ -1669,7 +1669,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         """
         tcdi = self.connectToTestCentralDatabase()
 
-        species = Species().fromSMILES('CC')
+        species = Species().from_smiles('CC')
 
         thermo_data = self.database.get_thermo_data_from_groups(species)
 
@@ -1682,7 +1682,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         """
         tcdi = self.connectToTestCentralDatabase()
 
-        species = Species().fromSMILES('C1CC1')
+        species = Species().from_smiles('C1CC1')
 
         thermo_data = self.database.get_thermo_data_from_groups(species)
 
@@ -1695,7 +1695,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         """
         tcdi = self.connectToTestCentralDatabase()
 
-        species = Species().fromSMILES('[H][H]')
+        species = Species().from_smiles('[H][H]')
 
         thermo_data = self.database.get_thermo_data_from_libraries(species)
 
@@ -1711,7 +1711,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         """
         tcdi = self.connectToTestCentralDatabase()
 
-        species = Species().fromSMILES('C1C=CC2C=CC2=C1')
+        species = Species().from_smiles('C1C=CC2C=CC2=C1')
 
         thermo_data = self.database.get_thermo_data_from_groups(species)
 
@@ -1727,7 +1727,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         """
         tcdi = self.connectToTestCentralDatabase()
 
-        species = Species().fromSMILES('C1=C=C2CC23C=CC=1C=C3')
+        species = Species().from_smiles('C1=C=C2CC23C=CC=1C=C3')
 
         thermo_data = self.database.get_thermo_data_from_groups(species)
 
@@ -1744,7 +1744,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         tcdi = ThermoCentralDatabaseInterface(host, port, username, password, application)
 
         # prepare species to register
-        species = Species().fromSMILES('C1=C=C2CC23C=CC=1C=C3')
+        species = Species().from_smiles('C1=C=C2CC23C=CC=1C=C3')
         expected_aug_inchi = "InChI=1S/C10H6/c1-2-9-7-10(9)5-3-8(1)4-6-10/h3-6H,7H2"
 
         # select registration table
@@ -1763,7 +1763,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         registered_species_entry = registered_species_entries[0]
 
         # check all the columns are expected
-        registered_species = Species().fromSMILES(str(registered_species_entry['SMILES_input']))
+        registered_species = Species().from_smiles(str(registered_species_entry['SMILES_input']))
         self.assertEqual(registered_species_entry['aug_inchi'], expected_aug_inchi)
         self.assertTrue(registered_species.is_isomorphic(species))
         self.assertIn(registered_species_entry['status'], ['pending', 'submitted'])
@@ -1784,7 +1784,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         tcdi = ThermoCentralDatabaseInterface(host, port, username, password, application)
 
         # prepare species to register
-        species = Species().fromSMILES('C1=C=C2CC23C=CC=1C=C3')
+        species = Species().from_smiles('C1=C=C2CC23C=CC=1C=C3')
         expected_aug_inchi = "InChI=1S/C10H6/c1-2-9-7-10(9)5-3-8(1)4-6-10/h3-6H,7H2"
 
         # select registration table
@@ -1823,7 +1823,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         tcdi = ThermoCentralDatabaseInterface(host, port, username, password, application)
 
         # prepare species to register
-        species = Species().fromSMILES('C1=C=C2CC23C=CC=1C=C3')
+        species = Species().from_smiles('C1=C=C2CC23C=CC=1C=C3')
         expected_aug_inchi = "InChI=1S/C10H6/c1-2-9-7-10(9)5-3-8(1)4-6-10/h3-6H,7H2"
 
         # select registration table

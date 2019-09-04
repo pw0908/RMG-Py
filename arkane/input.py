@@ -233,13 +233,13 @@ def species(label, *args, **kwargs):
                 else:
                     spec.conformer.E0 = spec.thermo.E0
 
-        if spec.reactive and spec.thermo and not spec.hasStatMech() and structure is not None:
+        if spec.reactive and spec.thermo and not spec.has_statmech() and structure is not None:
             # generate stat mech info if it wasn't provided before
-            spec.generateStatMech()
+            spec.generate_statmech()
 
         if not energyTransferModel:
             # default to RMG's method of generating energyTransferModel
-            spec.generateEnergyTransferModel()
+            spec.generate_energy_transfer_model()
 
     return spec
 

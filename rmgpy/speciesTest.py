@@ -83,7 +83,7 @@ class TestSpecies(unittest.TestCase):
             reactive=True,
         )
 
-        self.species2 = Species().fromAdjacencyList(
+        self.species2 = Species().from_adjacency_list(
             """
             1  C u0 p0 c0 {2,D} {6,S} {7,S}
             2  C u0 p0 c0 {1,D} {3,S} {8,S}
@@ -110,8 +110,8 @@ class TestSpecies(unittest.TestCase):
         self.assertEqual(self.species.index, species.index)
         self.assertEqual(self.species.label, species.label)
         self.assertEqual(self.species.molecule[0].multiplicity, species.molecule[0].multiplicity)
-        self.assertEqual(self.species.getThermoData().H298.value_si, species.getThermoData().H298.value_si)
-        self.assertEqual(self.species.getThermoData().H298.units, species.getThermoData().H298.units)
+        self.assertEqual(self.species.get_thermo_data().H298.value_si, species.get_thermo_data().H298.value_si)
+        self.assertEqual(self.species.get_thermo_data().H298.units, species.get_thermo_data().H298.units)
         self.assertEqual(len(self.species.conformer.modes), len(species.conformer.modes))
         self.assertEqual(len(self.species.molecule), len(species.molecule))
         self.assertTrue(self.species.molecule[0].is_isomorphic(species.molecule[0]))
@@ -139,8 +139,8 @@ class TestSpecies(unittest.TestCase):
         self.assertEqual(self.species.index, species.index)
         self.assertEqual(self.species.label, species.label)
         self.assertEqual(self.species.molecule[0].multiplicity, species.molecule[0].multiplicity)
-        self.assertEqual(self.species.getThermoData().H298.value_si, species.getThermoData().H298.value_si)
-        self.assertEqual(self.species.getThermoData().H298.units, species.getThermoData().H298.units)
+        self.assertEqual(self.species.get_thermo_data().H298.value_si, species.get_thermo_data().H298.value_si)
+        self.assertEqual(self.species.get_thermo_data().H298.units, species.get_thermo_data().H298.units)
         self.assertEqual(len(self.species.conformer.modes), len(species.conformer.modes))
         self.assertEqual(len(self.species.molecule), len(species.molecule))
         self.assertTrue(self.species.molecule[0].is_isomorphic(species.molecule[0]))
@@ -208,7 +208,7 @@ class TestSpecies(unittest.TestCase):
         """
         Test that to_adjacency_list() works as expected.
         """
-        string = self.species.toAdjacencyList()
+        string = self.species.to_adjacency_list()
         self.assertTrue(
             string.startswith(self.species.molecule[0].to_adjacency_list(label=self.species.label, remove_h=False)),
             string)
@@ -238,14 +238,14 @@ class TestSpecies(unittest.TestCase):
 
     def testResonanceIsomersGenerated(self):
         """Test that 1-penten-3-yl makes 2-penten-1-yl resonance isomer"""
-        spec = Species().fromSMILES('C=C[CH]CC')
+        spec = Species().from_smiles('C=C[CH]CC')
         spec.generate_resonance_structures()
         self.assertEquals(len(spec.molecule), 2)
         self.assertEquals(spec.molecule[1].to_smiles(), "[CH2]C=CCC")
 
     def testResonaceIsomersRepresented(self):
         """Test that both resonance forms of 1-penten-3-yl are printed by __repr__"""
-        spec = Species().fromSMILES('C=C[CH]CC')
+        spec = Species().from_smiles('C=C[CH]CC')
         spec.generate_resonance_structures()
         namespace = {}
         exec('spec2 = {0!r}'.format(spec), globals(), namespace)
@@ -268,39 +268,39 @@ class TestSpecies(unittest.TestCase):
         is generated, RMG finds the Species it belongs to, if the last exists.
         """
 
-        spc1_correct = Species().fromSMILES('[O]N=O')  # check charge separation with higher octet deviation
-        spc1_nonrepresentative = Species().fromAdjacencyList("""multiplicity 2
+        spc1_correct = Species().from_smiles('[O]N=O')  # check charge separation with higher octet deviation
+        spc1_nonrepresentative = Species().from_adjacency_list("""multiplicity 2
                                                                 1 N u1 p1 c0 {2,S} {3,S}
                                                                 2 O u0 p3 c-1 {1,S}
                                                                 3 O u0 p2 c+1 {1,S}""")
-        spc2_correct = Species().fromSMILES('[N]=NON=O')  # check atoms with val 6
-        spc2_nonrepresentative = Species().fromAdjacencyList("""multiplicity 2
+        spc2_correct = Species().from_smiles('[N]=NON=O')  # check atoms with val 6
+        spc2_nonrepresentative = Species().from_adjacency_list("""multiplicity 2
                                                                 1 O u0 p2 c0 {2,S} {3,S}
                                                                 2 N u1 p1 c0 {1,S} {4,S}
                                                                 3 N u0 p2 c-1 {1,S} {5,S}
                                                                 4 N u0 p2 c0 {2,S}
                                                                 5 O u0 p2 c+1 {3,S}""")
-        spc3_correct = Species().fromSMILES('[O]S(O)=O')  # check O4tc penalty
-        spc3_nonrepresentative = Species().fromAdjacencyList("""multiplicity 2
+        spc3_correct = Species().from_smiles('[O]S(O)=O')  # check O4tc penalty
+        spc3_nonrepresentative = Species().from_adjacency_list("""multiplicity 2
                                                                 1 S u0 p1 c-1 {2,S} {3,S} {4,T}
                                                                 2 O u0 p2 c0 {1,S} {5,S}
                                                                 3 O u1 p2 c0 {1,S}
                                                                 4 O u0 p1 c+1 {1,T}
                                                                 5 H u0 p0 c0 {2,S}""")
-        spc4_correct = Species().fromSMILES('OS(=[N+]=[N-])O')  # check O4dc penalty
-        spc4_nonrepresentative = Species().fromAdjacencyList("""1 S u0 p0 c+1 {2,D} {3,D} {4,S}
+        spc4_correct = Species().from_smiles('OS(=[N+]=[N-])O')  # check O4dc penalty
+        spc4_nonrepresentative = Species().from_adjacency_list("""1 S u0 p0 c+1 {2,D} {3,D} {4,S}
                                                                 2 N u0 p1 c0 {1,D} {5,S}
                                                                 3 O u0 p1 c+1 {1,D} {6,S}
                                                                 4 O u0 p2 c0 {1,S} {7,S}
                                                                 5 N u0 p3 c-2 {2,S}
                                                                 6 H u0 p0 c0 {3,S}
                                                                 7 H u0 p0 c0 {4,S}""")
-        spc5_correct = Species().fromSMILES('[O][S]')  # checks birad penalty
-        spc5_nonrepresentative = Species().fromAdjacencyList("""multiplicity 3
+        spc5_correct = Species().from_smiles('[O][S]')  # checks birad penalty
+        spc5_nonrepresentative = Species().from_adjacency_list("""multiplicity 3
                                                                 1 O u0 p2 c0 {2,D}
                                                                 2 S u2 p1 c0 {1,D}""")
-        spc6_correct = Species().fromSMILES('[N-]=[N+]=S=S=O')  # checks the S#S case
-        spc6_nonrepresentative = Species().fromAdjacencyList("""1 S u0 p1 c0 {2,S} {3,T}
+        spc6_correct = Species().from_smiles('[N-]=[N+]=S=S=O')  # checks the S#S case
+        spc6_nonrepresentative = Species().from_adjacency_list("""1 S u0 p1 c0 {2,S} {3,T}
                                                                 2 N u0 p0 c+1 {1,S} {4,T}
                                                                 3 S u0 p1 c0 {1,T} {5,S}
                                                                 4 N u0 p1 c0 {2,T}
@@ -319,15 +319,15 @@ class TestSpecies(unittest.TestCase):
 
     def testGetResonanceHybrid(self):
         """
-        Tests that getResonanceHybrid returns an isomorphic structure
+        Tests that get_resonance_hybrid returns an isomorphic structure
         which has intermediate bond orders.
         
         This check is for C=C[CH]CC which has another resonance structure,
         [CH2]C=CC. When these structures are merged, the bond structure should be,
         C~C~CC, where '~' is a hybrid bond of order 1.5. 
         """
-        spec = Species().fromSMILES('C=C[CH]CC')
-        hybrid_mol = spec.getResonanceHybrid()
+        spec = Species().from_smiles('C=C[CH]CC')
+        hybrid_mol = spec.get_resonance_hybrid()
 
         self.assertTrue(hybrid_mol.to_single_bonds().is_isomorphic(spec.molecule[0].to_single_bonds()))
 
@@ -353,7 +353,7 @@ class TestSpecies(unittest.TestCase):
         spc_cp = self.species.copy()
 
         self.assertTrue(id(self.species) != id(spc_cp))
-        self.assertTrue(self.species.isIsomorphic(spc_cp))
+        self.assertTrue(self.species.is_isomorphic(spc_cp))
         self.assertEquals(self.species.label, spc_cp.label)
         self.assertEquals(self.species.index, spc_cp.index)
 
@@ -376,7 +376,7 @@ Thermo library: primaryThermoLibrary
                                                                       polarizability=(1, 'angstrom^3'),
                                                                       rotrelaxcollnum=15.0, comment="""GRI-Mech"""))
 
-        rmg_ct_species = rmg_species.toCantera(useChemkinIdentifier=True)
+        rmg_ct_species = rmg_species.to_cantera(use_chemkin_identifier=True)
 
         ct_species = ct.Species.fromCti("""species(name=u'Ar',
         atoms='Ar:1',
@@ -403,7 +403,7 @@ Thermo library: primaryThermoLibrary
 
     def testGetTransportData(self):
         """
-        Test that transport data can be retrieved correctly via the getTransportData method.
+        Test that transport data can be retrieved correctly via the get_transport_data method.
         """
 
         spc = Species(label="Ar", molecule=[Molecule(smiles="[Ar]")],
@@ -411,7 +411,7 @@ Thermo library: primaryThermoLibrary
                                                   dipoleMoment=(2, 'De'), polarizability=(1, 'angstrom^3'),
                                                   rotrelaxcollnum=15.0, comment="""GRI-Mech"""))
 
-        self.assertTrue(spc.getTransportData() is spc.transportData)
+        self.assertTrue(spc.get_transport_data() is spc.transportData)
 
     def test_fingerprint_property(self):
         """Test that the fingerprint property works"""
@@ -433,13 +433,13 @@ Thermo library: primaryThermoLibrary
         """Test that we can create a species using the InChI argument"""
         test = Species(InChI='InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H')
 
-        self.assertTrue(test.isIsomorphic(self.species2))
+        self.assertTrue(test.is_isomorphic(self.species2))
 
     def test_smiles_instantiation(self):
         """Test that we can create a species using the SMILES argument"""
         test = Species(SMILES='C1=CC=CC=C1')
 
-        self.assertTrue(test.isIsomorphic(self.species2))
+        self.assertTrue(test.is_isomorphic(self.species2))
 
 
 ################################################################################

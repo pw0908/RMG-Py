@@ -298,8 +298,8 @@ class TestQMCalculator(unittest.TestCase):
         output_directory = os.path.join(qm.settings.fileStore, '..', '..')
         qm.setDefaultOutputDirectory(output_directory)
 
-        spc1 = Species().fromSMILES('c1ccccc1')
-        spc2 = Species().fromSMILES('CC1C=CC=CC=1')
+        spc1 = Species().from_smiles('c1ccccc1')
+        spc2 = Species().from_smiles('CC1C=CC=CC=1')
         spc_list = [spc1, spc2]
 
         qm.runJobs(spc_list, procnum=1)

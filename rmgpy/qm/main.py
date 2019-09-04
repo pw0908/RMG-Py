@@ -269,7 +269,7 @@ def _write_QMfiles(quantumMechanics, mol):
     """
     If quantumMechanics is turned on thermo is calculated in parallel here.
     """
-    quantumMechanics.getThermoData(mol)
+    quantumMechanics.get_thermo_data(mol)
 
 
 def save(rmg):

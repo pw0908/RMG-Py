@@ -272,7 +272,7 @@ class Database(object):
             for line in f:
                 if line.strip() == '' and adjlist.strip() != '':
                     # Finish this adjacency list
-                    species = Species().fromAdjacencyList(adjlist)
+                    species = Species().from_adjacency_list(adjlist)
                     if resonance:
                         species.generate_resonance_structures()
                     label = species.label
@@ -286,7 +286,7 @@ class Database(object):
             else:  # reached end of file
                 if adjlist.strip() != '':
                     # Finish this adjacency list
-                    species = Species().fromAdjacencyList(adjlist)
+                    species = Species().from_adjacency_list(adjlist)
                     if resonance:
                         species.generate_resonance_structures()
                     label = species.label
@@ -603,11 +603,11 @@ class Database(object):
                     offset += num_labels
                     # Extract numeric parameter(s) or label of node with data to use
                     if num_parameters < 0:
-                        parameters = self.processOldLibraryEntry(info[offset:])
+                        parameters = self.process_old_library_entry(info[offset:])
                         comment = ''
                     else:
                         try:
-                            parameters = self.processOldLibraryEntry(info[offset:offset + num_parameters])
+                            parameters = self.process_old_library_entry(info[offset:offset + num_parameters])
                             offset += num_parameters
                         except (IndexError, ValueError):
                             parameters = info[offset]
@@ -722,7 +722,7 @@ class Database(object):
                         f.write("// Couldn't save in old syntax adjacency list. Here it is in new syntax:\n")
                         f.write(comment(entry.item.to_adjacency_list(remove_h=False, old_style=False) + '\n'))
                 elif isinstance(entry.item, Group):
-                    f.write(entry.item.to_adjacency_list(oldStyle=True).replace('{2S,2T}', '2') + '\n')
+                    f.write(entry.item.to_adjacency_list(old_style=True).replace('{2S,2T}', '2') + '\n')
                 elif isinstance(entry.item, LogicOr):
                     f.write('{0}\n\n'.format(entry.item).replace('OR{', 'Union {'))
                 elif entry.label[0:7] == 'Others-':
@@ -802,7 +802,7 @@ class Database(object):
                 if entry.data is not None:
                     data = entry.data
                     if not isinstance(data, str):
-                        data = self.generateOldLibraryEntry(data)
+                        data = self.generate_old_library_entry(data)
                     records.append((entry.index, [entry.label], data, entry.shortDesc))
 
             records.sort()
@@ -1302,7 +1302,7 @@ class ForbiddenStructures(Database):
         for entry in self.entries.values():
             if isinstance(entry.item, Molecule) or isinstance(entry.item, Species):
                 # Perform an isomorphism check
-                if entry.item.isIsomorphic(molecule):
+                if entry.item.is_isomorphic(molecule):
                     return True
             elif isinstance(entry.item, Group):
                 # We need to do subgraph isomorphism
@@ -1350,7 +1350,7 @@ class ForbiddenStructures(Database):
         if molecule is not None:
             item = Molecule().from_adjacency_list(molecule)
         elif species is not None:
-            item = Species().fromAdjacencyList(species)
+            item = Species().from_adjacency_list(species)
             item.generate_resonance_structures()
         elif group is not None:
             if (group[0:3].upper() == 'OR{' or

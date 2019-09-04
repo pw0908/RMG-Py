@@ -37,7 +37,7 @@ from __future__ import division
 import itertools
 
 
-def calculateAtomSymmetryNumber(molecule, atom):
+def calculate_atom_symmetry_number(molecule, atom):
     """
     Return the symmetry number centered at `atom` in the structure. The
     `atom` of interest must not be in a cycle.
@@ -89,7 +89,7 @@ def calculateAtomSymmetryNumber(molecule, atom):
     count.sort()
     count.reverse()
 
-    if atom.radicalElectrons == 0:
+    if atom.radical_electrons == 0:
         if single == 4:
             # Four single bonds
             if count == [4]:
@@ -126,7 +126,7 @@ def calculateAtomSymmetryNumber(molecule, atom):
         elif single == 0:
             if count == [2]:
                 symmetry_number *= 2
-    elif atom.radicalElectrons == 1:
+    elif atom.radical_electrons == 1:
         if single == 3:
             # Three single bonds
             if count == [3]:
@@ -140,7 +140,7 @@ def calculateAtomSymmetryNumber(molecule, atom):
                 symmetry_number *= 2
             elif count == [1, 1, 1]:
                 symmetry_number *= 1
-    elif atom.radicalElectrons == 2:
+    elif atom.radical_electrons == 2:
         if single == 2:
             # Two single bonds
             if count == [2]:
@@ -151,7 +151,7 @@ def calculateAtomSymmetryNumber(molecule, atom):
 
 ################################################################################
 
-def calculateBondSymmetryNumber(molecule, atom1, atom2):
+def calculate_bond_symmetry_number(molecule, atom1, atom2):
     """
     Return the symmetry number centered at `bond` in the structure.
     """
@@ -160,8 +160,8 @@ def calculateBondSymmetryNumber(molecule, atom1, atom2):
     if atom1.equivalent(atom2):
         # An O-O bond is considered to be an "optical isomer" and so no
         # symmetry correction will be applied
-        if (atom1.atomType.label == 'O2s' and atom2.atomType.label == 'O2s' and
-                atom1.radicalElectrons == atom2.radicalElectrons == 0):
+        if (atom1.atomtype.label == 'O2s' and atom2.atomtype.label == 'O2s' and
+                atom1.radical_electrons == atom2.radical_electrons == 0):
             return symmetry_number
         # If the molecule is diatomic, then we don't have to check the
         # ligands on the two atoms in this bond (since we know there
@@ -223,7 +223,7 @@ def calculateBondSymmetryNumber(molecule, atom1, atom2):
 
 ################################################################################
 
-def calculateAxisSymmetryNumber(molecule):
+def calculate_axis_symmetry_number(molecule):
     r"""
     Get the axis symmetry number correction. The "axis" refers to a series
     of two or more cumulated double bonds (e.g. C=C=C, etc.). Corrections
@@ -363,13 +363,13 @@ def calculateAxisSymmetryNumber(molecule):
             if len(groups) == 0:
                 end_fragments_to_remove.append(fragment)
                 continue  # next end fragment
-            elif len(groups) == 1 and terminal_atom.radicalElectrons == 0:
-                if terminal_atom.atomType.label == 'N3d':
+            elif len(groups) == 1 and terminal_atom.radical_electrons == 0:
+                if terminal_atom.atomtype.label == 'N3d':
                     symmetry_broken = True
                 else:
                     end_fragments_to_remove.append(fragment)
                     continue  # next end fragment
-            elif len(groups) == 1 and terminal_atom.radicalElectrons != 0:
+            elif len(groups) == 1 and terminal_atom.radical_electrons != 0:
                 symmetry_broken = True
             elif len(groups) == 2:
                 if not groups[0].is_isomorphic(groups[1]):
@@ -394,7 +394,7 @@ def calculateAxisSymmetryNumber(molecule):
 
 ################################################################################
 
-def calculateCyclicSymmetryNumber(molecule):
+def calculate_cyclic_symmetry_number(molecule):
     """
     Get the symmetry number correction for cyclic regions of a molecule.
     For complicated fused rings the smallest set of smallest rings is used.
@@ -546,7 +546,7 @@ def _indistinguishable(atom1, atom2):
     return True
 
 
-def calculateSymmetryNumber(molecule):
+def calculate_symmetry_number(molecule):
     """
     Return the symmetry number for the structure. The symmetry number
     includes both external and internal modes.
@@ -555,17 +555,17 @@ def calculateSymmetryNumber(molecule):
 
     for atom in molecule.vertices:
         if not molecule.is_atom_in_cycle(atom):
-            symmetry_number *= calculateAtomSymmetryNumber(molecule, atom)
+            symmetry_number *= calculate_atom_symmetry_number(molecule, atom)
 
     for atom1 in molecule.vertices:
         for atom2 in list(atom1.edges):  # Make a copy of the list of neighbors since we modify the dictionary
             if (molecule.vertices.index(atom1) < molecule.vertices.index(atom2) and
                     not molecule.is_bond_in_cycle(atom1.edges[atom2])):
-                symmetry_number *= calculateBondSymmetryNumber(molecule, atom1, atom2)
+                symmetry_number *= calculate_bond_symmetry_number(molecule, atom1, atom2)
 
-    symmetry_number *= calculateAxisSymmetryNumber(molecule)
+    symmetry_number *= calculate_axis_symmetry_number(molecule)
 
     if molecule.is_cyclic():
-        symmetry_number *= calculateCyclicSymmetryNumber(molecule)
+        symmetry_number *= calculate_cyclic_symmetry_number(molecule)
 
     return symmetry_number

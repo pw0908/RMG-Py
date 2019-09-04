@@ -782,13 +782,13 @@ class TestTreeGeneration(unittest.TestCase):
                             vio_obj.add((tuple(indc), tuple(bds), tuple(bd.order), typ))
                     elif typ == 'atomExt':
                         atypes = atms[indc[0]].reg_dim_atm[1]
-                        atype = atms[indc[0]].atomType
+                        atype = atms[indc[0]].atomtype
                         if boo and atypes != [] and not (set(atype) <= set(atypes)):
                             logging.error('atomtype regularization dimension missed')
                             vio_obj.add((tuple(indc), tuple(atypes), tuple(atype), typ))
                     elif typ == 'elExt':
                         us = atms[indc[0]].reg_dim_u[1]
-                        u = atms[indc[0]].radicalElectrons
+                        u = atms[indc[0]].radical_electrons
                         if boo and us != [] and not (set(u) <= set(us)):
                             logging.error('unpaired electron regularization dimension missed')
                             vio_obj.add((tuple(indc), tuple(us), tuple(u), typ))
@@ -847,8 +847,8 @@ class TestGenerateReactions(unittest.TestCase):
     @mock.patch('rmgpy.data.kinetics.family.logging')
     def test_debug_forbidden_reverse_rxn(self, mock_logging):
         """Test that we can automatically debug when a reverse reaction is forbidden."""
-        reactants = [Species().fromSMILES('CC'), Species().fromSMILES('[CH2]C=C[CH2]')]
-        products = [Species().fromSMILES('C[CH2]'), Species().fromSMILES('[CH2]C=CC')]
+        reactants = [Species().from_smiles('CC'), Species().from_smiles('[CH2]C=C[CH2]')]
+        products = [Species().from_smiles('C[CH2]'), Species().from_smiles('[CH2]C=CC')]
 
         reaction = TemplateReaction(reactants=reactants, products=products)
 
@@ -868,8 +868,8 @@ class TestGenerateReactions(unittest.TestCase):
 
     def test_addAtomLabelsForReaction(self):
         """Test that we can add atom labels to an existing reaction"""
-        reactants = [Species().fromSMILES('C=C'), Species().fromSMILES('[OH]')]
-        products = [Species().fromSMILES('[CH2]CO')]
+        reactants = [Species().from_smiles('C=C'), Species().from_smiles('[OH]')]
+        products = [Species().from_smiles('[CH2]CO')]
 
         reaction = TemplateReaction(reactants=reactants, products=products)
 

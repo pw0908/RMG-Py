@@ -137,7 +137,7 @@ RADICAL_LOOKUPS = {
 }
 
 
-def toInChI(mol, backend='rdkit-first', aug_level=0):
+def to_inchi(mol, backend='rdkit-first', aug_level=0):
     """
     Convert a molecular structure to an InChI string.
     For aug_level=0, generates the canonical InChI.
@@ -156,14 +156,14 @@ def toInChI(mol, backend='rdkit-first', aug_level=0):
         return _write(mol, 'inchi', backend)
 
     elif aug_level == 1:
-        inchi = toInChI(mol, backend=backend)
+        inchi = to_inchi(mol, backend=backend)
 
         mlayer = '/mult{0}'.format(mol.multiplicity) if mol.multiplicity != 0 else ''
 
         return inchi + mlayer
 
     elif aug_level == 2:
-        inchi = toInChI(mol, backend=backend)
+        inchi = to_inchi(mol, backend=backend)
 
         ulayer, player = inchiutil.create_augmented_layers(mol)
 
@@ -173,7 +173,7 @@ def toInChI(mol, backend='rdkit-first', aug_level=0):
         raise ValueError("Implemented values for aug_level are 0, 1, or 2.")
 
 
-def toInChIKey(mol, backend='rdkit-first', aug_level=0):
+def to_inchi_key(mol, backend='rdkit-first', aug_level=0):
     """
     Convert a molecular structure to an InChI Key string.
     For aug_level=0, generates the canonical InChI.
@@ -192,14 +192,14 @@ def toInChIKey(mol, backend='rdkit-first', aug_level=0):
         return _write(mol, 'inchikey', backend)
 
     elif aug_level == 1:
-        key = toInChIKey(mol, backend=backend)
+        key = to_inchi_key(mol, backend=backend)
 
         mlayer = '-mult{0}'.format(mol.multiplicity) if mol.multiplicity != 0 else ''
 
         return key + mlayer
 
     elif aug_level == 2:
-        key = toInChIKey(mol, backend=backend)
+        key = to_inchi_key(mol, backend=backend)
 
         ulayer, player = inchiutil.create_augmented_layers(mol)
 
@@ -209,7 +209,7 @@ def toInChIKey(mol, backend='rdkit-first', aug_level=0):
         raise ValueError("Implemented values for aug_level are 0, 1, or 2.")
 
 
-def toSMARTS(mol, backend='rdkit'):
+def to_smarts(mol, backend='rdkit'):
     """
     Convert a molecular structure to an SMARTS string. Uses
     `RDKit <http://rdkit.org/>`_ to perform the conversion.
@@ -218,7 +218,7 @@ def toSMARTS(mol, backend='rdkit'):
     return _write(mol, 'sma', backend)
 
 
-def toSMILES(mol, backend='default'):
+def to_smiles(mol, backend='default'):
     """
     Convert a molecular structure to an SMILES string.
 
@@ -252,7 +252,7 @@ def toSMILES(mol, backend='default'):
         return output
 
 
-def fromInChI(mol, inchistr, backend='try-all'):
+def from_inchi(mol, inchistr, backend='try-all'):
     """
     Convert an InChI string `inchistr` to a molecular structure. Uses
     a user-specified backend for conversion, currently supporting
@@ -264,7 +264,7 @@ def fromInChI(mol, inchistr, backend='try-all'):
         return _read(mol, inchiutil.INCHI_PREFIX + '/' + inchistr, 'inchi', backend)
 
 
-def fromAugmentedInChI(mol, aug_inchi):
+def from_augmented_inchi(mol, aug_inchi):
     """
     Creates a Molecule object from the augmented inchi.
 
@@ -282,18 +282,18 @@ def fromAugmentedInChI(mol, aug_inchi):
     if not isinstance(aug_inchi, inchiutil.AugmentedInChI):
         aug_inchi = inchiutil.AugmentedInChI(aug_inchi)
 
-    mol = fromInChI(mol, aug_inchi.inchi)
+    mol = from_inchi(mol, aug_inchi.inchi)
 
     mol.multiplicity = len(aug_inchi.u_indices) + 1 if aug_inchi.u_indices else 1
 
     inchiutil.fix_molecule(mol, aug_inchi)
 
-    mol.updateAtomTypes()
+    mol.update_atomtypes()
 
     return mol
 
 
-def fromSMARTS(mol, smartsstr, backend='rdkit'):
+def from_smarts(mol, smartsstr, backend='rdkit'):
     """
     Convert a SMARTS string `smartsstr` to a molecular structure. Uses
     `RDKit <http://rdkit.org/>`_ to perform the conversion.
@@ -302,7 +302,7 @@ def fromSMARTS(mol, smartsstr, backend='rdkit'):
     return _read(mol, smartsstr, 'sma', backend)
 
 
-def fromSMILES(mol, smilesstr, backend='try-all'):
+def from_smiles(mol, smilesstr, backend='try-all'):
     """
     Convert a SMILES string `smilesstr` to a molecular structure. Uses
     a user-specified backend for conversion, currently supporting
@@ -354,7 +354,7 @@ def _rdkit_translator(input_object, identifier_type, mol=None):
         if identifier_type == 'inchi':
             output = Chem.inchi.MolToInchi(rdkitmol, options='-SNon')
         elif identifier_type == 'inchikey':
-            inchi = toInChI(input_object)
+            inchi = to_inchi(input_object)
             output = Chem.inchi.InchiToInchiKey(inchi)
         elif identifier_type == 'sma':
             output = Chem.MolToSmarts(rdkitmol)
@@ -454,8 +454,8 @@ def _check_output(mol, identifier):
 
     # Check that the InChI element count matches the molecule
     if 'InChI=1' in identifier:
-        inchi_elementcount = util.retrieveElementCount(identifier)
-        mol_elementcount = util.retrieveElementCount(mol)
+        inchi_elementcount = util.get_element_count(identifier)
+        mol_elementcount = util.get_element_count(mol)
         conditions.append(inchi_elementcount == mol_elementcount)
 
     return all(conditions)

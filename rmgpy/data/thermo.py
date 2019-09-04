@@ -337,7 +337,7 @@ def is_bicyclic(polyring):
     returns True if it's a bicyclic, False otherwise
     """
     submol, _ = convert_ring_to_sub_molecule(polyring)
-    sssr = submol.getSmallestSetOfSmallestRings()
+    sssr = submol.get_smallest_set_of_smallest_rings()
 
     return len(sssr) == 2
 
@@ -381,7 +381,7 @@ def convert_ring_to_sub_molecule(ring):
                     mol0.add_bond(Bond(atoms_mapping[atom], atoms_mapping[bonded_atom], order=bond.order))
 
     mol0.update_multiplicity()
-    mol0.updateConnectivityValues()
+    mol0.update_connectivity_values()
     return mol0, atoms_mapping
 
 
@@ -413,7 +413,7 @@ def combine_two_rings_into_sub_molecule(ring1, ring2):
                     mol0.add_bond(Bond(atoms_mapping[atom], atoms_mapping[bonded_atom], order=bond.order))
 
     mol0.update_multiplicity()
-    mol0.updateConnectivityValues()
+    mol0.update_connectivity_values()
 
     return mol0, atoms_mapping
 
@@ -457,7 +457,7 @@ def is_ring_partial_matched(ring, matched_group):
         return True
     else:
         submol_ring, _ = convert_ring_to_sub_molecule(ring)
-        sssr = submol_ring.getSmallestSetOfSmallestRings()
+        sssr = submol_ring.get_smallest_set_of_smallest_rings()
         sssr_grp = matched_group.get_smallest_set_of_smallest_rings()
         if sorted([len(sr) for sr in sssr]) == sorted([len(sr_grp) for sr_grp in sssr_grp]):
             return False
@@ -579,7 +579,7 @@ def saturate_ring_bonds(ring_submol):
     mol0.saturate_unfilled_valence()
     mol0.update_atomtypes()
     mol0.update_multiplicity()
-    mol0.updateConnectivityValues()
+    mol0.update_connectivity_values()
     return mol0, already_saturated
 
 
@@ -1209,13 +1209,13 @@ class ThermoDatabase(object):
 
         if quantum_mechanics:
             original_molecule = species.molecule[0]
-            if quantum_mechanics.settings.onlyCyclics and not original_molecule.isCyclic():
+            if quantum_mechanics.settings.onlyCyclics and not original_molecule.is_cyclic():
                 pass
             else:  # try a QM calculation
-                if original_molecule.getRadicalCount() > quantum_mechanics.settings.maxRadicalNumber:
+                if original_molecule.get_radical_count() > quantum_mechanics.settings.maxRadicalNumber:
                     # Too many radicals for direct calculation: use HBI.
                     logging.info("{0} radicals on {1} exceeds limit of {2}. Using HBI method.".format(
-                        original_molecule.getRadicalCount(),
+                        original_molecule.get_radical_count(),
                         species.label,
                         quantum_mechanics.settings.maxRadicalNumber,
                     ))
@@ -1223,13 +1223,13 @@ class ThermoDatabase(object):
                     # Need to estimate thermo via each resonance isomer
                     thermo = []
                     for molecule in species.molecule:
-                        molecule.clearLabeledAtoms()
+                        molecule.clear_labeled_atoms()
                         # Try to see if the saturated molecule can be found in the libraries
                         tdata = self.estimate_radical_thermo_via_hbi(molecule, self.get_thermo_data_from_libraries)
                         priority = 1
                         if tdata is None:
                             # Then attempt quantum mechanics job on the saturated molecule
-                            tdata = self.estimate_radical_thermo_via_hbi(molecule, quantum_mechanics.getThermoData)
+                            tdata = self.estimate_radical_thermo_via_hbi(molecule, quantum_mechanics.get_thermo_data)
                             priority = 2
                         if tdata is None:
                             # Fall back to group additivity
@@ -1243,7 +1243,7 @@ class ThermoDatabase(object):
                         thermo = sorted(thermo, key=lambda x: (x[0], x[1]))
                         for i, therm in enumerate(thermo):
                             logging.debug("Resonance isomer {0} {1} gives H298={2:.0f} J/mol"
-                                          "".format(i + 1, therm[2].toSMILES(), therm[1]))
+                                          "".format(i + 1, therm[2].to_smiles(), therm[1]))
                         # Save resonance isomers reordered by their thermo
                         species.molecule = [item[2] for item in thermo]
                         original_molecule = species.molecule[0]
@@ -1263,11 +1263,11 @@ class ThermoDatabase(object):
                     break
             else:
                 for mol in species.molecule:
-                    logging.info(mol.toAdjacencyList())
+                    logging.info(mol.to_adjacency_list())
                     logging.info('reactive = {0}'.format(mol.reactive))
                     logging.info('\n')
                 raise ValueError('Could not process a species with no reactive structures')
-            if original_molecule.getRadicalCount() > 0:
+            if original_molecule.get_radical_count() > 0:
                 # If the molecule is a radical, check if any of the saturated forms are in the libraries
                 # first and perform an HBI correction on them
                 thermo = []
@@ -1287,10 +1287,10 @@ class ThermoDatabase(object):
                     for i, therm in enumerate(thermo):
                         if therm[1].reactive:
                             logging.debug("Resonance isomer {0} {1} gives H298={2:.0f} J/mol"
-                                          "".format(i + 1, therm[1].toSMILES(), therm[0]))
+                                          "".format(i + 1, therm[1].to_smiles(), therm[0]))
                         else:
                             logging.debug("Non-reactive resonance isomer {0} {1} gives H298={2:.0f} J/mol"
-                                          "".format(i + 1, therm[1].toSMILES(), therm[0]))
+                                          "".format(i + 1, therm[1].to_smiles(), therm[0]))
                     # Save resonance isomers reordered by their thermo
                     new_mol_list = [item[1] for item in thermo]
                     if len(new_mol_list) < len(species.molecule):
@@ -1305,7 +1305,7 @@ class ThermoDatabase(object):
                 # `self.get_thermo_data_from_ml`.
                 if (ml_estimator is not None
                         and all(a.element.number in {1, 6, 7, 8} for a in species.molecule[0].atoms)
-                        and species.molecule[0].getSingletCarbeneCount() == 0):
+                        and species.molecule[0].get_singlet_carbene_count() == 0):
                     thermo0 = self.get_thermo_data_from_ml(species,
                                                            ml_estimator,
                                                            ml_settings)
@@ -2580,7 +2580,7 @@ class ThermoCentralDatabaseInterface(object):
 
         # prepare registration entry
         try:
-            aug_inchi = species.getAugmentedInChI()
+            aug_inchi = species.get_augmented_inchi()
 
             # check if it's registered before or
             # already have available data in results_table
