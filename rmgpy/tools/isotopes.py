@@ -76,10 +76,10 @@ def initialize_isotope_model(rmg, isotopes):
     logging.info("isotope: Adding the isotopomers into the RMG model")
     for isotopomers in isotopes:
         for spc in isotopomers:
-            spec, isNew = rmg.reactionModel.makeNewSpecies(spc)
+            spec, isNew = rmg.reactionModel.make_new_species(spc)
             spec.thermo = spc.thermo
             if isNew:
-                rmg.reactionModel.addSpeciesToEdge(spec)
+                rmg.reactionModel.add_species_to_edge(spec)
                 rmg.initialSpecies.append(spec)
     logging.info("isotope: Adding standard species into the model")
     for spec in rmg.initialSpecies:
@@ -91,7 +91,7 @@ def initialize_isotope_model(rmg, isotopes):
             rmg.reactionModel.enlarge(spec)
     logging.info("isotope: Finalizing the species additions")
     rmg.initialize_reaction_threshold_and_react_flags()
-    rmg.reactionModel.initializeIndexSpeciesDict()
+    rmg.reactionModel.initialize_index_species_dict()
 
 
 def generate_isotope_model(outputDirectory, rmg0, isotopes, useOriginalReactions=False,
@@ -114,7 +114,7 @@ def generate_isotope_model(outputDirectory, rmg0, isotopes, useOriginalReactions
     if useOriginalReactions:
         logging.info("isotope: finding reactions from the original reactions")
         rxns = generate_isotope_reactions(rmg0.reactionModel.core.reactions, isotopes)
-        rmg.reactionModel.processNewReactions(rxns, newSpecies=[])
+        rmg.reactionModel.process_new_reactions(rxns, newSpecies=[])
 
     else:
         logging.info("isotope: enlarging the isotope model")

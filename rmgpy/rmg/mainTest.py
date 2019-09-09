@@ -137,22 +137,22 @@ class TestMain(unittest.TestCase):
         )
 
         self.rmg.reactionModel = CoreEdgeReactionModel()
-        self.rmg.reactionModel.addReactionLibraryToEdge('testSeed')  # try adding seed as library
+        self.rmg.reactionModel.add_reaction_library_to_edge('testSeed')  # try adding seed as library
         self.assertTrue(len(self.rmg.reactionModel.edge.species) > 0)
         self.assertTrue(len(self.rmg.reactionModel.edge.reactions) > 0)
 
         self.rmg.reactionModel = CoreEdgeReactionModel()
-        self.rmg.reactionModel.addSeedMechanismToCore('testSeed')  # try adding seed as seed mech
+        self.rmg.reactionModel.add_seed_mechanism_to_core('testSeed')  # try adding seed as seed mech
         self.assertTrue(len(self.rmg.reactionModel.core.species) > 0)
         self.assertTrue(len(self.rmg.reactionModel.core.reactions) > 0)
 
         self.rmg.reactionModel = CoreEdgeReactionModel()
-        self.rmg.reactionModel.addReactionLibraryToEdge('testSeed_edge')  # try adding seed as library
+        self.rmg.reactionModel.add_reaction_library_to_edge('testSeed_edge')  # try adding seed as library
         self.assertTrue(len(self.rmg.reactionModel.edge.species) > 0)
         self.assertTrue(len(self.rmg.reactionModel.edge.reactions) > 0)
 
         self.rmg.reactionModel = CoreEdgeReactionModel()
-        self.rmg.reactionModel.addSeedMechanismToCore('testSeed_edge')  # try adding seed as seed mech
+        self.rmg.reactionModel.add_seed_mechanism_to_core('testSeed_edge')  # try adding seed as seed mech
         self.assertTrue(len(self.rmg.reactionModel.core.species) > 0)
         self.assertTrue(len(self.rmg.reactionModel.core.reactions) > 0)
 

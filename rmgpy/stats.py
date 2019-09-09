@@ -89,7 +89,7 @@ class ExecutionStatsWriter(object):
 
         # Update RMG execution statistics
         logging.info('Updating RMG execution statistics...')
-        core_spec, core_reac, edge_spec, edge_reac = rmg.reactionModel.getModelSize()
+        core_spec, core_reac, edge_spec, edge_reac = rmg.reactionModel.get_model_size()
         self.coreSpeciesCount.append(core_spec)
         self.coreReactionCount.append(core_reac)
         self.edgeSpeciesCount.append(edge_spec)

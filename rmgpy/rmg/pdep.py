@@ -568,7 +568,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
 
         assert self.path_reactions != [], 'Reduction process removed all reactions, cannot update network with no reactions'
 
-        reactionModel.updateUnimolecularReactionNetworks()
+        reactionModel.update_unimolecular_reaction_networks()
 
         if reactionModel.pressureDependence.outputFile:
             path = os.path.join(reactionModel.pressureDependence.outputFile, 'pdep')
@@ -859,7 +859,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                         network=self,
                         kinetics=None
                     )
-                    net_reaction = reactionModel.makeNewPDepReaction(net_reaction)
+                    net_reaction = reactionModel.make_new_pdep_reaction(net_reaction)
                     self.net_reactions.append(net_reaction)
 
                     # Place the net reaction in the core or edge if necessary
@@ -876,7 +876,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                                     str(net_reaction), str(rxn), rxn.library))
                                 break
                         else:
-                            reactionModel.addReactionToCore(net_reaction)
+                            reactionModel.add_reaction_to_core(net_reaction)
                     else:
                         # Check whether netReaction already exists in the edge as a LibraryReaction
                         for rxn in reactionModel.edge.reactions:
@@ -888,7 +888,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
                                     str(net_reaction), str(rxn), rxn.library))
                                 break
                         else:
-                            reactionModel.addReactionToEdge(net_reaction)
+                            reactionModel.add_reaction_to_edge(net_reaction)
 
                 # Set/update the net reaction kinetics using interpolation model
                 kdata = K[:, :, i, j].copy()

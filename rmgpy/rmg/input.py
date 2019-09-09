@@ -164,13 +164,13 @@ def species(label, structure, reactive=True):
     if '+' in label:
         raise InputError('species {0} label cannot include a + sign'.format(label))
 
-    spec, is_new = rmg.reactionModel.makeNewSpecies(structure, label=label, reactive=reactive)
+    spec, is_new = rmg.reactionModel.make_new_species(structure, label=label, reactive=reactive)
     if not is_new:
         raise InputError("Species {0} is a duplicate of {1}. Species in input file must be unique".format(label,
                                                                                                           spec.label))
     # Force RMG to add the species to edge first, prior to where it is added to the core, in case it is found in 
     # any reaction libraries along the way
-    rmg.reactionModel.addSpeciesToEdge(spec)
+    rmg.reactionModel.add_species_to_edge(spec)
     rmg.initialSpecies.append(spec)
     speciesDict[label] = spec
 

@@ -33,7 +33,7 @@ import os.path
 from time import time
 
 import rmgpy.util as util
-from rmgpy.kinetics.diffusionLimited import diffusionLimiter
+from rmgpy.kinetics.diffusionLimited import diffusion_limiter
 from rmgpy.rmg.listener import SimulationProfileWriter, SimulationProfilePlotter
 from rmgpy.rmg.main import initialize_log
 from rmgpy.rmg.settings import ModelSettings
@@ -83,11 +83,11 @@ def simulate(rmg, diffusionLimited=True):
             if diffusionLimited:
                 rmg.load_database()
                 solvent_data = rmg.database.solvation.get_solvent_data(rmg.solvent)
-                diffusionLimiter.enable(solvent_data, rmg.database.solvation)
+                diffusion_limiter.enable(solvent_data, rmg.database.solvation)
 
             # Store constant species indices
             if reactionSystem.constSPCNames is not None:
-                reactionSystem.get_constSPCIndices(rmg.reactionModel.core.species)
+                reactionSystem.get_const_spc_indices(rmg.reactionModel.core.species)
         elif rmg.uncertainty is not None:
             rmg.verboseComments = True
             rmg.load_database()
