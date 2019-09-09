@@ -237,10 +237,10 @@ class RMG(util.Subject):
         Load an RMG job from the input file located at `input_file`, or
         from the `input_file` attribute if not given as a parameter.
         """
-        from rmgpy.rmg.input import readInputFile
+        from rmgpy.rmg.input import read_input_file
         if path is None:
             path = self.input_file
-        readInputFile(path, self)
+        read_input_file(path, self)
         self.reaction_model.kinetics_estimator = self.kinetics_estimator
         # If the output directory is not yet set, then set it to the same
         # directory as the input file by default
@@ -266,12 +266,12 @@ class RMG(util.Subject):
         Load an Thermo Estimation job from a thermo input file located at `input_file`, or
         from the `input_file` attribute if not given as a parameter.
         """
-        from rmgpy.rmg.input import readThermoInputFile
+        from rmgpy.rmg.input import read_thermo_input_file
         if path is None:
             path = self.input_file
         if not self.output_directory:
             self.output_directory = os.path.dirname(path)
-        readThermoInputFile(path, self)
+        read_thermo_input_file(path, self)
 
         if self.quantum_mechanics:
             self.reaction_model.quantum_mechanics = self.quantum_mechanics
@@ -348,10 +348,10 @@ class RMG(util.Subject):
         Save an RMG job to the input file located at `path`, or
         from the `outputFile` attribute if not given as a parameter.
         """
-        from rmgpy.rmg.input import saveInputFile
+        from rmgpy.rmg.input import save_input_file
         if path is None:
             path = self.outputFile
-        saveInputFile(path, self)
+        save_input_file(path, self)
 
     def load_database(self):
 
@@ -714,16 +714,16 @@ class RMG(util.Subject):
                                         bimolecular_react=self.bimolecular_react,
                                         trimolecular_react=self.trimolecular_react)
 
-        if not np.isinf(self.model_settings_list[0].tolerance_thermo_keep_species_in_edge):
+        if not np.isinf(self.model_settings_list[0].thermo_tol_keep_spc_in_edge):
             self.reaction_model.set_thermodynamic_filtering_parameters(
                 self.Tmax,
-                tolerance_thermo_keep_species_in_edge=self.model_settings_list[0].tolerance_thermo_keep_species_in_edge,
+                thermo_tol_keep_spc_in_edge=self.model_settings_list[0].thermo_tol_keep_spc_in_edge,
                 min_core_size_for_prune=self.model_settings_list[0].min_core_size_for_prune,
                 maximum_edge_species=self.model_settings_list[0].maximum_edge_species,
                 reaction_systems=self.reaction_systems
             )
 
-        if not np.isinf(self.model_settings_list[0].tolerance_thermo_keep_species_in_edge):
+        if not np.isinf(self.model_settings_list[0].thermo_tol_keep_spc_in_edge):
             self.reaction_model.thermo_filter_down(maximum_edge_species=self.model_settings_list[0].maximum_edge_species)
 
         logging.info('Completed initial enlarge edge step.\n')
@@ -879,10 +879,10 @@ class RMG(util.Subject):
                         else:
                             self.update_reaction_threshold_and_react_flags()
 
-                        if not np.isinf(model_settings.tolerance_thermo_keep_species_in_edge):
+                        if not np.isinf(model_settings.thermo_tol_keep_spc_in_edge):
                             self.reaction_model.set_thermodynamic_filtering_parameters(
                                 self.Tmax,
-                                tolerance_thermo_keep_species_in_edge=model_settings.tolerance_thermo_keep_species_in_edge,
+                                thermo_tol_keep_spc_in_edge=model_settings.thermo_tol_keep_spc_in_edge,
                                 min_core_size_for_prune=model_settings.min_core_size_for_prune,
                                 maximum_edge_species=model_settings.maximum_edge_species,
                                 reaction_systems=self.reaction_systems
@@ -899,7 +899,7 @@ class RMG(util.Subject):
                                 self.reaction_model.core.reactions):
                             reactor_done = False
 
-                        if not np.isinf(self.model_settings_list[0].tolerance_thermo_keep_species_in_edge):
+                        if not np.isinf(self.model_settings_list[0].thermo_tol_keep_spc_in_edge):
                             self.reaction_model.thermo_filter_down(maximum_edge_species=model_settings.maximum_edge_species)
 
                         max_num_spcs_hit = len(self.reaction_model.core.species) >= model_settings.maxNumSpecies
@@ -1456,10 +1456,10 @@ class RMG(util.Subject):
             # Determine which species in that network has the highest leak rate
             # We do this here because we need a temperature and pressure
             # Store the maximum leak species along with the associated network
-            ob = (obj, obj.getMaximumLeakSpecies(reaction_system.T.value_si, reaction_system.P.value_si))
+            ob = (obj, obj.get_maximum_leak_species(reaction_system.T.value_si, reaction_system.P.value_si))
             return ob
         elif isinstance(obj, list):
-            spcs = [ob.getMaximumLeakSpecies(reaction_system.T.value_si, reaction_system.P.value_si) for ob in obj]
+            spcs = [ob.get_maximum_leak_species(reaction_system.T.value_si, reaction_system.P.value_si) for ob in obj]
             nworks = [(obj[i], spcs[i]) for i in range(len(obj))]
             return nworks, set(spcs)
         else:

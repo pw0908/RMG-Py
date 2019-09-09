@@ -234,9 +234,9 @@ class ExplorerJob(object):
                                 kchar += rxn.generate_reverse_rate_coefficient(network_kinetics=True).get_rate_coefficient(
                                     T=temperature, P=pressure)
 
-                        if network.getLeakCoefficient(T=temperature, P=pressure) > self.explore_tol * kchar:
+                        if network.get_leak_coefficient(T=temperature, P=pressure) > self.explore_tol * kchar:
                             incomplete = True
-                            spc = network.getMaximumLeakSpecies(T=temperature, P=pressure)
+                            spc = network.get_maximum_leak_species(T=temperature, P=pressure)
                             logging.info('adding new isomer {0} to network'.format(spc))
                             flags = np.array([s.molecule[0].get_formula() == form for s in reaction_model.core.species])
                             reaction_model.enlarge((network, spc), reactEdge=False, unimolecularReact=flags,

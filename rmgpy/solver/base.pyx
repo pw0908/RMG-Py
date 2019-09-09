@@ -492,7 +492,7 @@ cdef class ReactionSystem(DASx):
         self.network_leak_coefficients = np.zeros((self.num_pdep_networks), np.float64)
 
         for j, network in enumerate(pdep_networks):
-            self.network_leak_coefficients[j] = network.getLeakCoefficient(self.T.value_si, self.P.value_si)
+            self.network_leak_coefficients[j] = network.get_leak_coefficient(self.T.value_si, self.P.value_si)
             for l, spec in enumerate(network.source):
                 try:
                     i = self.get_species_index(spec)

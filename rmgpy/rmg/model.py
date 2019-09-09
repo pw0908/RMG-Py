@@ -211,7 +211,7 @@ class CoreEdgeReactionModel:
         self.index_species_dict = {}
         self.save_edge_species = False
         self.iteration_num = 0
-        self.tolerance_thermo_keep_species_in_edge = np.inf
+        self.thermo_tol_keep_spc_in_edge = np.inf
         self.Gfmax = np.inf
         self.Gmax = np.inf
         self.Gmin = -np.inf
@@ -550,7 +550,7 @@ class CoreEdgeReactionModel:
             elif isinstance(new_object, tuple) and isinstance(new_object[0], PDepNetwork) and self.pressure_dependence:
 
                 pdep_network, new_species = new_object
-                new_reactions.extend(pdep_network.exploreIsomer(new_species))
+                new_reactions.extend(pdep_network.explore_isomer(new_species))
 
                 self.process_new_reactions(new_reactions, new_species, pdep_network, generate_thermo=False)
 
@@ -562,7 +562,7 @@ class CoreEdgeReactionModel:
             # If there are any core species among the unimolecular product channels
             # of any existing network, they need to be made included
             for network in self.network_list:
-                network.updateConfigurations(self)
+                network.update_configurations(self)
                 index = 0
                 isomers = [isomer.species[0] for isomer in network.isomers]
                 while index < len(self.core.species):
@@ -573,10 +573,10 @@ class CoreEdgeReactionModel:
                     for products in network.products:
                         products = products.species
                         if len(products) == 1 and products[0] == species:
-                            new_reactions = network.exploreIsomer(species)
+                            new_reactions = network.explore_isomer(species)
 
                             self.process_new_reactions(new_reactions, species, network, generate_thermo=False)
-                            network.updateConfigurations(self)
+                            network.update_configurations(self)
                             index = 0
                             break
                     else:
@@ -612,7 +612,7 @@ class CoreEdgeReactionModel:
             self.apply_thermo_to_species(procnum)
 
         # Do thermodynamic filtering
-        if not np.isinf(self.tolerance_thermo_keep_species_in_edge) and self.new_species_list != []:
+        if not np.isinf(self.thermo_tol_keep_spc_in_edge) and self.new_species_list != []:
             self.thermo_filter_species(self.new_species_list)
 
         # Generate kinetics of new reactions
@@ -694,7 +694,7 @@ class CoreEdgeReactionModel:
         lost_surface_rxns = (surf_rxns - new_surface_reactions) | added_bulk_rxns
 
         added_spcs = {k for k in obj if isinstance(k, Species)} | {
-            k.getMaximumLeakSpecies(reaction_system.T.value_si, reaction_system.P.value_si) for k in obj if
+            k.get_maximum_leak_species(reaction_system.T.value_si, reaction_system.P.value_si) for k in obj if
             isinstance(k, PDepNetwork)}
         lost_surface_spcs = (surf_spcs - new_surface_species) | added_spcs
         added_surface_spcs = new_surface_species - surf_spcs
@@ -810,8 +810,8 @@ class CoreEdgeReactionModel:
         """
         Generate thermo for species. QM calculations are parallelized if requested.
         """
-        from rmgpy.rmg.input import getInput
-        quantum_mechanics = getInput('quantum_mechanics')
+        from rmgpy.rmg.input import get_input
+        quantum_mechanics = get_input('quantum_mechanics')
 
         if quantum_mechanics:
             quantum_mechanics.run_jobs(self.new_species_list, procnum=procnum)
@@ -1069,12 +1069,12 @@ class CoreEdgeReactionModel:
         """
         self.edge.species.append(spec)
 
-    def set_thermodynamic_filtering_parameters(self, Tmax, tolerance_thermo_keep_species_in_edge,
+    def set_thermodynamic_filtering_parameters(self, Tmax, thermo_tol_keep_spc_in_edge,
                                                min_core_size_for_prune, maximum_edge_species, reaction_systems):
         """
         sets parameters for thermodynamic filtering based on the current core
         Tmax is the maximum reactor temperature in K
-        tolerance_thermo_keep_species_in_edge is the Gibbs number above which species will be filtered
+        thermo_tol_keep_spc_in_edge is the Gibbs number above which species will be filtered
         min_core_size_for_prune is the core size at which thermodynamic filtering will start
         maximum_edge_species is the maximum allowed number of edge species
         reaction_systems is a list of reaction_system objects
@@ -1084,8 +1084,8 @@ class CoreEdgeReactionModel:
         self.Gmax = max(Gs)
         self.Gmin = min(Gs)
 
-        self.Gfmax = tolerance_thermo_keep_species_in_edge * (self.Gmax - self.Gmin) + self.Gmax
-        self.tolerance_thermo_keep_species_in_edge = tolerance_thermo_keep_species_in_edge
+        self.Gfmax = thermo_tol_keep_spc_in_edge * (self.Gmax - self.Gmin) + self.Gmax
+        self.thermo_tol_keep_spc_in_edge = thermo_tol_keep_spc_in_edge
         self.min_core_size_for_prune = min_core_size_for_prune
         self.reaction_systems = reaction_systems
         self.maximum_edge_species = maximum_edge_species
@@ -1101,8 +1101,8 @@ class CoreEdgeReactionModel:
             if G > self.Gfmax:
                 Gn = (G - self.Gmax) / (self.Gmax - self.Gmin)
                 logging.info('Removing species {0} with Gibbs energy {1} from edge because it\'s Gibbs number {2} is '
-                             'greater than the tolerance_thermo_keep_species_in_edge of '
-                             '{3} '.format(spc, G, Gn, self.tolerance_thermo_keep_species_in_edge))
+                             'greater than the thermo_tol_keep_spc_in_edge of '
+                             '{3} '.format(spc, G, Gn, self.thermo_tol_keep_spc_in_edge))
                 self.remove_species_from_edge(self.reaction_systems, spc)
 
         # Delete any networks that became empty as a result of pruning
@@ -1181,7 +1181,7 @@ class CoreEdgeReactionModel:
                     del (self.network_dict[source])
                 self.network_list.remove(network)
 
-    def prune(self, reaction_systems, tolerance_keep_in_edge, tolerance_move_to_core, maximum_edge_species,
+    def prune(self, reaction_systems, tol_keep_in_edge, tol_move_to_core, maximum_edge_species,
               min_species_exist_iterations_for_prune):
         """
         Remove species from the model edge based on the simulation results from
@@ -1214,7 +1214,7 @@ class CoreEdgeReactionModel:
                 # Add the fraction of the network leak rate contributed by
                 # each unexplored species to that species' rate
                 # This is to ensure we have an overestimate of that species flux
-                ratios = network.getLeakBranchingRatios(reaction_system.T.value_si, reaction_system.P.value_si)
+                ratios = network.get_leak_branching_ratios(reaction_system.T.value_si, reaction_system.P.value_si)
                 for spec, frac in ratios.items():
                     if spec in prunable_species:
                         index = prunable_species.index(spec)
@@ -1234,16 +1234,16 @@ class CoreEdgeReactionModel:
             if spec in ineligible_species or not spec in self.edge.species:
                 continue
             # Remove the species with rates below the pruning tolerance from the model edge
-            if max_edge_species_rate_ratios[index] < tolerance_keep_in_edge:
+            if max_edge_species_rate_ratios[index] < tol_keep_in_edge:
                 species_to_prune.append((index, spec))
                 prune_due_to_rate_counter += 1
             # Keep removing species with the lowest rates until we are below the maximum edge species size
             elif num_prunable_species - len(species_to_prune) > maximum_edge_species:
-                if max_edge_species_rate_ratios[index] < tolerance_move_to_core:
+                if max_edge_species_rate_ratios[index] < tol_move_to_core:
                     logging.info('Pruning species {0} to make num_edge_species smaller than maximum_edge_species'.format(spec))
                     species_to_prune.append((index, spec))
                 else:
-                    logging.warning('Attempted to prune a species that exceeded tolerance_move_to_core, pruning settings '
+                    logging.warning('Attempted to prune a species that exceeded tol_move_to_core, pruning settings '
                                     'for this run are likely bad, either maximum_edge_species needs to be set higher '
                                     '(~100000) or min_species_exist_iterations_for_prune should be reduced (~2)')
                     break
@@ -1253,7 +1253,7 @@ class CoreEdgeReactionModel:
         # Actually do the pruning
         if prune_due_to_rate_counter > 0:
             logging.info('Pruning {0:d} species whose rate ratios against characteristic rate did not exceed the '
-                         'minimum threshold of {1:g}'.format(prune_due_to_rate_counter, tolerance_keep_in_edge))
+                         'minimum threshold of {1:g}'.format(prune_due_to_rate_counter, tol_keep_in_edge))
             for index, spec in species_to_prune[0:prune_due_to_rate_counter]:
                 logging.info('Pruning species {0:<56}'.format(spec))
                 logging.debug('    {0:<56}    {1:10.4e}'.format(spec, max_edge_species_rate_ratios[index]))
@@ -1325,7 +1325,7 @@ class CoreEdgeReactionModel:
                         network.net_reactions.remove(rxn)
 
                     # Recompute the isomers, reactants, and products for this network
-                    network.updateConfigurations(self)
+                    network.update_configurations(self)
 
         # Remove from the global list of reactions
         # also remove it from the global list of reactions

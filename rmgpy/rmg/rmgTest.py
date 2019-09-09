@@ -54,7 +54,7 @@ class TestRMGWorkFlow(unittest.TestCase):
         """
         # set-up RMG object
         self.rmg = RMG()
-        self.rmg.reactionModel = CoreEdgeReactionModel()
+        self.rmg.reaction_model = CoreEdgeReactionModel()
 
         # load kinetic database and forbidden structures
         self.rmg.database = RMGDatabase()
@@ -130,14 +130,14 @@ class TestRMGWorkFlow(unittest.TestCase):
         """
 
         rmg_test = RMG()
-        rmg_test.reactionModel = CoreEdgeReactionModel()
+        rmg_test.reaction_model = CoreEdgeReactionModel()
         DPP = Species().from_smiles('C1=CC=C(C=C1)CCCC1C=CC=CC=1')
         DPP.generate_resonance_structures()
         formula = DPP.molecule[0].get_formula()
-        if formula in rmg_test.reactionModel.speciesDict:
-            rmg_test.reactionModel.speciesDict[formula].append(DPP)
+        if formula in rmg_test.reaction_model.species_dict:
+            rmg_test.reaction_model.species_dict[formula].append(DPP)
         else:
-            rmg_test.reactionModel.speciesDict[formula] = [DPP]
+            rmg_test.reaction_model.species_dict[formula] = [DPP]
 
         mol_test = Molecule().from_adjacency_list(
 """
@@ -173,7 +173,7 @@ class TestRMGWorkFlow(unittest.TestCase):
 30    H u0 p0 c0 {14,S}
 31    H u0 p0 c0 {15,S}
 """)
-        spec = rmg_test.reactionModel.check_for_existing_species(mol_test)
+        spec = rmg_test.reaction_model.check_for_existing_species(mol_test)
         self.assertIsNotNone(spec)
 
 
