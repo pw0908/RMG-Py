@@ -76,10 +76,10 @@ class ModelSettings(object):
                  dynamics_time_scale=Quantity((0.0, 'sec')),
                  tol_branch_rxn_to_core=0.0, branching_index=0.5, branching_ratio_max=1.0):
 
-        self.flux_tol_keep_in_edge = tol_keep_in_edge
-        self.flux_tol_move_to_core = tol_move_to_core
+        self.tol_keep_in_edge = tol_keep_in_edge
+        self.tol_move_to_core = tol_move_to_core
         self.tol_move_edge_rxn_to_core = tol_move_edge_rxn_to_core
-        self.flux_tol_interrupt = tol_interrupt_simulation
+        self.tol_interrupt_simulation = tol_interrupt_simulation
         self.maximum_edge_species = maximum_edge_species
         self.min_core_size_for_prune = min_core_size_for_prune
         self.min_species_exist_iterations_for_prune = min_species_exist_iterations_for_prune
@@ -97,9 +97,9 @@ class ModelSettings(object):
         self.branching_ratio_max = branching_ratio_max
 
         if tol_interrupt_simulation:
-            self.flux_tol_interrupt = tol_interrupt_simulation
+            self.tol_interrupt_simulation = tol_interrupt_simulation
         else:
-            self.flux_tol_interrupt = tolerance_move_to_core
+            self.tol_interrupt_simulation = tol_move_to_core
 
         if tol_move_edge_rxn_to_surface_interrupt:
             self.tol_move_edge_rxn_to_surface_interrupt = tol_move_edge_rxn_to_surface_interrupt

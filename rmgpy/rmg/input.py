@@ -1097,9 +1097,9 @@ def save_input_file(path, rmg):
 
     # Model
     f.write('model(\n')
-    f.write('    toleranceMoveToCore = {0:g},\n'.format(rmg.model_settings_list[0].flux_tol_move_to_core))
-    f.write('    toleranceKeepInEdge = {0:g},\n'.format(rmg.model_settings_list[0].flux_tol_keep_in_edge))
-    f.write('    toleranceInterruptSimulation = {0:g},\n'.format(rmg.model_settings_list[0].flux_tol_interrupt))
+    f.write('    toleranceMoveToCore = {0:g},\n'.format(rmg.model_settings_list[0].tol_move_to_core))
+    f.write('    toleranceKeepInEdge = {0:g},\n'.format(rmg.model_settings_list[0].tol_keep_in_edge))
+    f.write('    toleranceInterruptSimulation = {0:g},\n'.format(rmg.model_settings_list[0].tol_interrupt_simulation))
     f.write('    maximumEdgeSpecies = {0:d},\n'.format(rmg.model_settings_list[0].maximum_edge_species))
     f.write('    minCoreSizeForPrune = {0:d},\n'.format(rmg.model_settings_list[0].min_core_size_for_prune))
     f.write('    minSpeciesExistIterationsForPrune = {0:d},\n'.format(rmg.model_settings_list[0].min_species_exist_iterations_for_prune))

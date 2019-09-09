@@ -45,7 +45,7 @@ from rmgpy.util import make_output_subdirectory
 
 ################################################################################
 
-def save_output_html(path, reactionModel, part_core_edge='core'):
+def save_output_html(path, reaction_model, part_core_edge='core'):
     """
     Save the current set of  species and reactions of `reactionModel` to
     an HTML file `path` on disk. As part of this process, drawings of all 
@@ -72,9 +72,9 @@ def save_output_html(path, reactionModel, part_core_edge='core'):
     title = 'RMG Output'
 
     if part_core_edge == 'core':
-        species = reactionModel.core.species[:] + reactionModel.outputSpeciesList
+        species = reaction_model.core.species[:] + reaction_model.output_species_list
     elif part_core_edge == 'edge':
-        species = reactionModel.edge.species[:] + reactionModel.outputSpeciesList
+        species = reaction_model.edge.species[:] + reaction_model.output_species_list
 
     if not os.path.isdir(os.path.join(dirname, 'species')):
         os.makedirs(os.path.join(dirname, 'species'))
@@ -105,9 +105,9 @@ def save_output_html(path, reactionModel, part_core_edge='core'):
     #    species.sort(key=lambda x: x.index)
 
     if part_core_edge == 'core':
-        reactions = [rxn for rxn in reactionModel.core.reactions] + reactionModel.outputReactionList
+        reactions = [rxn for rxn in reaction_model.core.reactions] + reaction_model.output_reaction_list
     elif part_core_edge == 'edge':
-        reactions = [rxn for rxn in reactionModel.edge.reactions] + reactionModel.outputReactionList
+        reactions = [rxn for rxn in reaction_model.edge.reactions] + reaction_model.output_reaction_list
 
     # We want to keep reactions sorted in original order in which they were added to core
     # rather than ordered by index
@@ -128,7 +128,7 @@ def save_output_html(path, reactionModel, part_core_edge='core'):
     families.sort()
 
     ## jinja2 filters etc.
-    to_remove_from_css_names = re.compile('[/.\-+,]')
+    to_remove_from_css_names = re.compile(r'[/.\-+,]')
 
     def csssafe(input):
         """Replace unsafe CSS class name characters with an underscore."""

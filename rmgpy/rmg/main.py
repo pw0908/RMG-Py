@@ -614,7 +614,7 @@ class RMG(util.Subject):
         if self.solvent is not None:
             for index, reaction_system in enumerate(self.reaction_systems):
                 if reaction_system.const_spc_names is not None:  # if no constant species provided do nothing
-                    reaction_system.get_constSPCIndices(
+                    reaction_system.get_const_spc_indices(
                         self.reaction_model.core.species)  # call the function to identify indices in the solver
 
         self.initialize_reaction_threshold_and_react_flags()
@@ -836,7 +836,7 @@ class RMG(util.Subject):
                             # Run a raw simulation to get updated reaction system threshold values
                             # Run with the same conditions as with pruning off
                             temp_model_settings = deepcopy(model_settings)
-                            temp_model_settings.fluxToleranceKeepInEdge = 0
+                            temp_model_settings.tol_keep_in_edge = 0
                             if not resurrected:
                                 try:
                                     reaction_system.simulate(
@@ -902,7 +902,7 @@ class RMG(util.Subject):
                         if not np.isinf(self.model_settings_list[0].thermo_tol_keep_spc_in_edge):
                             self.reaction_model.thermo_filter_down(maximum_edge_species=model_settings.maximum_edge_species)
 
-                        max_num_spcs_hit = len(self.reaction_model.core.species) >= model_settings.maxNumSpecies
+                        max_num_spcs_hit = len(self.reaction_model.core.species) >= model_settings.max_num_species
 
                         self.save_everything()
 
@@ -920,10 +920,10 @@ class RMG(util.Subject):
 
                     # If we reached our termination conditions, then try to prune
                     # species from the edge
-                    if all_terminated and model_settings.fluxToleranceKeepInEdge > 0.0:
+                    if all_terminated and model_settings.tol_keep_in_edge > 0.0:
                         logging.info('Attempting to prune...')
-                        self.reaction_model.prune(self.reaction_systems, model_settings.fluxToleranceKeepInEdge,
-                                                  model_settings.fluxToleranceMoveToCore,
+                        self.reaction_model.prune(self.reaction_systems, model_settings.tol_keep_in_edge,
+                                                  model_settings.tol_move_to_core,
                                                   model_settings.maximum_edge_species,
                                                   model_settings.min_species_exist_iterations_for_prune)
                         # Perform garbage collection after pruning
@@ -949,7 +949,7 @@ class RMG(util.Subject):
 
             if max_num_spcs_hit:  # resets maxNumSpcsHit and continues the settings for loop
                 logging.info('The maximum number of species ({0}) has been hit, Exiting stage {1} ...'.format(
-                    model_settings.maxNumSpecies, q + 1))
+                    model_settings.max_num_species, q + 1))
                 max_num_spcs_hit = False
                 continue
 
@@ -1019,7 +1019,7 @@ class RMG(util.Subject):
                     pdep_networks=self.reaction_model.network_list,
                     sensitivity=True,
                     sens_worksheet=sens_worksheet,
-                    model_settings=ModelSettings(toleranceMoveToCore=1e8, toleranceInterruptSimulation=1e8),
+                    model_settings=ModelSettings(tol_move_to_core=1e8, tol_interrupt_simulation=1e8),
                     simulator_settings=self.simulator_settings_list[-1],
                     conditions=reaction_system.sens_conditions,
                 )

@@ -57,8 +57,8 @@ class TestExecutionStatsWriter(unittest.TestCase):
         if not os.path.isdir(folder):
             os.mkdir(folder)
 
-        self.rmg = RMG(outputDirectory=folder)
-        self.rmg.reactionModel = CoreEdgeReactionModel()
+        self.rmg = RMG(output_directory=folder)
+        self.rmg.reaction_model = CoreEdgeReactionModel()
 
         self.rmg.save_everything()
 
@@ -67,7 +67,7 @@ class TestExecutionStatsWriter(unittest.TestCase):
         Tests if the statistics output file can be found.
         """
 
-        folder = self.rmg.outputDirectory
+        folder = self.rmg.output_directory
 
         writer = ExecutionStatsWriter(folder)
         writer.update(self.rmg)
@@ -77,4 +77,4 @@ class TestExecutionStatsWriter(unittest.TestCase):
         self.assertTrue(os.path.isfile(statsfile))
 
     def tearDown(self):
-        shutil.rmtree(self.rmg.outputDirectory)
+        shutil.rmtree(self.rmg.output_directory)
