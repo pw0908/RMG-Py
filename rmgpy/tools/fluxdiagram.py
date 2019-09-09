@@ -605,7 +605,7 @@ def createFluxDiagram(inputFile, chemkinFile, speciesDict, savePath=None, specie
             else:
                 # Enable diffusion-limited rates
                 if diffusionLimited and isinstance(reactionSystem, LiquidReactor):
-                    rmg.loadDatabase()
+                    rmg.load_database()
                     solventData = rmg.database.solvation.get_solvent_data(rmg.solvent)
                     diffusionLimiter.enable(solventData, rmg.database.solvation)
 

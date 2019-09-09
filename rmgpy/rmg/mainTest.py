@@ -340,10 +340,10 @@ CH3(4)              2     144.001     3.800     0.000     0.000     0.000    ! G
             f.close()
 
             if works:
-                self.rmg.generateCanteraFiles(os.path.join(os.getcwd(), 'chem001.inp'))
+                self.rmg.generate_cantera_files(os.path.join(os.getcwd(), 'chem001.inp'))
             else:
                 with self.assertRaises(InputParseError):
-                    self.rmg.generateCanteraFiles(os.path.join(os.getcwd(), 'chem001.inp'))
+                    self.rmg.generate_cantera_files(os.path.join(os.getcwd(), 'chem001.inp'))
 
             # clean up
             os.chdir(originalPath)

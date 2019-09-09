@@ -53,7 +53,7 @@ from rmgpy.kinetics.arrhenius import MultiArrhenius
 from rmgpy.molecule import Molecule
 from rmgpy.molecule.element import get_element
 from rmgpy.reaction import Reaction, same_species_lists
-from rmgpy.rmg.main import RMG, initializeLog
+from rmgpy.rmg.main import RMG, initialize_log
 from rmgpy.species import Species
 from rmgpy.thermo.thermoengine import process_thermo_data
 from rmgpy.tools.loader import loadRMGJob
@@ -65,13 +65,13 @@ def initialize_isotope_model(rmg, isotopes):
     as initial species instead of the species from the RMG input file.
     """
     # Read input file
-    rmg.loadInput(rmg.inputFile)
+    rmg.load_input(rmg.inputFile)
 
     # Check input file
-    rmg.checkInput()
+    rmg.check_input()
 
     # Load databases
-    rmg.loadDatabase()
+    rmg.load_database()
 
     logging.info("isotope: Adding the isotopomers into the RMG model")
     for isotopomers in isotopes:
@@ -90,7 +90,7 @@ def initialize_isotope_model(rmg, isotopes):
         if spec.reactive:
             rmg.reactionModel.enlarge(spec)
     logging.info("isotope: Finalizing the species additions")
-    rmg.initializeReactionThresholdAndReactFlags()
+    rmg.initialize_reaction_threshold_and_react_flags()
     rmg.reactionModel.initializeIndexSpeciesDict()
 
 
@@ -156,7 +156,7 @@ def generate_isotope_model(outputDirectory, rmg0, isotopes, useOriginalReactions
     else:
         logging.info('isotope: not adding kinetic isotope effects since no method was supplied.')
     logging.info("isotope: saving files")
-    rmg.saveEverything()
+    rmg.save_everything()
 
     rmg.finish()
 
@@ -509,7 +509,7 @@ def generate_RMG_model(inputFile, outputDirectory):
 
     Returns created RMG object.
     """
-    initializeLog(logging.INFO, os.path.join(outputDirectory, 'RMG.log'))
+    initialize_log(logging.INFO, os.path.join(outputDirectory, 'RMG.log'))
     # generate mechanism:
     rmg = RMG(inputFile=os.path.abspath(inputFile),
               outputDirectory=os.path.abspath(outputDirectory))

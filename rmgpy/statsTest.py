@@ -60,7 +60,7 @@ class TestExecutionStatsWriter(unittest.TestCase):
         self.rmg = RMG(outputDirectory=folder)
         self.rmg.reactionModel = CoreEdgeReactionModel()
 
-        self.rmg.saveEverything()
+        self.rmg.save_everything()
 
     def test_save(self):
         """

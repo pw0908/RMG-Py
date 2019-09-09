@@ -35,7 +35,7 @@ from time import time
 import rmgpy.util as util
 from rmgpy.kinetics.diffusionLimited import diffusionLimiter
 from rmgpy.rmg.listener import SimulationProfileWriter, SimulationProfilePlotter
-from rmgpy.rmg.main import initializeLog
+from rmgpy.rmg.main import initialize_log
 from rmgpy.rmg.settings import ModelSettings
 from rmgpy.solver.liquid import LiquidReactor
 from rmgpy.tools.loader import loadRMGJob
@@ -81,7 +81,7 @@ def simulate(rmg, diffusionLimited=True):
 
         if isinstance(reactionSystem, LiquidReactor):
             if diffusionLimited:
-                rmg.loadDatabase()
+                rmg.load_database()
                 solvent_data = rmg.database.solvation.get_solvent_data(rmg.solvent)
                 diffusionLimiter.enable(solvent_data, rmg.database.solvation)
 
@@ -90,7 +90,7 @@ def simulate(rmg, diffusionLimited=True):
                 reactionSystem.get_constSPCIndices(rmg.reactionModel.core.species)
         elif rmg.uncertainty is not None:
             rmg.verboseComments = True
-            rmg.loadDatabase()
+            rmg.load_database()
 
         reactionSystem.simulate(
             coreSpecies=rmg.reactionModel.core.species,
@@ -120,7 +120,7 @@ def run_simulation(inputFile, chemkinFile, dictFile, diffusionLimited=True, chec
     otherwise they will not be in a liquid reactor
     """
     output_dir = os.path.abspath(os.path.dirname(inputFile))
-    initializeLog(logging.INFO, os.path.join(output_dir, 'simulate.log'))
+    initialize_log(logging.INFO, os.path.join(output_dir, 'simulate.log'))
 
     rmg = loadRMGJob(inputFile, chemkinFile, dictFile, generateImages=False, checkDuplicates=checkDuplicates)
 
