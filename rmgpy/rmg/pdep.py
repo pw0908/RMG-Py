@@ -827,7 +827,7 @@ class PDepNetwork(rmgpy.pdep.network.Network):
             self.label = str(self.index)
 
         if output_directory:
-            job.saveInputFile(
+            job.save_input_file(
                 os.path.join(output_directory, 'pdep', 'network{0:d}_{1:d}.py'.format(self.index, len(self.isomers))))
 
         self.log_summary(level=logging.INFO)
