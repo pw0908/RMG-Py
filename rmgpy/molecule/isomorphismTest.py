@@ -76,7 +76,7 @@ def get_group_string(element, unpaired_electrons, charge):
     return s + get_molecule_string(element, unpaired_electrons, charge)
 
 
-def createMolecule(element, u1, c1):
+def create_molecule(element, u1, c1):
     from rmgpy.molecule.adjlist import InvalidAdjacencyListError
     adjlist = get_molecule_string(element, u1, c1)
     logging.info('Creating molecule: {0}'.format(adjlist))
@@ -90,7 +90,7 @@ def createMolecule(element, u1, c1):
     return mol, adjlist
 
 
-def createGroup(element, u1, c1):
+def create_group(element, u1, c1):
     adjlist = get_group_string(element, u1, c1)
     return Group().from_adjacency_list(adjlist), adjlist
 
@@ -186,7 +186,7 @@ def run_parameter_tests():
     def success():
         assert_equal(True, True)
 
-    def isIsomorphic_mol_atom_types(e1, e2, u1, u2, c1, c2):
+    def is_isomorphic_mol_atom_types(e1, e2, u1, u2, c1, c2):
         """
         Check whether isomorphism between 2 molecules consisting of each 1 atom
         perceives the difference in charge
@@ -201,7 +201,7 @@ def run_parameter_tests():
             calc = mol1.is_isomorphic(mol2)
             assert_equal(calc, exp, err)
 
-    def findIsomorphisms_mol_atom_types(e1, e2, u1, u2, c1, c2):
+    def find_isomorphisms_mol_atom_types(e1, e2, u1, u2, c1, c2):
         """
         Check whether isomorphism between 2 molecules consisting of each 1 atom
         perceives the difference in charge
@@ -217,7 +217,7 @@ def run_parameter_tests():
             calc = len(mol1.find_isomorphism(mol2)) > 0
             assert_equal(calc, exp, err)
 
-    def isSubgraphIsomorphic_mol_atom_types(e1, e2, u1, u2, c1, c2):
+    def is_subgraph_isomorphic_mol_atom_types(e1, e2, u1, u2, c1, c2):
         mol1, adjlist1 = createMolecule(e1, u1, c1)
         group1, adjlist2 = createGroup(e2, u2, c2)
 
@@ -229,7 +229,7 @@ def run_parameter_tests():
             calc = mol1.is_subgraph_isomorphic(group1)
             assert_equal(calc, exp, err)
 
-    def findSubgraphIsomorphisms_mol_atom_types(e1, e2, u1, u2, c1, c2):
+    def find_subgraph_isomorphisms_mol_atom_types(e1, e2, u1, u2, c1, c2):
 
         mol1, adjlist1 = createMolecule(e1, u1, c1)
         group1, adjlist2 = createGroup(e2, u2, c2)
@@ -255,7 +255,7 @@ def run_parameter_tests():
         except Exception as e:
             yield (exception, e)
 
-    def isIsomorphic_mol_group_atom_types(e1, e2, u1, u2, c1, c2):
+    def is_isomorphic_mol_group_atom_types(e1, e2, u1, u2, c1, c2):
         """
         Check whether isomorphism between 2 molecules consisting of each 1 atom
         perceives the difference in charge
@@ -272,7 +272,7 @@ def run_parameter_tests():
             calc = mol1.is_subgraph_isomorphic(group1)
             assert_equal(calc, exp, err)
 
-    def findSubgraphIsomorphisms_mol_group_atom_types(e1, e2, u1, u2, c1, c2):
+    def find_subgraph_isomorphisms_mol_group_atom_types(e1, e2, u1, u2, c1, c2):
         mol1, adjlist1 = createMolecule(e1, u1, c1)
         group1, adjlist2 = createGroup(e2, u2, c2)
         if mol1 is not None and group1 is not None:
@@ -298,7 +298,7 @@ def run_parameter_tests():
     yield (success,)
 
 
-def testMultiplicity_mol_mol_distinct_multiplicity():
+def test_multiplicity_mol_mol_distinct_multiplicity():
     """
     distinct multiplicity for both molecules set by user.
     """
@@ -320,7 +320,7 @@ def testMultiplicity_mol_mol_distinct_multiplicity():
     assert_false(len(mol.find_isomorphism(mol2)) > 0)
 
 
-def testMultiplicity_mol_mol_identical_multiplicity():
+def test_multiplicity_mol_mol_identical_multiplicity():
     """
     identical multiplicity for both molecules set by user.
     """
@@ -338,7 +338,7 @@ def testMultiplicity_mol_mol_identical_multiplicity():
     assert_true(len(mol.find_isomorphism(mol2)) > 0)
 
 
-def testMultiplicity_mol_not_specified_mol_specified():
+def test_multiplicity_mol_not_specified_mol_specified():
     """
     Multiplicity not set for one of two molecules
     """
@@ -355,7 +355,7 @@ def testMultiplicity_mol_not_specified_mol_specified():
     assert_true(len(mol.find_isomorphism(mol2)) > 0)
 
 
-def testMultiplicity_mol_not_specified_mol_not_specified():
+def test_multiplicity_mol_not_specified_mol_not_specified():
     """
     Both multiplicities not set.
     """
@@ -371,7 +371,7 @@ def testMultiplicity_mol_not_specified_mol_not_specified():
     assert_true(len(mol.find_isomorphism(mol2)) > 0)
 
 
-def test_isomorphism_R():
+def test_isomorphism__r():
     mol = Molecule().from_adjacency_list("""
     1 C u0 p0 c0
     """, saturate_h=True)
@@ -430,7 +430,7 @@ def test_isomorphism_group_group():
     assert_false(len(gp3.find_subgraph_isomorphisms(gp2)) > 0)
 
 
-def test_isomorphism_sulfurGroup_sulfurMolecule():
+def test_isomorphism_sulfur_group_sulfur_molecule():
     """
     Test isormophism check of a CS group vs. a sulfur containing molecule
     """
