@@ -105,8 +105,8 @@ cdef class SimpleReactor(ReactionSystem):
 
     cdef public dict sens_conditions
 
-    cdef public list Trange
-    cdef public list Prange
+    cdef public list T_range
+    cdef public list P_range
     cdef public int n_sims
 
     def __init__(self, T, P, initial_mole_fractions, n_sims=1, termination=None, sensitive_species=None,
@@ -116,12 +116,12 @@ cdef class SimpleReactor(ReactionSystem):
         if type(T) != list:
             self.T = Quantity(T)
         else:
-            self.Trange = [Quantity(t) for t in T]
+            self.T_range = [Quantity(t) for t in T]
 
         if type(P) != list:
             self.P = Quantity(P)
         else:
-            self.Prange = [Quantity(p) for p in P]
+            self.P_range = [Quantity(p) for p in P]
 
         self.initial_mole_fractions = initial_mole_fractions
 
