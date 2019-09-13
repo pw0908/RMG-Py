@@ -1604,7 +1604,7 @@ def is_tcd_available():
     import platform
     import subprocess
 
-    host = getTestingTCDAuthenticationInfo()[0]
+    host = get_testing_tcd_authentication_info()[0]
     if host is not None:
         arg = '-n' if platform.system() == 'Windows' else '-c'
         result = subprocess.call(['ping', arg, '1', host]) == 0
@@ -1627,7 +1627,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         self.database = database.thermo
 
     def connect_to_test_central_database(self):
-        host, port, username, password = getTestingTCDAuthenticationInfo()
+        host, port, username, password = get_testing_tcd_authentication_info()
         application = 'test'
 
         tcdi = ThermoCentralDatabaseInterface(host, port, username, password, application)
@@ -1645,7 +1645,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         self.assertTrue(tcdi.client is None)
 
     def test_connect_success(self):
-        tcdi = self.connectToTestCentralDatabase()
+        tcdi = self.connect_to_test_central_database()
 
         self.assertTrue(tcdi.client is not None)
 
@@ -1654,7 +1654,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         the species is non-cyclic, currently regarded no need to 
         register in thermo central database
         """
-        tcdi = self.connectToTestCentralDatabase()
+        tcdi = self.connect_to_test_central_database()
 
         species = Species().from_smiles('C[CH2]')
 
@@ -1667,7 +1667,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         the species is for non-cyclic, so no need to register in 
         thermo central database
         """
-        tcdi = self.connectToTestCentralDatabase()
+        tcdi = self.connect_to_test_central_database()
 
         species = Species().from_smiles('CC')
 
@@ -1680,7 +1680,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         the thermo is exact match, so no need to register in 
         thermo central database
         """
-        tcdi = self.connectToTestCentralDatabase()
+        tcdi = self.connect_to_test_central_database()
 
         species = Species().from_smiles('C1CC1')
 
@@ -1693,7 +1693,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         the thermo is from library, so no need to register in 
         thermo central database
         """
-        tcdi = self.connectToTestCentralDatabase()
+        tcdi = self.connect_to_test_central_database()
 
         species = Species().from_smiles('[H][H]')
 
@@ -1709,7 +1709,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         In the future, if RMG-database includes corresponding exact match
         this test should be modified.
         """
-        tcdi = self.connectToTestCentralDatabase()
+        tcdi = self.connect_to_test_central_database()
 
         species = Species().from_smiles('C1C=CC2C=CC2=C1')
 
@@ -1725,7 +1725,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         In the future, if RMG-database includes corresponding exact match
         this test should be modified.
         """
-        tcdi = self.connectToTestCentralDatabase()
+        tcdi = self.connect_to_test_central_database()
 
         species = Species().from_smiles('C1=C=C2CC23C=CC=1C=C3')
 
@@ -1739,7 +1739,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         species as the one going to be registered
         """
         # connect to thermo central database
-        host, port, username, password = getTestingTCDAuthenticationInfo()
+        host, port, username, password = get_testing_tcd_authentication_info()
         application = 'test'
         tcdi = ThermoCentralDatabaseInterface(host, port, username, password, application)
 
@@ -1778,7 +1778,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         """
 
         # connect to thermo central database
-        host, port, username, password = getTestingTCDAuthenticationInfo()
+        host, port, username, password = get_testing_tcd_authentication_info()
         application = 'test'
 
         tcdi = ThermoCentralDatabaseInterface(host, port, username, password, application)
@@ -1817,7 +1817,7 @@ class TestThermoCentralDatabaseInterface(unittest.TestCase):
         """
 
         # connect to thermo central database
-        host, port, username, password = getTestingTCDAuthenticationInfo()
+        host, port, username, password = get_testing_tcd_authentication_info()
         application = 'test'
 
         tcdi = ThermoCentralDatabaseInterface(host, port, username, password, application)
