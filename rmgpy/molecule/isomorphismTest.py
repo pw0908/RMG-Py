@@ -191,8 +191,8 @@ def run_parameter_tests():
         Check whether isomorphism between 2 molecules consisting of each 1 atom
         perceives the difference in charge
         """
-        mol1, adjlist1 = createMolecule(e1, u1, c1)
-        mol2, adjlist2 = createMolecule(e2, u2, c2)
+        mol1, adjlist1 = create_molecule(e1, u1, c1)
+        mol2, adjlist2 = create_molecule(e2, u2, c2)
 
         exp = mol_atom_type_comparison(e1, e2, u1, u2, c1, c2)
         err = "\nGraph 1: {0},\nGraph 2: {1}. \nExpected: {2}".format(adjlist1, adjlist2, exp)
@@ -207,8 +207,8 @@ def run_parameter_tests():
         perceives the difference in charge
         """
 
-        mol1, adjlist1 = createMolecule(e1, u1, c1)
-        mol2, adjlist2 = createMolecule(e2, u2, c2)
+        mol1, adjlist1 = create_molecule(e1, u1, c1)
+        mol2, adjlist2 = create_molecule(e2, u2, c2)
 
         exp = mol_atom_type_comparison(e1, e2, u1, u2, c1, c2)
         err = "\nGraph 1: {0},\nGraph 2: {1}. \nExpected: {2}".format(adjlist1, adjlist2, exp)
@@ -218,8 +218,8 @@ def run_parameter_tests():
             assert_equal(calc, exp, err)
 
     def is_subgraph_isomorphic_mol_atom_types(e1, e2, u1, u2, c1, c2):
-        mol1, adjlist1 = createMolecule(e1, u1, c1)
-        group1, adjlist2 = createGroup(e2, u2, c2)
+        mol1, adjlist1 = create_molecule(e1, u1, c1)
+        group1, adjlist2 = create_group(e2, u2, c2)
 
         exp = mol_atom_type_comparison(e1, e2, u1, u2, c1, c2)  # string comparison will give us expected value!
 
@@ -231,8 +231,8 @@ def run_parameter_tests():
 
     def find_subgraph_isomorphisms_mol_atom_types(e1, e2, u1, u2, c1, c2):
 
-        mol1, adjlist1 = createMolecule(e1, u1, c1)
-        group1, adjlist2 = createGroup(e2, u2, c2)
+        mol1, adjlist1 = create_molecule(e1, u1, c1)
+        group1, adjlist2 = create_group(e2, u2, c2)
 
         exp = mol_atom_type_comparison(e1, e2, u1, u2, c1, c2)  # string comparison will give us expected value!
 
@@ -245,9 +245,9 @@ def run_parameter_tests():
     output = load_cases_molecule_atom_types()
     for args in output:
         try:
-            isIsomorphic_mol_atom_types(*args)
-            findIsomorphisms_mol_atom_types(*args)
-            isSubgraphIsomorphic_mol_atom_types(*args)
+            is_isomorphic_mol_atom_types(*args)
+            find_isomorphisms_mol_atom_types(*args)
+            is_subgraph_isomorphic_mol_atom_types(*args)
 
         except AssertionError:
             yield (failed, args)
@@ -260,8 +260,8 @@ def run_parameter_tests():
         Check whether isomorphism between 2 molecules consisting of each 1 atom
         perceives the difference in charge
         """
-        mol1, adjlist1 = createMolecule(e1, u1, c1)
-        group1, adjlist2 = createGroup(e2, u2, c2)
+        mol1, adjlist1 = create_molecule(e1, u1, c1)
+        group1, adjlist2 = create_group(e2, u2, c2)
         if mol1 is not None and group1 is not None:
             a1 = mol1.atoms[0].atomtype
             a2 = group1.atoms[0].atomtype[0]
@@ -273,8 +273,8 @@ def run_parameter_tests():
             assert_equal(calc, exp, err)
 
     def find_subgraph_isomorphisms_mol_group_atom_types(e1, e2, u1, u2, c1, c2):
-        mol1, adjlist1 = createMolecule(e1, u1, c1)
-        group1, adjlist2 = createGroup(e2, u2, c2)
+        mol1, adjlist1 = create_molecule(e1, u1, c1)
+        group1, adjlist2 = create_group(e2, u2, c2)
         if mol1 is not None and group1 is not None:
             a1 = mol1.atoms[0].atomtype
             a2 = group1.atoms[0].atomtype[0]
@@ -287,8 +287,8 @@ def run_parameter_tests():
     output = load_cases_group_atom_types()
     for args in output:
         try:
-            isIsomorphic_mol_group_atom_types(*args)
-            findSubgraphIsomorphisms_mol_group_atom_types(*args)
+            is_isomorphic_mol_group_atom_types(*args)
+            find_subgraph_isomorphisms_mol_group_atom_types(*args)
         except AssertionError:
             yield (failed, args)
         except Exception as e:
