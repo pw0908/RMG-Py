@@ -1161,7 +1161,7 @@ def getInput(name):
             else:
                 raise Exception
         except Exception:
-            logging.debug("Did not find a way to obtain the variable for {}.".format(name))
+            # logging.debug("Did not find a way to obtain the variable for {}.".format(name))
             raise
 
     raise Exception('Could not get variable with name: {}'.format(name))

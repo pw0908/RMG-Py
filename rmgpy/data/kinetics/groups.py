@@ -184,22 +184,22 @@ class KineticsGroups(Database):
         if len(template) != len(forwardTemplate):
             msg = 'Unable to find matching template for reaction {0} in reaction family {1}.'.format(str(reaction), str(self))
             msg += 'Trying to match {0} but matched {1}'.format(str(forwardTemplate),str(template))
-            logging.debug('len(template): {0}'.format(len(template)))
-            logging.debug('len(forwardTemplate): {0}'.format(len(forwardTemplate)))
-            logging.debug('reactants:')
-            for reactant in reaction.reactants:
-                if isinstance(reactant,Species):
-                    for mol in reactant.molecule:
-                        logging.debug(mol.toAdjacencyList())
-                else:
-                    logging.debug(reactant.toAdjacencyList())
-            logging.debug('products:')
-            for product in reaction.products:
-                if isinstance(product,Species):
-                    for mol in product.molecule:
-                        logging.debug(mol.toAdjacencyList())
-                else:
-                    logging.debug(product.toAdjacencyList())
+            # logging.debug('len(template): {0}'.format(len(template)))
+            # logging.debug('len(forwardTemplate): {0}'.format(len(forwardTemplate)))
+            # logging.debug('reactants:')
+            # for reactant in reaction.reactants:
+            #     if isinstance(reactant,Species):
+            #         for mol in reactant.molecule:
+            #             logging.debug(mol.toAdjacencyList())
+            #     else:
+            #         logging.debug(reactant.toAdjacencyList())
+            # logging.debug('products:')
+            # for product in reaction.products:
+            #     if isinstance(product,Species):
+            #         for mol in product.molecule:
+            #             logging.debug(mol.toAdjacencyList())
+            #     else:
+            #         logging.debug(product.toAdjacencyList())
             raise UndeterminableKineticsError(reaction, message=msg)
 
         return template

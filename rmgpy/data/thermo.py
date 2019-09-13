@@ -1121,7 +1121,7 @@ class ThermoDatabase(object):
         thermo0 = self.getThermoDataFromLibraries(species)
         
         if thermo0 is not None:
-            logging.debug("Found thermo for {0} in {1}".format(species.label,thermo0[0].comment.lower()))
+            # logging.debug("Found thermo for {0} in {1}".format(species.label,thermo0[0].comment.lower()))
             assert len(thermo0) == 3, "thermo0 should be a tuple at this point: (thermoData, library, entry)"
             thermo0 = thermo0[0]
 
