@@ -1883,17 +1883,17 @@ class ThermoDatabase(object):
                 # Currently we only have gauche(1,4) and 1,5 interactions in that file. 
                 # If you want to add more corrections for longer distance, please call getNthNeighbor() method accordingly.
                 # Potentially we could include other.py in this database, but it's a little confusing how to label atoms for the entries in other.py
-                if not molecule.isAtomInCycle(atom):
-                    for atom_2 in molecule.getNthNeighbor([atom],[1,2]):
-                        if not molecule.isAtomInCycle(atom_2):
-                        # This is the correction for noncyclic structure. If `atom` or `atom_2` is in a cycle, do not apply this correction.
-                        # Note that previously we do not do gauche for cyclic molecule, which is unreasonable for cyclic molecule with a long tail.
-                            try:
-                                self.__addGroupThermoData(thermoData, self.groups['longDistanceInteraction_noncyclic'], molecule, {'*1':atom, '*2': atom_2})
-                            except KeyError: pass
-                try:
-                    self.__addGroupThermoData(thermoData, self.groups['other'], molecule, {'*':atom})
-                except KeyError: pass
+                # if not molecule.isAtomInCycle(atom):
+                #     for atom_2 in molecule.getNthNeighbor([atom],[1,2]):
+                #         if not molecule.isAtomInCycle(atom_2):
+                #         # This is the correction for noncyclic structure. If `atom` or `atom_2` is in a cycle, do not apply this correction.
+                #         # Note that previously we do not do gauche for cyclic molecule, which is unreasonable for cyclic molecule with a long tail.
+                #             try:
+                #                 self.__addGroupThermoData(thermoData, self.groups['longDistanceInteraction_noncyclic'], molecule, {'*1':atom, '*2': atom_2})
+                #             except KeyError: pass
+                # try:
+                #     self.__addGroupThermoData(thermoData, self.groups['other'], molecule, {'*':atom})
+                # except KeyError: pass
         
         # Do long distance interaction correction for cyclic molecule. 
         # First get smallest set of smallest rings. 
@@ -1907,13 +1907,13 @@ class ThermoDatabase(object):
         # PS: by saying 'forward side', I mean {'*1':atomPair[0], '*2':atomPair[1]}. So the following is the reverse side '{'*1':atomPair[1], '*2':atomPair[0]}'
         # In my opinion, it's cleaner to do it in the current way.
         # WIPWIPWIPWIPWIPWIPWIP         #########################################         WIPWIPWIPWIPWIPWIPWIP
-        if cyclic:
-            SSSR = molecule.getSmallestSetOfSmallestRings()
-            for ring in SSSR:
-                for atomPair in itertools.permutations(ring, 2):
-                    try:
-                        self.__addGroupThermoData(thermoData,self.groups['longDistanceInteraction_cyclic'], molecule, {'*1':atomPair[0], '*2':atomPair[1]})
-                    except KeyError: pass
+        # if cyclic:
+        #     SSSR = molecule.getSmallestSetOfSmallestRings()
+        #     for ring in SSSR:
+        #         for atomPair in itertools.permutations(ring, 2):
+        #             try:
+        #                 self.__addGroupThermoData(thermoData,self.groups['longDistanceInteraction_cyclic'], molecule, {'*1':atomPair[0], '*2':atomPair[1]})
+        #             except KeyError: pass
 
         # Do ring corrections separately because we only want to match
         # each ring one time
@@ -1930,16 +1930,16 @@ class ThermoDatabase(object):
                     logging.error(molecule)
                     logging.error(molecule.toAdjacencyList())
                     raise
-            for polyring in polyrings:
-                # Make a temporary structure containing only the atoms in the ring
-                # NB. if any of the ring corrections depend on ligands not in the ring, they will not be found!
-                try:
-                    self.__addPolycyclicCorrectionThermoData(thermoData, molecule, polyring)
-                except KeyError:
-                    logging.error("Couldn't find a match in the polycyclic ring database even though polycyclic rings were found.")
-                    logging.error(molecule)
-                    logging.error(molecule.toAdjacencyList())
-                    raise
+            # for polyring in polyrings:
+            #     # Make a temporary structure containing only the atoms in the ring
+            #     # NB. if any of the ring corrections depend on ligands not in the ring, they will not be found!
+            #     try:
+            #         self.__addPolycyclicCorrectionThermoData(thermoData, molecule, polyring)
+            #     except KeyError:
+            #         logging.error("Couldn't find a match in the polycyclic ring database even though polycyclic rings were found.")
+            #         logging.error(molecule)
+            #         logging.error(molecule.toAdjacencyList())
+            #         raise
 
         return thermoData
 
