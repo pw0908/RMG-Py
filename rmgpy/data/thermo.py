@@ -117,6 +117,17 @@ def saveEntry(f, entry):
     else:
         f.write('    thermo = {0!r},\n'.format(entry.data))
 
+    if isinstance(entry.solute, AbrahamData):
+        f.write('    solute = SoluteData(\n')
+        f.write('        S = {0!r},\n'.format(entry.solute.S))
+        f.write('        B = {0!r},\n'.format(entry.solute.B))
+        f.write('        E = {0!r},\n'.format(entry.solute.E))
+        f.write('        L = {0!r},\n'.format(entry.solute.L))
+        f.write('        A = {0!r},\n'.format(entry.solute.A))
+        f.write('    ),\n')
+    else:
+        f.write('    solute = {0!r},\n'.format(entry.solute))
+
     if entry.reference is not None: f.write('    reference = {0!r},\n'.format(entry.reference))
     if entry.referenceType != "": f.write('    referenceType = "{0}",\n'.format(entry.referenceType))
     f.write('    shortDesc = u"""')
@@ -659,6 +670,7 @@ class ThermoGroups(Database):
                   label,
                   group,
                   thermo,
+                  solute,
                   reference=None,
                   referenceType='',
                   shortDesc='',
@@ -675,6 +687,7 @@ class ThermoGroups(Database):
             label = label,
             item = item,
             data = thermo,
+            solute = solute,
             reference = reference,
             referenceType = referenceType,
             shortDesc = shortDesc,
