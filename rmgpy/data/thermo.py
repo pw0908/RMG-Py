@@ -1981,20 +1981,20 @@ class ThermoDatabase(object):
                 # Currently we only have gauche(1,4) and 1,5 interactions in that file. 
                 # If you want to add more corrections for longer distance, please call get_nth_neighbor() method accordingly.
                 # Potentially we could include other.py in this database, but it's a little confusing how to label atoms for the entries in other.py
-                if not molecule.is_atom_in_cycle(atom):
-                    for atom_2 in molecule.get_nth_neighbor([atom], [1, 2]):
-                        if not molecule.is_atom_in_cycle(atom_2):
-                            # This is the correction for noncyclic structure. If `atom` or `atom_2` is in a cycle, do not apply this correction.
-                            # Note that previously we do not do gauche for cyclic molecule, which is unreasonable for cyclic molecule with a long tail.
-                            try:
-                                self._add_group_thermo_data(thermo_data, self.groups['longDistanceInteraction_noncyclic'],
-                                                            molecule, {'*1': atom, '*2': atom_2})
-                            except KeyError:
-                                pass
-                try:
-                    self._add_group_thermo_data(thermo_data, self.groups['other'], molecule, {'*': atom})
-                except KeyError:
-                    pass
+                # if not molecule.is_atom_in_cycle(atom):
+                #     for atom_2 in molecule.get_nth_neighbor([atom], [1, 2]):
+                #         if not molecule.is_atom_in_cycle(atom_2):
+                #             # This is the correction for noncyclic structure. If `atom` or `atom_2` is in a cycle, do not apply this correction.
+                #             # Note that previously we do not do gauche for cyclic molecule, which is unreasonable for cyclic molecule with a long tail.
+                #             try:
+                #                 self._add_group_thermo_data(thermo_data, self.groups['longDistanceInteraction_noncyclic'],
+                #                                             molecule, {'*1': atom, '*2': atom_2})
+                #             except KeyError:
+                #                 pass
+                # try:
+                #     self._add_group_thermo_data(thermo_data, self.groups['other'], molecule, {'*': atom})
+                # except KeyError:
+                #     pass
 
         # Do long distance interaction correction for cyclic molecule. 
         # First get smallest set of smallest rings. 
@@ -2008,15 +2008,15 @@ class ThermoDatabase(object):
         # PS: by saying 'forward side', I mean {'*1':atomPair[0], '*2':atomPair[1]}. So the following is the reverse side '{'*1':atomPair[1], '*2':atomPair[0]}'
         # In my opinion, it's cleaner to do it in the current way.
         # WIPWIPWIPWIPWIPWIPWIP         #########################################         WIPWIPWIPWIPWIPWIPWIP
-        if cyclic:
-            sssr = molecule.get_smallest_set_of_smallest_rings()
-            for ring in sssr:
-                for atomPair in itertools.permutations(ring, 2):
-                    try:
-                        self._add_group_thermo_data(thermo_data, self.groups['longDistanceInteraction_cyclic'], molecule,
-                                                    {'*1': atomPair[0], '*2': atomPair[1]})
-                    except KeyError:
-                        pass
+        # if cyclic:
+        #     sssr = molecule.get_smallest_set_of_smallest_rings()
+        #     for ring in sssr:
+        #         for atomPair in itertools.permutations(ring, 2):
+        #             try:
+        #                 self._add_group_thermo_data(thermo_data, self.groups['longDistanceInteraction_cyclic'], molecule,
+        #                                             {'*1': atomPair[0], '*2': atomPair[1]})
+        #             except KeyError:
+        #                 pass
 
         # Do ring corrections separately because we only want to match
         # each ring one time
@@ -2034,17 +2034,17 @@ class ThermoDatabase(object):
                     logging.error(molecule)
                     logging.error(molecule.to_adjacency_list())
                     raise
-            for polyring in polyrings:
-                # Make a temporary structure containing only the atoms in the ring
-                # NB. if any of the ring corrections depend on ligands not in the ring, they will not be found!
-                try:
-                    self._add_polycyclic_correction_thermo_data(thermo_data, molecule, polyring)
-                except KeyError:
-                    logging.error("Couldn't find a match in the polycyclic ring database even though "
-                                  "polycyclic rings were found.")
-                    logging.error(molecule)
-                    logging.error(molecule.to_adjacency_list())
-                    raise
+            # for polyring in polyrings:
+            #     # Make a temporary structure containing only the atoms in the ring
+            #     # NB. if any of the ring corrections depend on ligands not in the ring, they will not be found!
+            #     try:
+            #         self._add_polycyclic_correction_thermo_data(thermo_data, molecule, polyring)
+            #     except KeyError:
+            #         logging.error("Couldn't find a match in the polycyclic ring database even though "
+            #                       "polycyclic rings were found.")
+            #         logging.error(molecule)
+            #         logging.error(molecule.to_adjacency_list())
+            #         raise
 
         return thermo_data
 
