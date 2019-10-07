@@ -202,7 +202,7 @@ def add_thermo_data(thermo_data1, thermo_data2, group_additivity=False, verbose=
             any([T1 != T2 for T1, T2 in zip(thermo_data1.Tdata.value_si, thermo_data2.Tdata.value_si)])):
         raise ValueError('Cannot add these ThermoData objects due to their having different temperature points.')
 
-    for i in range(thermo_data1.Tdata.value_si.shape[0]):
+    for i in range(thermo_data1.Tdata.value_si.shape[0]-2):
         thermo_data1.Cpdata.value_si[i] += thermo_data2.Cpdata.value_si[i]
     thermo_data1.H298.value_si += thermo_data2.H298.value_si
     thermo_data1.S298.value_si += thermo_data2.S298.value_si
@@ -601,7 +601,6 @@ class ThermoDepository(Database):
             label=label,
             item=Molecule().from_adjacency_list(molecule),
             data=thermo,
-            solute=solute,
             reference=reference,
             reference_type=referenceType,
             short_desc=shortDesc,
@@ -633,7 +632,6 @@ class ThermoLibrary(Database):
                    label,
                    molecule,
                    thermo,
-                   solute,
                    reference=None,
                    referenceType='',
                    shortDesc='',
