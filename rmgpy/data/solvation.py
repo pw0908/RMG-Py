@@ -827,7 +827,14 @@ class SolvationDatabase(object):
             L=0.13,
             A=0.003
         )
-
+        # solute_data = SoluteData(
+        #     S=0.427991016,
+        #     B=0.063387773,
+        #     E=0.278780101,
+        #     L=-0.113113537,
+        #     A=0.039025528
+        # )
+        				
         added_to_radicals = {}  # Dictionary of key = atom, value = dictionary of {H atom: bond}
         added_to_pairs = {}  # Dictionary of key = atom, value = # lone pairs changed
         saturated_struct = molecule.copy(deep=True)
