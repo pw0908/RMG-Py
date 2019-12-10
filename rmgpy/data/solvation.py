@@ -696,40 +696,19 @@ class SolvationDatabase(object):
         return None
 
     def get_solute_data_from_groups(self, species):
-        """
-        Return the set of Abraham solute parameters corresponding to a given
-        :class:`Species` object `species` by estimation using the Platts group
-        additivity method. If no group additivity values are loaded, a
-        :class:`DatabaseError` is raised.
-        
-        It averages (linearly) over the desciptors for each Molecule (resonance isomer)
-        in the Species.
-        """
-        solute_data = SoluteData(0.0, 0.0, 0.0, 0.0, 0.0)
-        count = 0
-        comments = []
-        for molecule in species.molecule:
-            molecule.clear_labeled_atoms()
-            molecule.update_atomtypes()
-            sdata = self.estimate_solute_via_group_additivity(molecule)
-            solute_data.S += sdata.S
-            solute_data.B += sdata.B
-            solute_data.E += sdata.E
-            solute_data.L += sdata.L
-            solute_data.A += sdata.A
-            count += 1
-            comments.append(sdata.comment)
-
-        solute_data.S /= count
-        solute_data.B /= count
-        solute_data.E /= count
-        solute_data.L /= count
-        solute_data.A /= count
-
-        # Print groups that are used for debugging purposes
-        solute_data.comment = "Average of {0}".format(" and ".join(comments))
-
-        return solute_data
+       """
+       Return the set of Abraham solute parameters corresponding to a given
+       :class:Species object species by estimation using the Platts group
+       additivity method. If no group additivity values are loaded, a
+       :class:DatabaseError is raised.
+       It averages (linearly) over the desciptors for each Molecule (resonance isomer)
+       in the Species.
+       """
+       molecule = species.molecule[0]
+       molecule.clear_labeled_atoms()
+       molecule.update_atomtypes()
+       solute_data = self.estimate_solute_via_group_additivity(molecule)
+       return solute_data
 
     def transform_lone_pairs(self, molecule):
         """

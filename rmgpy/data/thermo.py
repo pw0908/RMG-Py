@@ -212,12 +212,12 @@ def add_thermo_data(thermo_data1, thermo_data2, group_additivity=False, verbose=
     # Used to check if all of the entries in thermo_data2 are zero
 
     if group_additivity:
-        if verbose or test_zero != 0:
+        # if verbose or test_zero != 0:
             # If verbose==True or test_zero!=0, add thermo_data2.comment to thermo_data1.comment.
-            if thermo_data1.comment:
-                thermo_data1.comment += ' + {0}'.format(thermo_data2.comment)
-            else:
-                thermo_data1.comment = 'Thermo group additivity estimation: ' + thermo_data2.comment
+        if thermo_data1.comment:
+            thermo_data1.comment += ' + {0}'.format(thermo_data2.comment)
+        else:
+            thermo_data1.comment = 'Thermo group additivity estimation: ' + thermo_data2.comment
 
     return thermo_data1
 
@@ -234,7 +234,7 @@ def remove_thermo_data(thermo_data1, thermo_data2, group_additivity=False, verbo
         raise ValueError('Cannot take the difference between these ThermoData objects due to their having different '
                          'temperature points.')
 
-    for i in range(thermo_data1.Tdata.value_si.shape[0]):
+    for i in range(5):
         thermo_data1.Cpdata.value_si[i] -= thermo_data2.Cpdata.value_si[i]
     thermo_data1.H298.value_si -= thermo_data2.H298.value_si
     thermo_data1.S298.value_si -= thermo_data2.S298.value_si
@@ -276,7 +276,7 @@ def average_thermo_data(thermo_data_list=None):
             for thermo_data in thermo_data_list[1:]:
                 averaged_thermo_data = add_thermo_data(averaged_thermo_data, thermo_data)
 
-            for i in range(averaged_thermo_data.Tdata.value_si.shape[0]):
+            for i in range(5):
                 averaged_thermo_data.Cpdata.value_si[i] /= num_values
 
                 cp_data = [thermo_data.Cpdata.value_si[i] for thermo_data in thermo_data_list]
@@ -2032,17 +2032,17 @@ class ThermoDatabase(object):
                     logging.error(molecule)
                     logging.error(molecule.to_adjacency_list())
                     raise
-            # for polyring in polyrings:
-            #     # Make a temporary structure containing only the atoms in the ring
-            #     # NB. if any of the ring corrections depend on ligands not in the ring, they will not be found!
-            #     try:
-            #         self._add_polycyclic_correction_thermo_data(thermo_data, molecule, polyring)
-            #     except KeyError:
-            #         logging.error("Couldn't find a match in the polycyclic ring database even though "
-            #                       "polycyclic rings were found.")
-            #         logging.error(molecule)
-            #         logging.error(molecule.to_adjacency_list())
-            #         raise
+            for polyring in polyrings:
+                # Make a temporary structure containing only the atoms in the ring
+                # NB. if any of the ring corrections depend on ligands not in the ring, they will not be found!
+                try:
+                    self._add_polycyclic_correction_thermo_data(thermo_data, molecule, polyring)
+                except KeyError:
+                    logging.error("Couldn't find a match in the polycyclic ring database even though "
+                                  "polycyclic rings were found.")
+                    logging.error(molecule)
+                    logging.error(molecule.to_adjacency_list())
+                    raise
 
         return thermo_data
 
@@ -2268,7 +2268,7 @@ class ThermoDatabase(object):
             for entry in ring_database.entries.values():
                 if entry.label == data:
                     data = entry.data
-                    comment = entry.label
+                    # comment = entry.label
                     node = entry
                     break
         data.comment = '{0}({1})'.format(ring_database.label, comment)
@@ -2342,7 +2342,7 @@ class ThermoDatabase(object):
             for entry in database.entries.values():
                 if entry.label == data:
                     data = entry.data
-                    comment = entry.label
+                    # comment = entry.label
                     break
             else:
                 raise DatabaseError("Node {0} points to a non-existant group called {1} in database: "
